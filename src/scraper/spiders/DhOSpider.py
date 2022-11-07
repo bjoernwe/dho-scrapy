@@ -47,6 +47,7 @@ def _get_messages_from_rss(response: XmlResponse, **kwargs) -> List[DhOMessage]:
         message = DhOMessage(
             title=item.xpath('./title/text()').get(),
             author=item.xpath('./dc:creator/text()').get(),
+            date=item.xpath('./pubDate/text()').get(),
             msg=item.xpath('./description/text()').get(),
         )
         yield message

@@ -1,3 +1,4 @@
+from datetime import timezone, datetime
 from pathlib import Path
 from typing import List
 
@@ -51,6 +52,7 @@ def test_spider_finds_known_message(dho_messages: List[DhOMessage]):
     known_message = DhOMessage(
         title='RE: Hippie Dippy Bulls**t',
         author='Milo',
+        date=datetime(2020, 11, 21, 4, 14, 6),
         msg='<img src="https://i.redd.it/disdm1grojj21.jpg" />'
     )
 
