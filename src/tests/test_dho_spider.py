@@ -46,8 +46,13 @@ def test_spider_finds_expected_number_of_messages(dho_messages: List[DhOMessage]
 
 
 def test_spider_finds_known_message(dho_messages: List[DhOMessage]):
-    # GIVEN a spider for DhO
-    # WHEN the messages are crawled
+
+    # GIVEN a known message from DhO
+    known_message = DhOMessage(
+        title='RE: Hippie Dippy Bulls**t',
+        msg='I think people often have a hard time holding more than one thought in their mind. That makes it hard to be nuanced.\xa0'
+    )
+
+    # WHEN all messages are crawled
     # THEN the result contains a known message
-    known_message = DhOMessage(title='RE: Hippie Dippy Bulls**t')
     assert known_message in dho_messages
