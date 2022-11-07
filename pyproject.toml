@@ -9,6 +9,7 @@ packages = [{include = "dharma_overground"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 Scrapy = "^2.7.1"
+pydantic = "^1.10.2"
 
 
 [build-system]

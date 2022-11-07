@@ -4,9 +4,8 @@
 # https://docs.scrapy.org/en/latest/topics/items.html
 
 
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class DhOMessage:
+class DhOMessage(BaseModel):
     title: str
