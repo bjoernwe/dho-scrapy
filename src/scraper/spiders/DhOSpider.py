@@ -1,4 +1,5 @@
-from typing import List
+from enum import Enum
+from typing import List, Optional
 
 import scrapy
 
@@ -6,14 +7,21 @@ from scrapy.http import HtmlResponse, XmlResponse
 from scraper.items import DhOMessage
 
 
+class DhOCategory(str, Enum):
+    ContemporaryBuddhism = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/13969849?_com_liferay_message_boards_web_portlet_MBPortlet_delta2=20&_com_liferay_message_boards_web_portlet_MBPortlet_orderByCol=modified-date&_com_liferay_message_boards_web_portlet_MBPortlet_orderByType=desc&_com_liferay_message_boards_web_portlet_MBPortlet_resetCur=false&_com_liferay_message_boards_web_portlet_MBPortlet_cur2=1'
+    DharmaDiagnostics = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/103268?_com_liferay_message_boards_web_portlet_MBPortlet_delta2=20&_com_liferay_message_boards_web_portlet_MBPortlet_orderByCol=modified-date&_com_liferay_message_boards_web_portlet_MBPortlet_orderByType=desc&_com_liferay_message_boards_web_portlet_MBPortlet_resetCur=false&_com_liferay_message_boards_web_portlet_MBPortlet_cur2=1'
+
+
 class DhOSpider(scrapy.Spider):
+
     name = "dho"
 
+    def __init__(self, categories: Optional[List[DhOCategory]] = None, **kwargs):
+        super().__init__(**kwargs)
+        self._categories = categories or [DhOCategory.DharmaDiagnostics]
+
     def start_requests(self):
-        urls = [
-            # Dharma Diagnostics
-            'https://www.dharmaoverground.org/discussion/-/message_boards/category/103268?_com_liferay_message_boards_web_portlet_MBPortlet_delta2=20&_com_liferay_message_boards_web_portlet_MBPortlet_orderByCol=modified-date&_com_liferay_message_boards_web_portlet_MBPortlet_orderByType=desc&_com_liferay_message_boards_web_portlet_MBPortlet_resetCur=false&_com_liferay_message_boards_web_portlet_MBPortlet_cur2=1',
-        ]
+        urls = [str(category.value) for category in self._categories]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
@@ -28,9 +36,10 @@ class DhOSpider(scrapy.Spider):
 
 def _get_messages_from_rss(response: XmlResponse, **kwargs) -> List[DhOMessage]:
     for item in response.xpath('//item'):
-        yield DhOMessage(
+        message = DhOMessage(
             title=item.xpath('./title/text()').get(),
         )
+        yield message
 
 
 def _get_thread_rss_urls(response: HtmlResponse) -> List[str]:
