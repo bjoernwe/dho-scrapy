@@ -1,3 +1,5 @@
+from typing import List
+
 import scrapy
 from scrapy.http import HtmlResponse
 
@@ -14,8 +16,24 @@ class DhOSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response: HtmlResponse, **kwargs):
-        next_page_urls = response.xpath('//ul[contains(@class, "pagination")]/li[not(contains(@class, "inactive"))]/a/@href').getall()
-        for next_page_url in next_page_urls:
-            if not next_page_url or not next_page_url.startswith('http'):
-                continue
+        for next_page_url in _parse_other_page_urls(response):
             yield scrapy.Request(next_page_url, callback=self.parse)
+
+
+def _parse_other_page_urls(response: HtmlResponse) -> List[str]:
+    next_page_urls = response.xpath(
+        '//ul[contains(@class, "pagination")]/li[not(contains(@class, "inactive"))]/a/@href'
+    ).getall()
+    next_page_urls = [url for url in next_page_urls if _is_valid_url(url)]
+    return next_page_urls
+
+
+def _is_valid_url(url: str) -> bool:
+
+    if not url:
+        return False
+
+    if not url.startswith('http'):
+        return False
+
+    return True
