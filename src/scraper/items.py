@@ -9,4 +9,5 @@ from pydantic import BaseModel
 
 class DhOMessage(BaseModel):
     title: str
+    author: str
     msg: str

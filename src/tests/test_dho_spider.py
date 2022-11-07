@@ -50,7 +50,8 @@ def test_spider_finds_known_message(dho_messages: List[DhOMessage]):
     # GIVEN a known message from DhO
     known_message = DhOMessage(
         title='RE: Hippie Dippy Bulls**t',
-        msg='I think people often have a hard time holding more than one thought in their mind. That makes it hard to be nuanced.\xa0'
+        author='Milo',
+        msg='<img src="https://i.redd.it/disdm1grojj21.jpg" />'
     )
 
     # WHEN all messages are crawled

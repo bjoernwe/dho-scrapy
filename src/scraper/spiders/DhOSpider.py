@@ -43,8 +43,10 @@ class DhOSpider(scrapy.Spider):
 
 def _get_messages_from_rss(response: XmlResponse, **kwargs) -> List[DhOMessage]:
     for item in response.xpath('//item'):
+        item.register_namespace('dc', 'http://purl.org/dc/elements/1.1/')
         message = DhOMessage(
             title=item.xpath('./title/text()').get(),
+            author=item.xpath('./dc:creator/text()').get(),
             msg=item.xpath('./description/text()').get(),
         )
         yield message
