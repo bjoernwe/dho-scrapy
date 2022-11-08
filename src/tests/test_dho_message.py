@@ -1,6 +1,4 @@
-from datetime import datetime, tzinfo, timezone
-
-from scrapy.http import XmlResponse
+from datetime import datetime
 
 from scraper.items import DhOMessage
 
