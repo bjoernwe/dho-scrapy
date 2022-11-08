@@ -1,4 +1,4 @@
-from scraper.pipelines import RemoveBlockquotesPipeline
+from scraper.pipelines import RemoveDhOBlockquotesPipeline
 
 
 def test_dho_blockquotes_are_removed():
@@ -7,7 +7,7 @@ def test_dho_blockquotes_are_removed():
     html = '<div class="quote other">A QUOTE</div>OTHER TEXT'
 
     # WHEN the HTML is filtered
-    filtered = RemoveBlockquotesPipeline._remove_blockquotes(html)
+    filtered = RemoveDhOBlockquotesPipeline._remove_blockquotes(html)
 
     # THEN the result does not contain quotes anymore (but other text)
     assert 'OTHER TEXT' in filtered

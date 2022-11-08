@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 from itemadapter import ItemAdapter
 
 
-class RemoveBlockquotesPipeline:
+class RemoveDhOBlockquotesPipeline:
 
     def process_item(self, item, spider):
         adapter = ItemAdapter(item)
