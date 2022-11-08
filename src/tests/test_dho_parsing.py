@@ -1,9 +1,10 @@
 from pathlib import Path
 
 import pytest
+
 from scrapy.http import XmlResponse
 
-from scraper.spiders import DhOSpider
+from dho_scraper.dho_spider import _get_messages_from_rss
 
 
 @pytest.fixture(scope='session')
@@ -27,7 +28,7 @@ def test_all_messages_are_parsed_from_rss(rss_response: XmlResponse):
 
     # GIVEN the response object for an RSS
     # WHEN the RSS response is parsed
-    messages = list(DhOSpider._get_messages_from_rss(response=rss_response))
+    messages = list(_get_messages_from_rss(response=rss_response))
 
     # THEN all messages are found
     assert len(messages) == 23

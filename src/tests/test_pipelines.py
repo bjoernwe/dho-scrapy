@@ -1,7 +1,4 @@
-from bs4 import BeautifulSoup
-
-from scraper.items import DhOMessage
-from scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline
+from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline
 
 
 def test_dho_blockquotes_are_removed():

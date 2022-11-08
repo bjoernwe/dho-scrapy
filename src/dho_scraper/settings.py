@@ -7,10 +7,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'scraper'
+BOT_NAME = 'dho-scraper'
 
-SPIDER_MODULES = ['scraper.spiders']
-NEWSPIDER_MODULE = 'scraper.spiders'
+SPIDER_MODULES = ['dho_scraper']
+NEWSPIDER_MODULE = 'dho_scraper'
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -63,8 +63,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'scraper.pipelines.RemoveDhOBlockquotesPipeline': 300,
-    'scraper.pipelines.HtmlToTextPipeline': 600,
+    'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 300,
+    'dho_scraper.pipelines.HtmlToTextPipeline': 600,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

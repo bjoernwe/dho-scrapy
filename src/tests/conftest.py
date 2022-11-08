@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from scraper.items import DhOMessage
+from dho_scraper.items import DhOMessage
 
 
 @pytest.fixture

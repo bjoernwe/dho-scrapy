@@ -1,4 +1,4 @@
-from datetime import timezone, datetime
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -8,8 +8,8 @@ from _pytest.tmpdir import TempPathFactory
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from scraper.items import DhOMessage
-from scraper.spiders.DhOSpider import DhOSpider, DhOCategory
+from dho_scraper.items import DhOMessage
+from dho_scraper.dho_spider import DhOSpider, DhOCategory
 
 
 @pytest.fixture(scope='session')

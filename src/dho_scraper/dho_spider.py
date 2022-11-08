@@ -4,7 +4,7 @@ from typing import List, Optional
 import scrapy
 
 from scrapy.http import HtmlResponse, XmlResponse
-from scraper.items import DhOMessage
+from dho_scraper.items import DhOMessage
 
 
 class DhOCategory(str, Enum):
@@ -41,7 +41,7 @@ class DhOSpider(scrapy.Spider):
             yield scrapy.Request(next_page_url, callback=self.parse)
 
 
-def _get_messages_from_rss(response: XmlResponse, **kwargs) -> List[DhOMessage]:
+def _get_messages_from_rss(response: XmlResponse, **_) -> List[DhOMessage]:
     for item in response.xpath('//item'):
         item.register_namespace('dc', 'http://purl.org/dc/elements/1.1/')
         message = DhOMessage(
