@@ -27,7 +27,7 @@ def items_jsonl_path(tmp_path_factory: TempPathFactory) -> Path:
 
 
 @pytest.fixture()
-def dho_messages(items_jsonl_path: Path) -> List[DhOMessage]:
+def crawled_messages(items_jsonl_path: Path) -> List[DhOMessage]:
 
     messages = []
 
@@ -39,47 +39,45 @@ def dho_messages(items_jsonl_path: Path) -> List[DhOMessage]:
     return messages
 
 
-def test_spider_finds_expected_number_of_messages(dho_messages: List[DhOMessage]):
+def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
     # GIVEN a spider for DhO
     # WHEN the messages are crawled
     # THEN there's the expected number of them
-    assert len(dho_messages) >= 678
+    assert len(crawled_messages) >= 678
 
 
 def _find_msg_by_date(dt: datetime, msgs: List[DhOMessage]) -> DhOMessage:
     return next(filter(lambda m: m.date == dt, msgs))
 
 
-def test_spider_finds_known_message(dho_messages: List[DhOMessage]):
-
-    # GIVEN a known message from DhO
-    known_msg = DhOMessage(
-        title='RE: Hippie Dippy Bulls**t',
-        author='Milo',
-        date=datetime(2020, 11, 21, 4, 14, 6),
-        msg='<img src="https://i.redd.it/disdm1grojj21.jpg" />'  # Warning: Pipeline may change HTML formatting!
-    )
-
-    # WHEN all messages are crawled
-    msg = _find_msg_by_date(dt=known_msg.date, msgs=dho_messages)
-
-    # THEN the result contains the known message
-    assert msg.title == known_msg.title
-    assert msg.author == known_msg.author
+def test_spider_finds_known_message(crawled_messages: List[DhOMessage], msg_with_blockquote):
+    # GIVEN a known message
+    # WHEN all messages are crawled by the spider
+    # THEN they contain the known message
+    msg = _find_msg_by_date(dt=msg_with_blockquote.date, msgs=crawled_messages)
+    assert msg.title == msg_with_blockquote.title
+    assert msg.author == msg_with_blockquote.author
 
 
-def test_spider_removes_block_quotes(dho_messages: List[DhOMessage]):
+def test_spider_removes_block_quotes(crawled_messages: List[DhOMessage], msg_with_blockquote):
 
     # GIVEN a DhO message that is known to contain a blockquote
-    known_msg = DhOMessage(
-        title='RE: Letter and Invitation: Living Buddhas in Pemako Sangha',
-        author='George S',
-        date=datetime(2022, 6, 30, 17, 41, 42),
-        msg='<div class="quote"><div class="quote-content">Kim Katami<br />I haven&#39;t written posts like this in a long time but for some reason I did so today.<br /></div></div><br />If I had to guess:<br /><br />73 x 30 = 2,190<br /><br />Buddha inflation <img alt="emoticon" src="https://www.dharmaoverground.org/o/classic-theme/images/emoticons/tongue.gif" >',
-    )
+    assert 'quote' in msg_with_blockquote.msg
+    assert 'Katami' in msg_with_blockquote.msg  # the author
 
-    # WHEN all messages are crawled
-    msg = _find_msg_by_date(dt=known_msg.date, msgs=dho_messages)
+    # WHEN the message has been crawled by the spider
+    crawled_msg = _find_msg_by_date(dt=msg_with_blockquote.date, msgs=crawled_messages)
 
-    # THEN the known message does not contain the blockquote
-    assert 'Katami' not in msg.msg
+    # THEN the  message does not contain the blockquote
+    assert 'quote' not in crawled_msg
+    assert 'Katami' not in crawled_msg.msg
+
+
+def test_spider_removes_html(crawled_messages: List[DhOMessage], msg_with_blockquote):
+
+    # GIVEN a DhO spider and a known message with HTML tags
+    # WHEN the known message has been crawled
+    msg = _find_msg_by_date(dt=msg_with_blockquote.date, msgs=crawled_messages)
+
+    # THEN it does not contain HTML tags
+    assert '<' not in msg.msg
