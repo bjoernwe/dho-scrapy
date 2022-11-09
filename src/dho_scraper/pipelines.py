@@ -10,7 +10,7 @@ from itemadapter import ItemAdapter
 
 class RemoveDhOBlockquotesPipeline:
 
-    def process_item(self, item, spider):
+    def process_item(self, item, _):
         adapter = ItemAdapter(item)
         adapter['msg'] = self._remove_blockquotes(adapter['msg'])
         return item
@@ -25,7 +25,7 @@ class RemoveDhOBlockquotesPipeline:
 
 class HtmlToTextPipeline:
 
-    def process_item(self, item, spider):
+    def process_item(self, item, _):
         adapter = ItemAdapter(item)
         adapter['msg'] = self._html_to_text(adapter['msg'])
         return item

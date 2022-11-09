@@ -8,7 +8,7 @@ import typer
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from dho_scraper.dho_spider import DhOSpider, DhOCategory
+from dho_scraper.spider import DhOSpider, DhOCategory
 
 
 def crawl_messages(out_file: Optional[str] = None):

@@ -9,7 +9,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
 from dho_scraper.items import DhOMessage
-from dho_scraper.dho_spider import DhOSpider, DhOCategory
+from dho_scraper.spider import DhOSpider, DhOCategory
 
 
 @pytest.fixture(scope='session')

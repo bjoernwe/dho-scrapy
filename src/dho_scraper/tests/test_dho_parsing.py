@@ -4,7 +4,7 @@ import pytest
 
 from scrapy.http import XmlResponse
 
-from dho_scraper.dho_spider import _get_messages_from_rss
+from dho_scraper.spider import _get_messages_from_rss
 
 
 @pytest.fixture(scope='session')
