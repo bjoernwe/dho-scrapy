@@ -1,5 +1,9 @@
+import logging
+
 from pathlib import Path
 from typing import Optional
+
+import typer
 
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
@@ -7,10 +11,13 @@ from scrapy.utils.project import get_project_settings
 from dho_scraper.dho_spider import DhOSpider, DhOCategory
 
 
-def main(output_file: Optional[str] = None):
+def crawl_messages(out_file: Optional[str] = None):
 
-    if output_file:
-        DhOSpider.set_output_feed(jsonlines_path=output_file)
+    if not out_file:
+        out_file = Path(__file__).parent.parent.joinpath('data/messages.jsonl')
+
+    logging.info(f'Writing DhO messages to {out_file} ...')
+    DhOSpider.set_output_feed(jsonlines_path=out_file)
 
     process = CrawlerProcess(get_project_settings())
     process.crawl(DhOSpider, categories=[DhOCategory.DharmaDiagnostics])
@@ -18,8 +25,4 @@ def main(output_file: Optional[str] = None):
 
 
 if __name__ == '__main__':
-
-    output_file = './output/items.jsonl'
-    project_root = Path(__file__).parent.parent
-
-    main(output_file=str(project_root.joinpath(output_file)))
+    typer.run(crawl_messages)
