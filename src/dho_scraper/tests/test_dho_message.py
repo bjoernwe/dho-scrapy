@@ -14,6 +14,7 @@ def test_dho_message_accepts_datetime():
         author='author',
         date=dt,
         msg='msg',
+        is_first_in_thread=True,
     )
 
     # THEN the date was not changed
@@ -31,6 +32,7 @@ def test_dho_message_accepts_date_string_in_dho_format():
         author='author',
         date=date_str,
         msg='msg',
+        is_first_in_thread=True,
     )
 
     # THEN the resulting message contains the correct date

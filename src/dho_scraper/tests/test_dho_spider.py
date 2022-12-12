@@ -81,3 +81,15 @@ def test_spider_removes_html(crawled_messages: List[DhOMessage], msg_with_blockq
 
     # THEN it does not contain HTML tags
     assert '<' not in msg.msg
+
+
+def test_spider_parses_beginning_of_thread(crawled_messages: List[DhOMessage]):
+    # Note: This test is flaky. It seems to fail in the rare case when a thread with only one message is parsed first.
+
+    # GIVEN a list of messages crawled by the spider
+    # WHEN the first two messages are considered
+    msg1, msg2 = crawled_messages[0], crawled_messages[1]
+
+    # THEN the beginning of a thread is correctly identified
+    assert msg1.is_first_in_thread and not msg1.title.startswith('RE:')
+    assert not msg2.is_first_in_thread and msg2.title.startswith('RE:')
