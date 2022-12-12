@@ -73,7 +73,7 @@ def test_spider_removes_block_quotes(crawled_messages: List[DhOMessage], msg_wit
     assert 'Katami' not in crawled_msg.msg
 
 
-def test_spider_removes_html(crawled_messages: List[DhOMessage], msg_with_blockquote):
+def test_spider_removes_html(crawled_messages: List[DhOMessage], msg_with_blockquote: DhOMessage):
 
     # GIVEN a DhO spider and a known message with HTML tags
     # WHEN the known message has been crawled
