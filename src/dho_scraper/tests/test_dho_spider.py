@@ -93,3 +93,13 @@ def test_spider_parses_beginning_of_thread(crawled_messages: List[DhOMessage]):
     # THEN the beginning of a thread is correctly identified
     assert msg1.is_first_in_thread and not msg1.title.startswith('RE:')
     assert not msg2.is_first_in_thread and msg2.title.startswith('RE:')
+
+
+def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
+
+    # GIVEN a list of messages crawled by the spider
+    # WHEN the message IDs are considered
+    msg_ids = {msg.msg_id for msg in crawled_messages}
+
+    # THEN all messages have a unique ID
+    assert len(msg_ids) == len(crawled_messages)

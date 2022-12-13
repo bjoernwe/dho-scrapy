@@ -45,6 +45,8 @@ def _get_messages_from_rss(response: XmlResponse, **_) -> List[DhOMessage]:
     for i, item in enumerate(reversed(response.xpath('//item'))):
         item.register_namespace('dc', 'http://purl.org/dc/elements/1.1/')
         message = DhOMessage(
+            msg_id=item.xpath('./link/text()').get().split('=')[-1],
+            thread_id=response.xpath('./channel/link/text()').get().split('=')[-1],
             title=item.xpath('./title/text()').get(),
             author=item.xpath('./dc:creator/text()').get(),
             date=item.xpath('./pubDate/text()').get(),

@@ -8,6 +8,8 @@ from dho_scraper.items import DhOMessage
 @pytest.fixture
 def msg_with_blockquote() -> DhOMessage:
     return DhOMessage(
+        msg_id=123,
+        thread_id=890,
         title='RE: Letter and Invitation: Living Buddhas in Pemako Sangha',
         author='George S',
         date=datetime(2022, 6, 30, 17, 41, 42),

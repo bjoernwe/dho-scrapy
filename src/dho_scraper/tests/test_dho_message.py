@@ -10,6 +10,8 @@ def test_dho_message_accepts_datetime():
 
     # WHEN a DhO message is created
     msg = DhOMessage(
+        msg_id=123,
+        thread_id=890,
         title='title',
         author='author',
         date=dt,
@@ -28,6 +30,8 @@ def test_dho_message_accepts_date_string_in_dho_format():
 
     # WHEN a message is created with this input format
     msg = DhOMessage(
+        msg_id=123,
+        thread_id=890,
         title='title',
         author='author',
         date=date_str,

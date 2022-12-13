@@ -9,6 +9,8 @@ from pydantic import BaseModel, validator
 
 
 class DhOMessage(BaseModel):
+    msg_id: int
+    thread_id: int
     title: str
     author: str
     date: datetime
