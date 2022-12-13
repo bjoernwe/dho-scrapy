@@ -6,6 +6,18 @@
 from bs4 import BeautifulSoup
 
 from itemadapter import ItemAdapter
+from scrapy.exceptions import DropItem
+
+from dho_scraper.items import DhOMessage
+
+
+class RemoveRepliesPipeline:
+
+    @staticmethod
+    def process_item(item: DhOMessage, _):
+        if item.is_first_in_thread:
+            return item
+        raise DropItem
 
 
 class RemoveDhOBlockquotesPipeline:
