@@ -46,15 +46,15 @@ def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMess
     assert len(crawled_messages) >= 31
 
 
-def _find_msg_by_date(dt: datetime, msgs: List[DhOMessage]) -> DhOMessage:
-    return next(filter(lambda m: m.date == dt, msgs))
+def _find_msg_by_id(msg_id: int, msgs: List[DhOMessage]) -> DhOMessage:
+    return next(filter(lambda m: m.msg_id == msg_id, msgs))
 
 
 def test_spider_finds_known_message(crawled_messages: List[DhOMessage], dho_msg: DhOMessage):
     # GIVEN a known message
     # WHEN all messages are crawled by the spider
     # THEN they contain the known message
-    msg = _find_msg_by_date(dt=dho_msg.date, msgs=crawled_messages)
+    msg = _find_msg_by_id(msg_id=dho_msg.msg_id, msgs=crawled_messages)
     assert msg.title == dho_msg.title
     assert msg.author == dho_msg.author
 
@@ -65,7 +65,7 @@ def test_spider_removes_html(crawled_messages: List[DhOMessage], dho_msg: DhOMes
     assert '<' in dho_msg.msg
 
     # WHEN the known message has been crawled
-    msg = _find_msg_by_date(dt=dho_msg.date, msgs=crawled_messages)
+    msg = _find_msg_by_id(msg_id=dho_msg.msg_id, msgs=crawled_messages)
 
     # THEN it does not contain HTML tags
     assert '<' not in msg.msg
