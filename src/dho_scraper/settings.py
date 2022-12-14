@@ -63,8 +63,9 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 300,
-    'dho_scraper.pipelines.HtmlToTextPipeline': 600,
+    'dho_scraper.pipelines.RemoveRepliesPipeline': 100,
+    'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 600,
+    'dho_scraper.pipelines.HtmlToTextPipeline': 800,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

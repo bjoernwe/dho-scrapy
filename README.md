@@ -10,3 +10,8 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `cd src`
 - `python -m pytest` to run tests
 - `python crawl_messages.py` to crawl messages (to be stored in `./data/`)
+
+
+### Development
+
+- `./install_git_hooks.sh`

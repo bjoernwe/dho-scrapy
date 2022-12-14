@@ -6,10 +6,13 @@ from dho_scraper.items import DhOMessage
 
 
 @pytest.fixture
-def msg_with_blockquote() -> DhOMessage:
+def dho_msg() -> DhOMessage:
     return DhOMessage(
-        title='RE: Letter and Invitation: Living Buddhas in Pemako Sangha',
-        author='George S',
-        date=datetime(2022, 6, 30, 17, 41, 42),
-        msg='<div class="quote"><div class="quote-content">Kim Katami<br />I haven&#39;t written posts like this in a long time but for some reason I did so today.<br /></div></div><br />If I had to guess:<br /><br />73 x 30 = 2,190<br /><br />Buddha inflation <img alt="emoticon" src="https://www.dharmaoverground.org/o/classic-theme/images/emoticons/tongue.gif" >',
+        msg_id=15662490,
+        thread_id=15662491,
+        title='10 things you disagree with Classical Buddhism',
+        author='A. Dietrich Ringle',
+        date=datetime(2019, 9, 14, 8, 13, 24),
+        msg='Lists are handy things, and in this case they line up with brain wave function.<br /><br />I&#39;ll be surprised.',
+        is_first_in_thread=True,
     )

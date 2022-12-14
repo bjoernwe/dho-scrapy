@@ -42,13 +42,16 @@ class DhOSpider(scrapy.Spider):
 
 
 def _get_messages_from_rss(response: XmlResponse, **_) -> List[DhOMessage]:
-    for item in response.xpath('//item'):
+    for i, item in enumerate(reversed(response.xpath('//item'))):
         item.register_namespace('dc', 'http://purl.org/dc/elements/1.1/')
         message = DhOMessage(
+            msg_id=item.xpath('./link/text()').get().split('=')[-1],
+            thread_id=response.xpath('./channel/link/text()').get().split('=')[-1],
             title=item.xpath('./title/text()').get(),
             author=item.xpath('./dc:creator/text()').get(),
             date=item.xpath('./pubDate/text()').get(),
             msg=item.xpath('./description/text()').get(),
+            is_first_in_thread=(i==0),
         )
         yield message
 

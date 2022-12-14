@@ -9,10 +9,13 @@ from pydantic import BaseModel, validator
 
 
 class DhOMessage(BaseModel):
+    msg_id: int
+    thread_id: int
     title: str
     author: str
     date: datetime
     msg: str
+    is_first_in_thread: bool
 
     @validator('date', pre=True)
     def dho_date_to_datetime(cls, dt) -> datetime:
