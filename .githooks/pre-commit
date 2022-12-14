@@ -1,2 +1,4 @@
 #!/bin/sh
-python -m pytest ..
+
+cd src
+poetry run python -m pytest .
