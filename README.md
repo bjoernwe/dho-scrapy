@@ -9,7 +9,8 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `poetry shell` to activate virtual environment
 - `cd src`
 - `python -m pytest` to run tests
-- `python crawl_messages.py` to crawl messages (to be stored in `./data/`)
+- `python 1_crawl_messages.py` to crawl messages (to be stored in `./data/`)
+- `python 2_convert_data.py` to crawl messages (to be stored in `./data/`)
 
 
 ### Development
