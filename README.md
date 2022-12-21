@@ -10,7 +10,7 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `cd src`
 - `python -m pytest` to run tests
 - `python 1_crawl_messages.py` to crawl messages (to be stored in `./data/`)
-- `python 2_convert_data.py` to crawl messages (to be stored in `./data/`)
+- `python 2_convert_data.py` to extract messages to simple txt
 
 
 ### Development
