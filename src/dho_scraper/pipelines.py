@@ -45,7 +45,7 @@ class HtmlToTextPipeline:
     @staticmethod
     def _html_to_text(html: str) -> str:
         soup = BeautifulSoup(html, 'html.parser')
-        return soup.get_text()
+        return soup.get_text(separator=' ')
 
 
 class ReplaceNonStandardWhitespacesPipeline:
