@@ -1,6 +1,6 @@
 from dho_scraper.items import DhOMessage
 from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline, \
-    ReplaceNonStandardWhitespacesPipeline
+    ReplaceNonStandardWhitespacesPipeline, RemoveDuplicateSpacesPipeline
 
 
 def test_dho_blockquotes_are_removed():
@@ -30,17 +30,29 @@ def test_html_is_removed_from_message(dho_msg: DhOMessage):
     assert '<' not in text
 
 
-def test_non_standard_whitespace_is_removed_from_message(dho_msg: DhOMessage):
+def test_non_standard_whitespace_is_removed_from_message():
 
-    # GIVEN a DhO message with non-standard whitespaces
+    # GIVEN a string with non-standard whitespaces
     whitespaces = ["\u00a0", "\u200b"]
-    unfiltered_message = dho_msg.msg + ''.join(whitespaces)
+    unfiltered_message = ''.join(whitespaces)
     for ws in whitespaces:
         assert ws in unfiltered_message
 
-    # WHEN the message is filtered
-    filtered_message = ReplaceNonStandardWhitespacesPipeline._normalize_whitespaces(dho_msg.msg)
+    # WHEN the string is filtered
+    filtered_message = ReplaceNonStandardWhitespacesPipeline._normalize_whitespaces(unfiltered_message)
 
     # THEN the non-standard whitespaces are removed
     for ws in whitespaces:
         assert ws not in filtered_message
+
+
+def test_duplicate_spaces_are_removed_from_message():
+
+    # GIVEN a string with duplicate white spaces
+    unfiltered_message = ' foo   bar  '
+
+    # WHEN the message is filtered
+    filtered_message = RemoveDuplicateSpacesPipeline._remove_duplicate_spaces(unfiltered_message)
+
+    # THEN the duplicates are removed
+    assert filtered_message == 'foo bar'

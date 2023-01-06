@@ -67,3 +67,15 @@ class ReplaceNonStandardWhitespacesPipeline:
             s = s.replace(c, " ")
 
         return s
+
+
+class RemoveDuplicateSpacesPipeline:
+
+    def process_item(self, item, _):
+        adapter = ItemAdapter(item)
+        adapter['msg'] = self._remove_duplicate_spaces(adapter['msg'])
+        return item
+
+    @staticmethod
+    def _remove_duplicate_spaces(s: str):
+        return ' '.join(s.split())
