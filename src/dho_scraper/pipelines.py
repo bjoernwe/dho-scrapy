@@ -90,3 +90,13 @@ class RemoveDuplicateSpacesPipeline:
     @staticmethod
     def _remove_duplicate_spaces(s: str):
         return ' '.join(s.split())
+
+
+class RemoveEmptyMessagePipeline:
+
+    @staticmethod
+    def process_item(item, _):
+        adapter = ItemAdapter(item)
+        if not adapter['msg']:
+            raise DropItem
+        return item

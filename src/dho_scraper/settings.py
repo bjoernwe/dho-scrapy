@@ -68,6 +68,7 @@ ITEM_PIPELINES = {
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
     'dho_scraper.pipelines.RemoveDuplicateSpacesPipeline': 900,
+    'dho_scraper.pipelines.RemoveEmptyMessagePipeline': 1000,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
