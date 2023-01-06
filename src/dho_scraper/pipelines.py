@@ -46,3 +46,24 @@ class HtmlToTextPipeline:
     def _html_to_text(html: str) -> str:
         soup = BeautifulSoup(html, 'html.parser')
         return soup.get_text()
+
+
+class ReplaceNonStandardWhitespacesPipeline:
+
+    def process_item(self, item, _):
+        adapter = ItemAdapter(item)
+        adapter['msg'] = self._normalize_whitespaces(adapter['msg'])
+        return item
+
+    @staticmethod
+    def _normalize_whitespaces(s: str) -> str:
+
+        characters = [
+            "\u00a0",  # non-breaking space
+            "\u200b",  # zero-width space
+        ]
+
+        for c in characters:
+            s = s.replace(c, " ")
+
+        return s

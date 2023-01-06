@@ -1,5 +1,6 @@
 from dho_scraper.items import DhOMessage
-from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline
+from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline, \
+    ReplaceNonStandardWhitespacesPipeline
 
 
 def test_dho_blockquotes_are_removed():
@@ -27,3 +28,19 @@ def test_html_is_removed_from_message(dho_msg: DhOMessage):
     # THEN tags are removed and regular text preserved
     assert 'brain wave' in text
     assert '<' not in text
+
+
+def test_non_standard_whitespace_is_removed_from_message(dho_msg: DhOMessage):
+
+    # GIVEN a DhO message with non-standard whitespaces
+    whitespaces = ["\u00a0", "\u200b"]
+    unfiltered_message = dho_msg.msg + ''.join(whitespaces)
+    for ws in whitespaces:
+        assert ws in unfiltered_message
+
+    # WHEN the message is filtered
+    filtered_message = ReplaceNonStandardWhitespacesPipeline._normalize_whitespaces(dho_msg.msg)
+
+    # THEN the non-standard whitespaces are removed
+    for ws in whitespaces:
+        assert ws not in filtered_message
