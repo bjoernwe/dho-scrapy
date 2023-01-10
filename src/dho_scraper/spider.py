@@ -15,17 +15,10 @@ class DhOCategory(str, Enum):
 class DhOSpider(scrapy.Spider):
 
     name = "dho"
-    custom_settings = {
-        'FEEDS': {}
-    }
 
     def __init__(self, categories: Optional[List[DhOCategory]] = None, **kwargs):
         super().__init__(**kwargs)
         self._categories = categories or [DhOCategory.DharmaDiagnostics]
-
-    @classmethod
-    def set_output_feed(cls, jsonlines_path: str):
-        cls.custom_settings['FEEDS'][jsonlines_path] = {'format': 'jsonlines'}
 
     def start_requests(self):
         urls = [str(category.value) for category in self._categories]
