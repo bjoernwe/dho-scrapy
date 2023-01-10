@@ -46,6 +46,15 @@ class RemoveNonOpRepliesPipeline:
         raise DropItem
 
 
+class RemoveAllRepliesPipeline:
+
+    @classmethod
+    def process_item(cls, item: DhOMessage, _):
+        if item.is_first_in_thread:
+            return item
+        raise DropItem
+
+
 class RemoveDhOBlockquotesPipeline:
 
     def process_item(self, item, _):
