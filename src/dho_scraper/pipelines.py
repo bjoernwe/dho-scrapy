@@ -27,7 +27,7 @@ class RemoveDuplicatesPipeline:
         return item
 
 
-class RemoveRepliesPipeline:
+class RemoveNonOpRepliesPipeline:
 
     thread_owners = {}
 
@@ -36,12 +36,11 @@ class RemoveRepliesPipeline:
 
         if item.is_first_in_thread:
             cls.thread_owners[item.thread_id] = item.author  # remember author
-            return item
 
-        thread_op = cls.thread_owners.get(item.thread_id)
+        thread_op = cls.thread_owners[item.thread_id]
         post_is_by_op = item.author == thread_op
 
-        if post_is_by_op:
+        if item.is_first_in_thread or post_is_by_op:
             return item
 
         raise DropItem
