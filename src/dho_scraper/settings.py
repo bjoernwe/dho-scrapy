@@ -65,7 +65,7 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
     'dho_scraper.pipelines.RemoveDuplicatesPipeline': 10,
     'dho_scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
-    #'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
+    'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
     'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 400,
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
