@@ -11,6 +11,22 @@ from scrapy.exceptions import DropItem
 from dho_scraper.items import DhOMessage
 
 
+class RemoveDuplicatesPipeline:
+
+    def __init__(self):
+        self.ids_seen = set()
+
+    def process_item(self, item: DhOMessage, _):
+
+        msg_id = item.msg_id
+
+        if msg_id in self.ids_seen:
+            raise DropItem(f'Duplicate item found: {item!r}')
+
+        self.ids_seen.add(msg_id)
+        return item
+
+
 class RemoveRepliesPipeline:
 
     thread_owners = {}
