@@ -23,6 +23,7 @@ def crawled_messages(session_tmp_path) -> List[DhOMessage]:
 
     settings = get_project_settings()
     settings['FEEDS'][str(tmp_items_path)] = {'format': 'jsonlines'}
+    settings['PIPELINE_MIN_MESSAGE_WORDS'] = 1
 
     process = CrawlerProcess(settings=settings)
     process.crawl(DhOSpider, categories=[DhOCategory.ContemporaryBuddhism])

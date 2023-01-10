@@ -65,13 +65,15 @@ ROBOTSTXT_OBEY = True
 ITEM_PIPELINES = {
     'dho_scraper.pipelines.RemoveDuplicatesPipeline': 10,
     'dho_scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
-    'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
+    #'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
     'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 400,
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
     'dho_scraper.pipelines.RemoveDuplicateSpacesPipeline': 900,
-    'dho_scraper.pipelines.RemoveEmptyMessagePipeline': 1000,
+    'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
 }
+
+PIPELINE_MIN_MESSAGE_WORDS = 50
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

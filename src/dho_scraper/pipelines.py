@@ -116,11 +116,24 @@ class RemoveDuplicateSpacesPipeline:
         return ' '.join(s.split())
 
 
-class RemoveEmptyMessagePipeline:
+class RemoveShortMessagePipeline:
 
-    @staticmethod
-    def process_item(item, _):
-        adapter = ItemAdapter(item)
-        if not adapter['msg']:
+    @classmethod
+    def from_crawler(cls, crawler):
+        min_message_words = crawler.settings.get('PIPELINE_MIN_MESSAGE_WORDS')
+        return cls(min_message_words=min_message_words)
+
+    def __init__(self, min_message_words: int = 1):
+        self._min_message_words = min_message_words
+
+    def process_item(self, item: DhOMessage, _):
+        if self._is_too_short(msg=item.msg, min_words=self._min_message_words):
             raise DropItem
         return item
+
+    @staticmethod
+    def _is_too_short(msg: str, min_words: int) -> bool:
+        n_words = len(msg.split())
+        if n_words < min_words:
+            return True
+        return False
