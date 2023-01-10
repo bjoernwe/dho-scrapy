@@ -1,6 +1,5 @@
-from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 import pytest
 
@@ -13,25 +12,30 @@ from dho_scraper.spider import DhOSpider, DhOCategory
 
 
 @pytest.fixture(scope='session')
-def items_jsonl_path(tmp_path_factory: TempPathFactory) -> Path:
+def session_tmp_path(tmp_path_factory: TempPathFactory) -> Path:
+    return tmp_path_factory.mktemp('dho-scraper')
 
-    tmp_path = tmp_path_factory.mktemp('dho-scraper')
-    tmp_items_path = tmp_path.joinpath('items.jsonl')
-    DhOSpider.set_output_feed(jsonlines_path=str(tmp_items_path))
 
-    process = CrawlerProcess(settings=get_project_settings())
+@pytest.fixture(scope='session')
+def crawled_messages(session_tmp_path) -> List[DhOMessage]:
+
+    tmp_items_path = session_tmp_path.joinpath('items.jsonl')
+
+    settings = get_project_settings()
+    settings['FEEDS'][str(tmp_items_path)] = {'format': 'jsonlines'}
+
+    process = CrawlerProcess(settings=settings)
     process.crawl(DhOSpider, categories=[DhOCategory.ContemporaryBuddhism])
     process.start()
 
-    return tmp_items_path
+    return _messages_from_file(tmp_items_path)
 
 
-@pytest.fixture()
-def crawled_messages(items_jsonl_path: Path) -> List[DhOMessage]:
+def _messages_from_file(jsonl_path: Path) -> List[DhOMessage]:
 
     messages = []
 
-    with open(str(items_jsonl_path), 'r') as file:
+    with open(str(jsonl_path), 'r') as file:
         for line in file.readlines():
             dho_message = DhOMessage.parse_raw(line)
             messages.append(dho_message)

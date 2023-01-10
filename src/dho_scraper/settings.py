@@ -63,7 +63,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'dho_scraper.pipelines.RemoveRepliesPipeline': 100,
+    'dho_scraper.pipelines.RemoveDuplicatesPipeline': 10,
+    'dho_scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
     'dho_scraper.pipelines.RemoveDhOBlockquotesPipeline': 400,
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
