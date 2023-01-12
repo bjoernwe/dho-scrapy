@@ -1,6 +1,8 @@
+import pytest
+
 from dho_scraper.items import DhOMessage
 from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline, HtmlToTextPipeline, \
-    ReplaceNonStandardWhitespacesPipeline, RemoveDuplicateSpacesPipeline
+    ReplaceNonStandardWhitespacesPipeline, RemoveDuplicateSpacesPipeline, RemoveShortMessagePipeline
 
 
 def test_dho_blockquotes_are_removed():
@@ -56,3 +58,16 @@ def test_duplicate_spaces_are_removed_from_message():
 
     # THEN the duplicates are removed
     assert filtered_message == 'foo bar'
+
+
+@pytest.mark.parametrize(argnames=['msg', 'min_words', 'too_short'],
+                         argvalues=[('foo', 2, True),
+                                    ('foo bar', 2, False)])
+def test_(msg: str, min_words: int, too_short: bool):
+
+    # GIVEN a message and a min number of words
+    # WHEN the message is filtered for length
+    is_msg_too_short = RemoveShortMessagePipeline._is_too_short(msg=msg, min_words=min_words)
+
+    # THEN it is filtered as expected
+    assert is_msg_too_short == too_short
