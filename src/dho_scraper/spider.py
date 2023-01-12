@@ -9,8 +9,9 @@ from dho_scraper.items import DhOMessage
 
 
 class DhOCategory(str, Enum):
-    ContemporaryBuddhism = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/13969849?_com_liferay_message_boards_web_portlet_MBPortlet_delta2=20&_com_liferay_message_boards_web_portlet_MBPortlet_orderByCol=modified-date&_com_liferay_message_boards_web_portlet_MBPortlet_orderByType=desc&_com_liferay_message_boards_web_portlet_MBPortlet_resetCur=false&_com_liferay_message_boards_web_portlet_MBPortlet_cur2=1'
-    DharmaDiagnostics = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/103268?_com_liferay_message_boards_web_portlet_MBPortlet_delta2=20&_com_liferay_message_boards_web_portlet_MBPortlet_orderByCol=modified-date&_com_liferay_message_boards_web_portlet_MBPortlet_orderByType=desc&_com_liferay_message_boards_web_portlet_MBPortlet_resetCur=false&_com_liferay_message_boards_web_portlet_MBPortlet_cur2=1'
+    ContemporaryBuddhism = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/13969849'
+    DharmaDiagnostics = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/103268'
+    PracticeLogs = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/2658626'
 
 
 class DhOSpider(scrapy.Spider):
