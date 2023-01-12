@@ -1,3 +1,4 @@
+from collections import defaultdict
 from enum import Enum
 from typing import List, Optional
 
@@ -15,9 +16,7 @@ class DhOCategory(str, Enum):
 class DhOSpider(scrapy.Spider):
 
     name = "dho"
-    custom_settings = {
-        'FEEDS': {}
-    }
+    custom_settings = defaultdict(dict)
 
     def __init__(self, categories: Optional[List[DhOCategory]] = None, **kwargs):
         super().__init__(**kwargs)

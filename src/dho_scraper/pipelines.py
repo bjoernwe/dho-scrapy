@@ -11,7 +11,23 @@ from scrapy.exceptions import DropItem
 from dho_scraper.items import DhOMessage
 
 
-class RemoveRepliesPipeline:
+class RemoveDuplicatesPipeline:
+
+    def __init__(self):
+        self.ids_seen = set()
+
+    def process_item(self, item: DhOMessage, _):
+
+        msg_id = item.msg_id
+
+        if msg_id in self.ids_seen:
+            raise DropItem(f'Duplicate item found: {item!r}')
+
+        self.ids_seen.add(msg_id)
+        return item
+
+
+class RemoveNonOpRepliesPipeline:
 
     thread_owners = {}
 
@@ -20,14 +36,22 @@ class RemoveRepliesPipeline:
 
         if item.is_first_in_thread:
             cls.thread_owners[item.thread_id] = item.author  # remember author
-            return item
 
-        thread_op = cls.thread_owners.get(item.thread_id)
+        thread_op = cls.thread_owners[item.thread_id]
         post_is_by_op = item.author == thread_op
 
-        if post_is_by_op:
+        if item.is_first_in_thread or post_is_by_op:
             return item
 
+        raise DropItem
+
+
+class RemoveAllRepliesPipeline:
+
+    @classmethod
+    def process_item(cls, item: DhOMessage, _):
+        if item.is_first_in_thread:
+            return item
         raise DropItem
 
 
@@ -92,11 +116,24 @@ class RemoveDuplicateSpacesPipeline:
         return ' '.join(s.split())
 
 
-class RemoveEmptyMessagePipeline:
+class RemoveShortMessagePipeline:
 
-    @staticmethod
-    def process_item(item, _):
-        adapter = ItemAdapter(item)
-        if not adapter['msg']:
+    @classmethod
+    def from_crawler(cls, crawler):
+        min_message_words = crawler.settings.get('PIPELINE_MIN_MESSAGE_WORDS')
+        return cls(min_message_words=min_message_words)
+
+    def __init__(self, min_message_words: int = 1):
+        self._min_message_words = min_message_words
+
+    def process_item(self, item: DhOMessage, _):
+        if self._is_too_short(msg=item.msg, min_words=self._min_message_words):
             raise DropItem
         return item
+
+    @staticmethod
+    def _is_too_short(msg: str, min_words: int) -> bool:
+        n_words = len(msg.split())
+        if n_words < min_words:
+            return True
+        return False
