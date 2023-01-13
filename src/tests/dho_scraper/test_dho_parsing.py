@@ -10,7 +10,7 @@ from dho_scraper.spider import _get_messages_from_rss
 
 @pytest.fixture(scope='session')
 def rss_data() -> str:
-    rss_file = Path(__file__).parent.joinpath('data/rss.xml')
+    rss_file = Path(__file__).parent.parent.joinpath('data/rss.xml')
     with open(rss_file, 'r') as file:
         data = file.read()
     return data
