@@ -7,9 +7,12 @@ from datetime import datetime
 
 from pydantic import BaseModel, validator
 
+from dho_scraper.categories import DhOCategory
+
 
 class DhOMessage(BaseModel):
     msg_id: int
+    category: DhOCategory
     thread_id: int
     title: str
     author: str

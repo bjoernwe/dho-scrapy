@@ -17,7 +17,12 @@ def session_tmp_path(tmp_path_factory: TempPathFactory) -> Path:
 
 
 @pytest.fixture(scope='session')
-def crawled_messages(session_tmp_path) -> List[DhOMessage]:
+def test_dho_category() -> DhOCategory:
+    return DhOCategory.ContemporaryBuddhism
+
+
+@pytest.fixture(scope='session')
+def crawled_messages(session_tmp_path: Path, test_dho_category: DhOCategory) -> List[DhOMessage]:
 
     tmp_items_path = session_tmp_path.joinpath('items.jsonl')
 
@@ -26,7 +31,7 @@ def crawled_messages(session_tmp_path) -> List[DhOMessage]:
     settings['PIPELINE_MIN_MESSAGE_WORDS'] = 1
 
     process = CrawlerProcess(settings=settings)
-    process.crawl(DhOSpider, categories=[DhOCategory.ContemporaryBuddhism])
+    process.crawl(DhOSpider, categories=[test_dho_category])
     process.start()
 
     return _messages_from_file(tmp_items_path)
@@ -84,3 +89,12 @@ def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
 
     # THEN all messages have a unique ID
     assert len(msg_ids) == len(crawled_messages)
+
+
+def test_crawled_messages_contain_category(crawled_messages: List[DhOMessage], test_dho_category: DhOCategory):
+
+    # GIVEN spider and a certain category
+    # WHEN the message are crawled
+    # THEN they all contain the specified category
+    for msg in crawled_messages:
+        assert msg.category == test_dho_category

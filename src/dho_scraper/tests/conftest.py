@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pytest
 
+from dho_scraper.categories import DhOCategory
 from dho_scraper.items import DhOMessage
 
 
@@ -9,6 +10,7 @@ from dho_scraper.items import DhOMessage
 def dho_msg() -> DhOMessage:
     return DhOMessage(
         msg_id=15662490,
+        category=DhOCategory.ContemporaryBuddhism,
         thread_id=15662491,
         title='10 things you disagree with Classical Buddhism',
         author='A. Dietrich Ringle',
