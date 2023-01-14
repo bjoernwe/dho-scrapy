@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import List
 
@@ -10,6 +11,20 @@ from scrapy.utils.project import get_project_settings
 from dho_scraper.categories import DhOCategory
 from dho_scraper.items import DhOMessage
 from dho_scraper.spider import DhOSpider
+
+
+@pytest.fixture
+def dho_msg() -> DhOMessage:
+    return DhOMessage(
+        msg_id=15662490,
+        category=DhOCategory.ContemporaryBuddhism,
+        thread_id=15662491,
+        title='10 things you disagree with Classical Buddhism',
+        author='A. Dietrich Ringle',
+        date=datetime(2019, 9, 14, 8, 13, 24),
+        msg='Lists are handy things, and in this case they line up with brain wave function.<br /><br />I&#39;ll be surprised.',
+        is_first_in_thread=True,
+    )
 
 
 @pytest.fixture(scope='session')
