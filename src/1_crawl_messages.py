@@ -20,7 +20,7 @@ def crawl_messages(out_file: Optional[str] = None):
     DhOSpider.set_output_feed(jsonlines_path=out_file)
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl(DhOSpider, categories=[DhOCategory.PracticeLogs])
+    process.crawl(DhOSpider, categories=[DhOCategory.PracticeLogs, DhOCategory.DharmaDiagnostics])
     process.start()
 
 
