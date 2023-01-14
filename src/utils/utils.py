@@ -25,8 +25,3 @@ def read_strings(file: str) -> List[str]:
             strings.append(line)
 
     return strings
-
-
-def save_strings(strings: List[str], output_file: str):
-    with open(output_file, 'w') as f:
-        f.writelines('\n'.join(strings))
