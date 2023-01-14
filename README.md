@@ -5,6 +5,7 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 
 ### Quickstart
 
+- `pip install poetry` to install `poetry`
 - `poetry install` to prepare environment incl. all dependencies
 - `poetry shell` to activate virtual environment
 - `cd src`
