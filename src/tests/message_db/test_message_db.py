@@ -59,3 +59,18 @@ def test_messages_are_sorted_by_date(message_db: MessageDB):
 
     # THEN all resulting messages are sorted
     assert False not in [sorted_msgs[i].date <= sorted_msgs[i+1].date for i in range(len(msgs)-1)]
+
+
+def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages in two categories
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].category = 'CATEGORY_1'
+    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+
+    # WHEN messages are grouped by author
+    category_msgs = MessageDB(msgs=msgs).group_by_category()
+
+    # THEN all messages are in the groups
+    assert len(category_msgs['CATEGORY_1']) == 1
+    assert len(category_msgs['CATEGORY_2']) == 2

@@ -43,3 +43,12 @@ class MessageDB:
             author_msgs[msg.author].append(msg)
 
         return {author: MessageDB(messages) for author, messages in author_msgs.items()}
+
+    def group_by_category(self) -> Dict[str, 'MessageDB']:
+
+        category_msgs: dict = defaultdict(list)
+
+        for msg in self._msgs:
+            category_msgs[msg.category].append(msg)
+
+        return {category: MessageDB(messages) for category, messages in category_msgs.items()}
