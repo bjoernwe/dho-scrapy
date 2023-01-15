@@ -84,3 +84,19 @@ def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
 
     # THEN all messages have a unique ID
     assert len(msg_ids) == len(crawled_messages)
+
+
+def test_feed_output_contains_uri_scheme():
+
+    # GIVEN a DhOSpider
+    spider = DhOSpider()
+
+    # WHEN an output file is set
+    path = Path('foo')
+    spider.set_output_feed(jsonlines_path=path)
+
+    # THEN scrapy is configured with a file:// scheme
+    # (otherwise, on Windows, "C:" would be interpreted as scheme)
+    feed_files: List[str] = list(spider.custom_settings['FEEDS'].keys())
+    assert len(feed_files) == 1
+    assert feed_files[0].startswith('file://')

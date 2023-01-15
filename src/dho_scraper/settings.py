@@ -12,6 +12,9 @@ BOT_NAME = 'dho-scraper'
 SPIDER_MODULES = ['dho_scraper']
 NEWSPIDER_MODULE = 'dho_scraper'
 
+LOG_FILE = 'scrapy.log'
+LOG_FILE_APPEND = False
+LOG_LEVEL = 'WARN'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scraper (+http://www.yourdomain.com)'
