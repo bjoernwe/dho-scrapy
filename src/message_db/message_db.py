@@ -1,3 +1,4 @@
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict
 
@@ -21,6 +22,9 @@ class MessageDB:
 
         return cls(msgs=msgs)
 
+    def __len__(self):
+        return self._msgs.__len__()
+
     def get_all_messages(self) -> List[DhOMessage]:
         return self._msgs.copy()
 
@@ -31,12 +35,11 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
-    def group_by_author(self) -> Dict[str, List[DhOMessage]]:
+    def group_by_author(self) -> Dict[str, 'MessageDB']:
 
-        author_msgs: dict = dict()
+        author_msgs: dict = defaultdict(list)
 
         for msg in self._msgs:
-            author_msgs[msg.author] = author_msgs.get(msg.author, [])
             author_msgs[msg.author].append(msg)
 
-        return author_msgs
+        return {author: MessageDB(messages) for author, messages in author_msgs.items()}
