@@ -24,6 +24,9 @@ class MessageDB:
     def get_all_messages(self) -> List[DhOMessage]:
         return self._msgs.copy()
 
+    def get_all_message_bodies(self) -> List[str]:
+        return [msg.msg for msg in self.get_all_messages()]
+
     def sorted_by_date(self) -> 'MessageDB':
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
