@@ -11,10 +11,14 @@ from scrapy.utils.project import get_project_settings
 from dho_scraper.spider import DhOSpider, DhOCategory
 
 
-def crawl_messages(out_file: Optional[str] = None):
+def crawl_messages(out_file: Optional[str] = None, remove_old: bool = True):
 
     if not out_file:
         out_file = Path(__file__).parent.parent.joinpath('data/messages.jsonl')
+
+    if remove_old:
+        logging.info(f'Deleting old file {out_file}')
+        out_file.unlink(missing_ok=True)
 
     logging.info(f'Writing DhO messages to {out_file} ...')
     DhOSpider.set_output_feed(jsonlines_path=out_file)

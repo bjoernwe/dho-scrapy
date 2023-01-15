@@ -1,7 +1,8 @@
+from pathlib import Path
 from typing import List
 
 from dho_scraper.items import DhOMessage
-from dho_scraper.spider import DhOCategory
+from dho_scraper.spider import DhOCategory, DhOSpider
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
@@ -53,3 +54,19 @@ def test_crawled_messages_contain_category(crawled_messages: List[DhOMessage], t
     # THEN they all contain the specified category
     for msg in crawled_messages:
         assert msg.category == test_dho_category
+
+
+def test_feed_output_contains_uri_scheme():
+
+    # GIVEN a DhOSpider
+    spider = DhOSpider()
+
+    # WHEN an output file is set
+    path = Path('foo')
+    spider.set_output_feed(jsonlines_path=path)
+
+    # THEN scrapy is configured with a file:// scheme
+    # (otherwise, on Windows, "C:" would be interpreted as scheme)
+    feed_files: List[str] = list(spider.custom_settings['FEEDS'].keys())
+    assert len(feed_files) == 1
+    assert feed_files[0].startswith('file://')

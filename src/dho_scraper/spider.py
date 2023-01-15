@@ -1,4 +1,5 @@
 from collections import defaultdict
+from pathlib import Path
 from typing import List, Optional
 
 import scrapy
@@ -20,8 +21,9 @@ class DhOSpider(scrapy.Spider):
         self._categories = categories or [DhOCategory.DharmaDiagnostics]
 
     @classmethod
-    def set_output_feed(cls, jsonlines_path: str):
-        cls.custom_settings['FEEDS'][jsonlines_path] = {'format': 'jsonlines'}
+    def set_output_feed(cls, jsonlines_path: Path):
+        jsonlines_uri: str = jsonlines_path.absolute().as_uri()  # Add file:// scheme to work on Windows
+        cls.custom_settings['FEEDS'][jsonlines_uri] = {'format': 'jsonlines'}
 
     def start_requests(self):
         for category in self._categories:
