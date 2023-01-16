@@ -121,3 +121,14 @@ def test_thread_grouping_contains_all_messages(dho_msg: DhOMessage):
     # THEN all messages are in the groups
     assert len(thread[111]) == 1
     assert len(thread[222]) == 2
+
+
+def test_thread_responses_are_filtered_out(message_db: MessageDB):
+
+    # GIVEN a MessageDB
+    # WHEN threads are filtered (remove all responses to initial post)
+    db = message_db.filter_thread_responses()
+
+    # THEN each thread has exactly one message
+    for thread_id, msgs in db.group_by_thread().items():
+        assert len(msgs) == 1

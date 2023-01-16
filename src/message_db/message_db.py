@@ -67,3 +67,7 @@ class MessageDB:
             thread_msgs[msg.thread_id].append(msg)
 
         return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
+
+    def filter_thread_responses(self) -> 'MessageDB':
+        filtered_msgs = [msg for msg in self.get_all_messages() if msg.is_first_in_thread]
+        return MessageDB(msgs=filtered_msgs)
