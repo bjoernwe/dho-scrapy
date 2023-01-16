@@ -73,10 +73,10 @@ ITEM_PIPELINES = {
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
     'dho_scraper.pipelines.RemoveDuplicateSpacesPipeline': 900,
-    'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
+    #'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
 }
 
-PIPELINE_MIN_MESSAGE_WORDS = 50
+PIPELINE_MIN_MESSAGE_WORDS = 1
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
