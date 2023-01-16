@@ -35,6 +35,10 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
+    def filter_message_length(self, min_num_words: int = 1) -> 'MessageDB':
+        msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
+        return MessageDB(msgs=msgs)
+
     def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
 
         author_msgs: dict = defaultdict(list)

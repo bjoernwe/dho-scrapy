@@ -89,3 +89,20 @@ def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
     # THEN all messages are in the groups
     assert len(category_msgs['CATEGORY_1']) == 1
     assert len(category_msgs['CATEGORY_2']) == 2
+
+
+def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
+
+    # GIVEN messages of different lengths
+    msgs = [dho_msg.copy() for _ in range(2)]
+    msgs[0].msg = 'two words'
+    msgs[1].msg = 'two plus words'
+
+    # WHEN they are filtered for their length
+    filtered_msgs = MessageDB(msgs=msgs) \
+        .filter_message_length(min_num_words=3) \
+        .get_all_messages()
+
+    # THEN the short message was filtered out
+    assert len(filtered_msgs) == 1
+    assert filtered_msgs[0].msg == 'two plus words'
