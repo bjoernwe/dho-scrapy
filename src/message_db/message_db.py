@@ -35,14 +35,16 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
-    def group_by_author(self) -> Dict[str, 'MessageDB']:
+    def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
 
         author_msgs: dict = defaultdict(list)
 
         for msg in self._msgs:
             author_msgs[msg.author].append(msg)
 
-        return {author: MessageDB(messages) for author, messages in author_msgs.items()}
+        return {author: MessageDB(messages)
+                for author, messages in author_msgs.items()
+                if len(messages) >= min_num_messages}
 
     def group_by_category(self) -> Dict[str, 'MessageDB']:
 

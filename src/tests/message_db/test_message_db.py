@@ -48,6 +48,21 @@ def test_author_grouping_contains_all_messages(dho_msg: DhOMessage):
     assert len(author_msgs['AUTHOR_2']) == 2
 
 
+def test_author_grouping_is_filtered_for_min_num_messages(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages from two authors
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].author = 'AUTHOR_1'
+    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+
+    # WHEN messages are grouped by author
+    author_msgs = MessageDB(msgs=msgs).group_by_author(min_num_messages=2)
+
+    # THEN all messages are in the groups
+    assert 'AUTHOR_1' not in author_msgs
+    assert len(author_msgs['AUTHOR_2']) == 2
+
+
 def test_messages_are_sorted_by_date(message_db: MessageDB):
 
     # GIVEN a message DB with messages not sorted by date
