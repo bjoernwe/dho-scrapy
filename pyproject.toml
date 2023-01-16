@@ -19,6 +19,7 @@ numpy = "^1.24.1"
 scikit-learn = "^1.2.0"
 matplotlib = "^3.6.3"
 sklearn-sfa = "^0.1.6"
+tqdm = "^4.64.1"
 
 [build-system]
 requires = ["poetry-core"]
