@@ -12,6 +12,9 @@ BOT_NAME = 'dho-scraper'
 SPIDER_MODULES = ['dho_scraper']
 NEWSPIDER_MODULE = 'dho_scraper'
 
+LOG_FILE = 'scrapy.log'
+LOG_FILE_APPEND = False
+LOG_LEVEL = 'WARN'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scraper (+http://www.yourdomain.com)'
@@ -70,10 +73,10 @@ ITEM_PIPELINES = {
     'dho_scraper.pipelines.HtmlToTextPipeline': 600,
     'dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline': 800,
     'dho_scraper.pipelines.RemoveDuplicateSpacesPipeline': 900,
-    'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
+    #'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
 }
 
-PIPELINE_MIN_MESSAGE_WORDS = 50
+PIPELINE_MIN_MESSAGE_WORDS = 1
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
