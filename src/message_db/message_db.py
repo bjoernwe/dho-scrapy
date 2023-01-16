@@ -41,7 +41,7 @@ class MessageDB:
 
     def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
 
-        author_msgs: dict = defaultdict(list)
+        author_msgs = defaultdict(list)
 
         for msg in self._msgs:
             author_msgs[msg.author].append(msg)
@@ -52,9 +52,18 @@ class MessageDB:
 
     def group_by_category(self) -> Dict[str, 'MessageDB']:
 
-        category_msgs: dict = defaultdict(list)
+        category_msgs = defaultdict(list)
 
         for msg in self._msgs:
             category_msgs[msg.category].append(msg)
 
         return {category: MessageDB(messages) for category, messages in category_msgs.items()}
+
+    def group_by_thread(self) -> Dict[int, 'MessageDB']:
+
+        thread_msgs = defaultdict(list)
+
+        for msg in self._msgs:
+            thread_msgs[msg.thread_id].append(msg)
+
+        return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}

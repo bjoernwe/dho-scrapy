@@ -106,3 +106,18 @@ def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
     # THEN the short message was filtered out
     assert len(filtered_msgs) == 1
     assert filtered_msgs[0].msg == 'two plus words'
+
+
+def test_thread_grouping_contains_all_messages(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages in two threads
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].thread_id = 111
+    msgs[1].thread_id = msgs[2].thread_id = 222
+
+    # WHEN messages are grouped by author
+    thread = MessageDB(msgs=msgs).group_by_thread()
+
+    # THEN all messages are in the groups
+    assert len(thread[111]) == 1
+    assert len(thread[222]) == 2
