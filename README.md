@@ -16,4 +16,4 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 
 ### Development
 
-- `./install_git_hooks.sh`
+- `./install_git_hooks.sh` to automatically run the tests before every commit
