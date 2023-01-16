@@ -68,6 +68,12 @@ class MessageDB:
 
         return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
 
-    def filter_thread_responses(self) -> 'MessageDB':
+    def filter_thread_responses(self, keep_op: bool) -> 'MessageDB':
         filtered_msgs = [msg for msg in self.get_all_messages() if msg.is_first_in_thread]
+        if keep_op:
+            thread_author = {msg.thread_id: msg.author for msg in filtered_msgs}
+            filtered_msgs = [msg for msg
+                             in self.get_all_messages()
+                             if msg.is_first_in_thread
+                             or msg.author == thread_author[msg.thread_id]]
         return MessageDB(msgs=filtered_msgs)

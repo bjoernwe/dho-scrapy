@@ -127,8 +127,20 @@ def test_thread_responses_are_filtered_out(message_db: MessageDB):
 
     # GIVEN a MessageDB
     # WHEN threads are filtered (remove all responses to initial post)
-    db = message_db.filter_thread_responses()
+    db = message_db.filter_thread_responses(keep_op=False)
 
     # THEN each thread has exactly one message
     for thread_id, msgs in db.group_by_thread().items():
         assert len(msgs) == 1
+
+
+def test_non_op_thread_responses_are_filtered_out(message_db: MessageDB):
+
+    # GIVEN a MessageDB
+    # WHEN threads are filtered for OP-responses ("Original Poster")
+    db = message_db.filter_thread_responses(keep_op=True)
+
+    # THEN each thread has exactly one message
+    for thread_messages in db.group_by_thread().values():
+        authors_in_thread = {msg.author for msg in thread_messages.get_all_messages()}
+        assert len(authors_in_thread) == 1
