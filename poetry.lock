@@ -1791,27 +1791,6 @@ files = [
 ]
 
 [[package]]
-name = "sklearn-sfa"
-version = "0.1.6"
-description = "A scikit-learn compatible implementation of Slow Feature Analysis"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "sklearn-sfa-0.1.6.tar.gz", hash = "sha256:2029ad5b63ac4fba7f481504557d5f99bc9dffdfe611a86028885fd9b2055c06"},
-    {file = "sklearn_sfa-0.1.6-py3-none-any.whl", hash = "sha256:f0f46f67f4634f6c97728d628128eca961de926283d31601e3185214e59a2419"},
-]
-
-[package.dependencies]
-numpy = "*"
-scikit-learn = "*"
-scipy = "*"
-
-[package.extras]
-docs = ["matplotlib", "numpydoc", "sphinx", "sphinx-gallery", "sphinx-rtd-theme"]
-tests = ["pytest", "pytest-cov"]
-
-[[package]]
 name = "soupsieve"
 version = "2.3.2.post1"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -2278,4 +2257,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "86337562056189454bf2e2b0a8c8e82e142e8cec7610fd781c890ceb63ab1a5b"
+content-hash = "2ef9e9f39f4b19ad5d9103bda8793ca853dba14bde5f2c2f08e384da5bcd7193"
