@@ -132,6 +132,7 @@ def test_thread_responses_are_filtered_out(message_db: MessageDB):
     # THEN each thread has exactly one message
     for thread_id, msgs in db.group_by_thread().items():
         assert len(msgs) == 1
+        assert msgs.get_all_messages()[0].is_first_in_thread
 
 
 def test_non_op_thread_responses_are_filtered_out(message_db: MessageDB):
