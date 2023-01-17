@@ -1,6 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Dict, Callable, Any, Hashable
+from typing import List, Dict, Callable, Any, Hashable, Set, Optional
 
 from dho_scraper.items import DhOMessage
 
@@ -40,10 +40,6 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
-    def filter_message_length(self, min_num_words: int = 1) -> 'MessageDB':
-        msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
-        return MessageDB(msgs=msgs)
-
     def _group_messages(self, key: Callable[[DhOMessage], Any]) -> Dict[Hashable, List[DhOMessage]]:
 
         grouped_msgs = defaultdict(list)
@@ -68,6 +64,10 @@ class MessageDB:
         thread_msgs = self._group_messages(key=lambda m: m.thread_id)
         return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
 
+    def filter_message_length(self, min_num_words: int = 1) -> 'MessageDB':
+        msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
+        return MessageDB(msgs=msgs)
+
     def filter_thread_responses(self, keep_op: bool) -> 'MessageDB':
         filtered_msgs = [msg for msg in self.get_all_messages() if msg.is_first_in_thread]
         if keep_op:
@@ -76,4 +76,11 @@ class MessageDB:
                              in self.get_all_messages()
                              if msg.is_first_in_thread
                              or msg.author == thread_author[msg.thread_id]]
+        return MessageDB(msgs=filtered_msgs)
+
+    def filter_authors(self, authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> 'MessageDB':
+        author_msgs = self.group_by_author(min_num_messages=min_num_messages)
+        filtered_msgs = [msg for author, msgs in author_msgs.items()
+                         for msg in msgs.get_all_messages()
+                         if authors is None or author in authors]
         return MessageDB(msgs=filtered_msgs)

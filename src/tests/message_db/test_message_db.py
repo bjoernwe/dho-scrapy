@@ -145,3 +145,34 @@ def test_non_op_thread_responses_are_filtered_out(message_db: MessageDB):
     for thread_messages in db.group_by_thread().values():
         authors_in_thread = {msg.author for msg in thread_messages.get_all_messages()}
         assert len(authors_in_thread) == 1
+
+
+def test_authors_can_be_filtered(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages from two authors
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].author = 'AUTHOR_1'
+    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+
+    # WHEN messages are filtered for one author
+    filtered_msgs = MessageDB(msgs=msgs).filter_authors(authors={'AUTHOR_1'}).get_all_messages()
+
+    # THEN all messages are in the groups
+    assert len(filtered_msgs) == 1
+    assert filtered_msgs[0].author == 'AUTHOR_1'
+
+
+def test_authors_can_be_filtered_with_min_message_number(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages from two authors
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].author = 'AUTHOR_1'
+    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+
+    # WHEN messages are filtered for one author
+    authors = {'AUTHOR_1', 'AUTHOR_2'}
+    filtered_msgs = MessageDB(msgs=msgs).filter_authors(authors=authors, min_num_messages=2).get_all_messages()
+
+    # THEN all messages are in the groups
+    assert len(filtered_msgs) == 2
+    assert filtered_msgs[0].author == filtered_msgs[0].author == 'AUTHOR_2'
