@@ -2,12 +2,11 @@ import numpy as np
 import pickle
 
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict
 
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from dho_scraper.items import DhOMessage
 from message_db.message_db import MessageDB
 
 
