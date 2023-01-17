@@ -24,9 +24,8 @@ def calc_embeddings(jsonl_path: Path, out_path: Path):
     print(f'Calculating embeddings for {len(db)} messages ...')
 
     for msg in tqdm(db.get_all_messages()):
-        msg_emb = model.encode([msg.msg])[0,:]
-        assert msg_emb.ndim == 1
-        assert msg_emb.shape[0] == 384
+        msg_emb = model.encode([msg.msg])
+        assert msg_emb.shape == (1, 384)
         msg_embeddings[msg.msg_id] = msg_emb
 
     with open(str(out_path), 'wb') as f:
