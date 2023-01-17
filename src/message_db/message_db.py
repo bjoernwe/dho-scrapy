@@ -6,6 +6,11 @@ from dho_scraper.items import DhOMessage
 
 
 class MessageDB:
+    """
+    MessageDB serves a convenient interface to a list of DhO messages - as crawled by dho-scrapy, for instance. The
+    interface provides methods for filtering, grouping, and sorting the messages according to criteria like author,
+    thread, etc.
+    """
 
     def __init__(self, msgs: List[DhOMessage]):
         self._msgs = msgs
