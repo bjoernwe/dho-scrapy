@@ -1,6 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import List, Dict
+from typing import List, Dict, Callable, Any, Hashable
 
 from dho_scraper.items import DhOMessage
 
@@ -39,33 +39,28 @@ class MessageDB:
         msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
         return MessageDB(msgs=msgs)
 
-    def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
+    def _group_messages(self, key: Callable[[DhOMessage], Any]) -> Dict[Hashable, List[DhOMessage]]:
 
-        author_msgs = defaultdict(list)
+        grouped_msgs = defaultdict(list)
 
         for msg in self._msgs:
-            author_msgs[msg.author].append(msg)
+            group = key(msg)
+            grouped_msgs[group].append(msg)
 
+        return grouped_msgs
+
+    def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
+        author_msgs = self._group_messages(key=lambda m: m.author)
         return {author: MessageDB(messages)
                 for author, messages in author_msgs.items()
                 if len(messages) >= min_num_messages}
 
     def group_by_category(self) -> Dict[str, 'MessageDB']:
-
-        category_msgs = defaultdict(list)
-
-        for msg in self._msgs:
-            category_msgs[msg.category].append(msg)
-
+        category_msgs = self._group_messages(key=lambda m: m.category)
         return {category: MessageDB(messages) for category, messages in category_msgs.items()}
 
     def group_by_thread(self) -> Dict[int, 'MessageDB']:
-
-        thread_msgs = defaultdict(list)
-
-        for msg in self._msgs:
-            thread_msgs[msg.thread_id].append(msg)
-
+        thread_msgs = self._group_messages(key=lambda m: m.thread_id)
         return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
 
     def filter_thread_responses(self, keep_op: bool) -> 'MessageDB':
