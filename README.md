@@ -11,7 +11,8 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `cd src`
 - `python -m pytest` to run tests
 - `python 1_crawl_messages.py` to crawl messages (to be stored in `./data/`)
-- `python 2_convert_data.py` to extract messages to simple txt
+- `python 2_convert_to_plain_text.py` to crawled messages to simple txt (in `./data/`)
+- `python 2_calc_embeddings.py` to calculate vector embeddings for all messages (slow!)
 
 
 ### Development
