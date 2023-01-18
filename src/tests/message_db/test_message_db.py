@@ -147,7 +147,7 @@ def test_non_op_thread_responses_are_filtered_out(message_db: MessageDB):
         assert len(authors_in_thread) == 1
 
 
-def test_authors_can_be_filtered(dho_msg: DhOMessage):
+def test_authors_are_filtered(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
@@ -155,14 +155,14 @@ def test_authors_can_be_filtered(dho_msg: DhOMessage):
     msgs[1].author = msgs[2].author = 'AUTHOR_2'
 
     # WHEN messages are filtered for one author
-    filtered_msgs = MessageDB(msgs=msgs).filter_authors(authors={'AUTHOR_1'}).get_all_messages()
+    author_msgs = MessageDB(msgs=msgs).filter_authors(authors={'AUTHOR_1'}).group_by_author()
 
-    # THEN all messages are in the groups
-    assert len(filtered_msgs) == 1
-    assert filtered_msgs[0].author == 'AUTHOR_1'
+    # THEN the only this author remains
+    assert len(author_msgs) == 1
+    assert 'AUTHOR_1' in author_msgs
 
 
-def test_authors_can_be_filtered_with_min_message_number(dho_msg: DhOMessage):
+def test_authors_are_filtered_with_min_message_number(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
@@ -176,3 +176,28 @@ def test_authors_can_be_filtered_with_min_message_number(dho_msg: DhOMessage):
     # THEN all messages are in the groups
     assert len(filtered_msgs) == 2
     assert filtered_msgs[0].author == filtered_msgs[0].author == 'AUTHOR_2'
+
+
+def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages from two authors
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].author = 'AUTHOR_1'
+    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+
+    # WHEN messages are filtered for author, no author specified
+    filtered_db = MessageDB(msgs=msgs).filter_authors()
+
+    # THEN all messages are kept
+    assert len(filtered_db) == 3
+
+
+def test_groups_are_sorted_for_size(message_db: MessageDB):
+
+    # GIVEN a DB of messages
+    # WHEN they are grouped
+    group_dict = message_db._group_messages(key=lambda m: m.thread_id)
+
+    # THEN the resulting groups are sorted for number of messages
+    group_lengths = list(map(lambda db: len(db), group_dict.values()))
+    assert group_lengths == sorted(group_lengths, reverse=True)

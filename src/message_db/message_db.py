@@ -48,7 +48,8 @@ class MessageDB:
             group = key(msg)
             grouped_msgs[group].append(msg)
 
-        return grouped_msgs
+        sorted_dict = dict(sorted(grouped_msgs.items(), key=lambda kv: len(kv[1]), reverse=True))
+        return sorted_dict
 
     def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
         author_msgs = self._group_messages(key=lambda m: m.author)
