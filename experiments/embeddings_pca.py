@@ -18,8 +18,10 @@ def main():
 
     # Load messages
     msgs = MessageDB.from_file(jsonl_path=jsonl_path) \
-                    .group_by_category()[DhOCategory.DharmaDiagnostics] \
+                    .filter_categories(categories={DhOCategory.PracticeLogs}) \
                     .filter_thread_responses(keep_op=True) \
+                    .filter_message_length(min_num_words=30) \
+                    .filter_threads(min_num_messages=5) \
                     .get_all_messages()
 
     # Load embeddings
