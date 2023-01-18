@@ -91,6 +91,21 @@ def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
     assert len(category_msgs['CATEGORY_2']) == 2
 
 
+def test_category_groups_are_filtered_for_length(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages in two categories
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].category = 'CATEGORY_1'
+    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+
+    # WHEN messages are grouped by author
+    category_msgs = MessageDB(msgs=msgs).group_by_category(min_num_messages=2)
+
+    # THEN all messages are in the groups
+    assert 'CATEGORY_1' not in category_msgs
+    assert len(category_msgs['CATEGORY_2']) == 2
+
+
 def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
 
     # GIVEN messages of different lengths
@@ -201,3 +216,17 @@ def test_groups_are_sorted_for_size(message_db: MessageDB):
     # THEN the resulting groups are sorted for number of messages
     group_lengths = list(map(lambda db: len(db), group_dict.values()))
     assert group_lengths == sorted(group_lengths, reverse=True)
+
+
+def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages in two categories
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].category = 'CATEGORY_1'
+    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+
+    # WHEN messages are filtered for author, no author specified
+    filtered_db = MessageDB(msgs=msgs).filter_categories()
+
+    # THEN all messages are kept
+    assert len(filtered_db) == 3

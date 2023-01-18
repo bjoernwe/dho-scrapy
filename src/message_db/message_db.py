@@ -2,6 +2,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import List, Dict, Callable, Any, Hashable, Set, Optional
 
+from dho_scraper.categories import DhOCategory
 from dho_scraper.items import DhOMessage
 
 
@@ -57,9 +58,11 @@ class MessageDB:
                 for author, messages in author_msgs.items()
                 if len(messages) >= min_num_messages}
 
-    def group_by_category(self) -> Dict[str, 'MessageDB']:
+    def group_by_category(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
         category_msgs = self._group_messages(key=lambda m: m.category)
-        return {category: MessageDB(messages) for category, messages in category_msgs.items()}
+        return {category: MessageDB(messages)
+                for category, messages in category_msgs.items()
+                if len(messages) >= min_num_messages}
 
     def group_by_thread(self) -> Dict[int, 'MessageDB']:
         thread_msgs = self._group_messages(key=lambda m: m.thread_id)
@@ -84,4 +87,11 @@ class MessageDB:
         filtered_msgs = [msg for author, msgs in author_msgs.items()
                          for msg in msgs.get_all_messages()
                          if authors is None or author in authors]
+        return MessageDB(msgs=filtered_msgs)
+
+    def filter_categories(self, categories: Optional[Set[DhOCategory]] = None, min_num_message: int = 1) -> 'MessageDB':
+        category_msgs = self.group_by_category(min_num_messages=min_num_message)
+        filtered_msgs = [msg for category, msgs in category_msgs.items()
+                         for msg in msgs.get_all_messages()
+                         if categories is None or category in categories]
         return MessageDB(msgs=filtered_msgs)
