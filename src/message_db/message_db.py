@@ -64,9 +64,11 @@ class MessageDB:
                 for category, messages in category_msgs.items()
                 if len(messages) >= min_num_messages}
 
-    def group_by_thread(self) -> Dict[int, 'MessageDB']:
+    def group_by_thread(self, min_num_messages: int = 1) -> Dict[int, 'MessageDB']:
         thread_msgs = self._group_messages(key=lambda m: m.thread_id)
-        return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
+        return {thread_id: MessageDB(messages)
+                for thread_id, messages in thread_msgs.items()
+                if len(messages) >= min_num_messages}
 
     def filter_message_length(self, min_num_words: int = 1) -> 'MessageDB':
         msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
@@ -94,4 +96,10 @@ class MessageDB:
         filtered_msgs = [msg for category, msgs in category_msgs.items()
                          for msg in msgs.get_all_messages()
                          if categories is None or category in categories]
+        return MessageDB(msgs=filtered_msgs)
+
+    def filter_threads(self, min_num_messages: int = 1) -> 'MessageDB':
+        thread_msgs = self.group_by_thread(min_num_messages=min_num_messages)
+        filtered_msgs = [msg for thread, msgs in thread_msgs.items()
+                         for msg in msgs.get_all_messages()]
         return MessageDB(msgs=filtered_msgs)
