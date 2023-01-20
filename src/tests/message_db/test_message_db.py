@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any, Callable
 
 import pytest
 
@@ -245,11 +245,14 @@ def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
     assert len(filtered_db) == 3
 
 
-def test_groups_are_sorted_for_size(message_db: MessageDB):
+@pytest.mark.parametrize(argnames='key', argvalues=[lambda m: m.author,
+                                                    lambda m: m.thread_id,
+                                                    lambda m: m.category])
+def test_groups_are_sorted_for_size(message_db: MessageDB, key: Callable[[DhOMessage], Any]):
 
     # GIVEN a DB of messages
     # WHEN they are grouped
-    group_dict = message_db._group_messages(key=lambda m: m.thread_id)
+    group_dict = message_db._group_messages(key=key)
 
     # THEN the resulting groups are sorted for number of messages
     group_lengths = list(map(lambda db: len(db), group_dict.values()))
