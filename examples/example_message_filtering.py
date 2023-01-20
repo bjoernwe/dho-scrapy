@@ -30,13 +30,13 @@ def example_message_filtering():
     # Load practice logs of a certain user
     author_id = 'Linda ”Polly Ester” Ö'
     practice_logs = message_db.filter_categories(categories={DhOCategory.PracticeLogs}) \
+                              .filter_threads(authors={author_id}) \
                               .filter_thread_responses(keep_op=True) \
-                              .filter_authors(authors={author_id}) \
                               .sorted_by_date() \
                               .get_all_messages()
 
     # Print first practice logs
-    print(f'Found {len(practice_logs)} practice logs from user {author_id}:\n')
+    print(f'Found {len(practice_logs)} practice logs from user "{author_id}":\n')
     for log in practice_logs[:3]:
         print(log.msg)
     print('...\n')

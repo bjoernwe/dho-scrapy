@@ -11,6 +11,31 @@ def message_db(jsonl_path) -> MessageDB:
     return MessageDB.from_file(jsonl_path=jsonl_path)
 
 
+@pytest.fixture
+def msgs_in_threads(dho_msg: DhOMessage) -> List[DhOMessage]:
+
+    author_1 = 'AUTHOR 1'
+    author_2 = 'AUTHOR 2'
+    thread_1 = 111
+    thread_2 = 222
+
+    msg1 = dho_msg.copy()
+    msg1.author = author_1
+    msg1.thread_id = thread_1
+    msg1.is_first_in_thread = True
+
+    msg2 = dho_msg.copy()
+    msg2.author = author_2
+    msg2.thread_id = thread_2
+    msg2.is_first_in_thread = True
+
+    msg3 = dho_msg.copy()
+    msg3.author = author_1
+    msg3.thread_id = thread_2
+
+    return [msg1, msg2, msg3]
+
+
 def test_all_messages_are_returned(jsonl_path, crawled_messages: List[DhOMessage]):
 
     # GIVEN a list of messages
@@ -123,30 +148,26 @@ def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
     assert filtered_msgs[0].msg == 'two plus words'
 
 
-def test_thread_grouping_contains_all_messages(dho_msg: DhOMessage):
+def test_thread_grouping_contains_all_messages(msgs_in_threads: List[DhOMessage]):
 
     # GIVEN a list of messages in two threads
-    msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].thread_id = 111
-    msgs[1].thread_id = msgs[2].thread_id = 222
+    db = MessageDB(msgs=msgs_in_threads)
 
     # WHEN messages are grouped by author
-    thread = MessageDB(msgs=msgs).group_by_thread()
+    thread = db.group_by_thread()
 
     # THEN all messages are in the groups
     assert len(thread[111]) == 1
     assert len(thread[222]) == 2
 
 
-def test_thread_groups_are_filtered_by_size(dho_msg: DhOMessage):
+def test_thread_groups_are_filtered_by_size(msgs_in_threads: List[DhOMessage]):
 
     # GIVEN a list of messages in two threads
-    msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].thread_id = 111
-    msgs[1].thread_id = msgs[2].thread_id = 222
+    db = MessageDB(msgs=msgs_in_threads)
 
     # WHEN messages are grouped by author
-    thread_messages = MessageDB(msgs=msgs).group_by_thread(min_num_messages=2)
+    thread_messages = db.group_by_thread(min_num_messages=2)
 
     # THEN all messages are in the groups
     assert 111 not in thread_messages
@@ -161,6 +182,7 @@ def test_thread_responses_are_filtered_out(message_db: MessageDB):
     db = message_db.filter_thread_responses(keep_op=False)
 
     # THEN each thread has exactly one message
+    assert len(db) >= 1
     for thread_id, msgs in db.group_by_thread().items():
         assert len(msgs) == 1
         assert msgs.get_all_messages()[0].is_first_in_thread
@@ -248,16 +270,29 @@ def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
     assert len(filtered_db) == 3
 
 
-def test_threads_are_filtered_with_min_message_number(dho_msg: DhOMessage):
+def test_threads_are_filtered_with_min_message_number(msgs_in_threads: List[DhOMessage]):
 
     # GIVEN a list of messages in two threads
-    msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].thread_id = 111
-    msgs[1].thread_id = msgs[2].thread_id = 222
+    db = MessageDB(msgs=msgs_in_threads)
 
     # WHEN messages are filtered for one author
-    filtered_msgs = MessageDB(msgs=msgs).filter_threads(min_num_messages=2).get_all_messages()
+    filtered_msgs = db.filter_threads(min_num_messages=2).get_all_messages()
 
     # THEN all messages are in the groups
     assert len(filtered_msgs) == 2
     assert filtered_msgs[0].thread_id == filtered_msgs[0].thread_id == 222
+
+
+def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessage]):
+
+    # GIVEN a list of messages in two threads
+    db = MessageDB(msgs=msgs_in_threads)
+
+    # WHEN the threads are filtered for one author
+    filtered_msgs = db.filter_threads(authors={'AUTHOR 2'}).get_all_messages()
+
+    # THEN left are the two message in the thread with corresponding author
+    assert len(filtered_msgs) == 2
+    assert filtered_msgs[0].thread_id == filtered_msgs[1].thread_id == 222
+    assert filtered_msgs[0].author == 'AUTHOR 2'
+    assert filtered_msgs[1].author == 'AUTHOR 1'

@@ -66,6 +66,8 @@ class MessageDB:
 
     def group_by_thread(self, min_num_messages: int = 1) -> Dict[int, 'MessageDB']:
         thread_msgs = self._group_messages(key=lambda m: m.thread_id)
+        for tid, msgs in thread_msgs.items():
+            assert thread_msgs[tid][0].is_first_in_thread, "Expecting thread groups to be sorted in a way that the initial post is first!"
         return {thread_id: MessageDB(messages)
                 for thread_id, messages in thread_msgs.items()
                 if len(messages) >= min_num_messages}
@@ -98,8 +100,9 @@ class MessageDB:
                          if categories is None or category in categories]
         return MessageDB(msgs=filtered_msgs)
 
-    def filter_threads(self, min_num_messages: int = 1) -> 'MessageDB':
-        thread_msgs = self.group_by_thread(min_num_messages=min_num_messages)
-        filtered_msgs = [msg for thread, msgs in thread_msgs.items()
-                         for msg in msgs.get_all_messages()]
+    def filter_threads(self, authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> 'MessageDB':
+        thread_groups = self.group_by_thread(min_num_messages=min_num_messages)
+        filtered_msgs = [msg for thread_id, thread_msgs in thread_groups.items()
+                         for msg in thread_msgs.get_all_messages()
+                         if authors is None or thread_msgs.get_all_messages()[0].author in authors]
         return MessageDB(msgs=filtered_msgs)

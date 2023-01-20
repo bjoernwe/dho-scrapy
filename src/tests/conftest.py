@@ -23,7 +23,7 @@ def dho_msg() -> DhOMessage:
         author='A. Dietrich Ringle',
         date=datetime(2019, 9, 14, 8, 13, 24),
         msg='Lists are handy things, and in this case they line up with brain wave function.<br /><br />I&#39;ll be surprised.',
-        is_first_in_thread=True,
+        is_first_in_thread=False,
     )
 
 
