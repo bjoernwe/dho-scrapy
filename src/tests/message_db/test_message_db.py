@@ -2,6 +2,7 @@ from typing import List, Any, Callable
 
 import pytest
 
+from dho_scraper.categories import DhOCategory
 from dho_scraper.items import DhOMessage
 from message_db.message_db import MessageDB
 
@@ -271,6 +272,20 @@ def test_groups_are_filtered_for_size(message_db: MessageDB, key: Callable[[DhOM
     # THEN the resulting groups are sorted for number of messages
     for group_msgs in group_dict.values():
         assert len(group_msgs) >= 5
+
+
+def test_categories_are_filtered(dho_msg: DhOMessage):
+
+    # GIVEN a list of messages in two categories
+    msgs = [dho_msg.copy() for _ in range(3)]
+    msgs[0].category = DhOCategory.DharmaDiagnostics
+    msgs[1].category = msgs[2].category = DhOCategory.PracticeLogs
+
+    # WHEN messages are filtered for author, no author specified
+    filtered_db = MessageDB(msgs=msgs).filter_categories(categories={DhOCategory.PracticeLogs})
+
+    # THEN all messages are kept
+    assert len(filtered_db) == 2
 
 
 def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):

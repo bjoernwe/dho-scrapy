@@ -44,7 +44,10 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
-    def _group_messages(self, key: Callable[[DhOMessage], Any], min_group_size: int = 1) -> Dict[Hashable, 'MessageDB']:
+    def _group_messages(self,
+                        key: Callable[[DhOMessage], Any],
+                        keep_keys: Optional[Set[Hashable]] = None,
+                        min_group_size: int = 1) -> Dict[Hashable, 'MessageDB']:
 
         grouped_msgs = defaultdict(list)
 
@@ -52,15 +55,23 @@ class MessageDB:
             group = key(msg)
             grouped_msgs[group].append(msg)
 
-        grouped_msgs = {k: v for k, v in grouped_msgs.items() if len(v) >= min_group_size}
-        sorted_dict = dict(sorted(grouped_msgs.items(), key=lambda kv: len(kv[1]), reverse=True))
+        filtered_msgs = {k: v
+                         for k, v in grouped_msgs.items()
+                         if len(v) >= min_group_size                 # filter length
+                         and (keep_keys is None or k in keep_keys)}  # filter keys (if specified)
+
+        sorted_dict = dict(sorted(filtered_msgs.items(), key=lambda kv: len(kv[1]), reverse=True))
         return {k: MessageDB(msgs=v) for k, v in sorted_dict.items()}
 
-    def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
-        return self._group_messages(key=lambda m: m.author, min_group_size=min_num_messages)
+    def group_by_author(self, keep_authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
+        return self._group_messages(key=lambda m: m.author,
+                                    keep_keys=keep_authors,
+                                    min_group_size=min_num_messages)
 
-    def group_by_category(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
-        return self._group_messages(key=lambda m: m.category, min_group_size=min_num_messages)
+    def group_by_category(self, keep_categories: Optional[Set] = None, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
+        return self._group_messages(key=lambda m: m.category,
+                                    keep_keys=keep_categories,
+                                    min_group_size=min_num_messages)
 
     def group_by_thread(self, min_num_messages: int = 1) -> Dict[int, 'MessageDB']:
         thread_msgs = self._group_messages(key=lambda m: m.thread_id, min_group_size=min_num_messages)
@@ -83,17 +94,15 @@ class MessageDB:
         return MessageDB(msgs=filtered_msgs)
 
     def filter_authors(self, authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> 'MessageDB':
-        author_msgs = self.group_by_author(min_num_messages=min_num_messages)
+        author_msgs = self.group_by_author(keep_authors=authors, min_num_messages=min_num_messages)
         filtered_msgs = [msg for author, msgs in author_msgs.items()
-                         for msg in msgs.get_all_messages()
-                         if authors is None or author in authors]
+                         for msg in msgs.get_all_messages()]
         return MessageDB(msgs=filtered_msgs)
 
     def filter_categories(self, categories: Optional[Set[DhOCategory]] = None, min_num_message: int = 1) -> 'MessageDB':
-        category_msgs = self.group_by_category(min_num_messages=min_num_message)
+        category_msgs = self.group_by_category(keep_categories=categories, min_num_messages=min_num_message)
         filtered_msgs = [msg for category, msgs in category_msgs.items()
-                         for msg in msgs.get_all_messages()
-                         if categories is None or category in categories]
+                         for msg in msgs.get_all_messages()]
         return MessageDB(msgs=filtered_msgs)
 
     def filter_threads(self, authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> 'MessageDB':
