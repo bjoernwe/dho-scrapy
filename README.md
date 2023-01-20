@@ -17,8 +17,10 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `poetry shell` to activate virtual environment
 - `python 1_crawl_messages.py` to crawl messages from DhO (to be stored in `./data/`)
 - `python 2_convert_to_plain_text.py` to convert messages to simple txt (in `./data/`)
-- `python 2_calc_embeddings.py` to calculate vector embeddings for all messages (slow!)
 
+### Examples & Experiments
+
+See `examples` and `experiments` for how to use the crawled messages.
 
 ### Development
 
