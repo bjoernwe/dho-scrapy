@@ -1,18 +1,14 @@
 from collections import defaultdict
-from enum import Enum
 from pathlib import Path
 from typing import List, Optional
 
 import scrapy
 
+from scrapy.exceptions import CloseSpider
 from scrapy.http import HtmlResponse, XmlResponse
+
+from dho_scraper.categories import DhOCategory
 from dho_scraper.items import DhOMessage
-
-
-class DhOCategory(str, Enum):
-    ContemporaryBuddhism = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/13969849'
-    DharmaDiagnostics = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/103268'
-    PracticeLogs = 'https://www.dharmaoverground.org/discussion/-/message_boards/category/2658626'
 
 
 class DhOSpider(scrapy.Spider):
@@ -30,24 +26,30 @@ class DhOSpider(scrapy.Spider):
         cls.custom_settings['FEEDS'][jsonlines_uri] = {'format': 'jsonlines'}
 
     def start_requests(self):
-        urls = [str(category.value) for category in self._categories]
-        for url in urls:
-            yield scrapy.Request(url=url, callback=self.parse)
+        for category in self._categories:
+            url = str(category.value)
+            yield scrapy.Request(url=url, callback=self.parse, cb_kwargs={'category': category})
 
     def parse(self, response: HtmlResponse, **kwargs):
 
+        try:
+            category = kwargs['category']
+        except KeyError:
+            raise CloseSpider('Current category should be known but isn\'t!')
+
         for thread_url in _get_thread_rss_urls(response):
-            yield scrapy.Request(thread_url, callback=_get_messages_from_rss)
+            yield scrapy.Request(thread_url, callback=_get_messages_from_rss, cb_kwargs={'category': category})
 
         for next_page_url in _get_other_page_urls(response):
-            yield scrapy.Request(next_page_url, callback=self.parse)
+            yield scrapy.Request(next_page_url, callback=self.parse, cb_kwargs={'category': category})
 
 
-def _get_messages_from_rss(response: XmlResponse, **_) -> List[DhOMessage]:
+def _get_messages_from_rss(response: XmlResponse, category: DhOCategory) -> List[DhOMessage]:
     for i, item in enumerate(reversed(response.xpath('//item'))):
         item.register_namespace('dc', 'http://purl.org/dc/elements/1.1/')
         message = DhOMessage(
             msg_id=item.xpath('./link/text()').get().split('=')[-1],
+            category=category,
             thread_id=response.xpath('./channel/link/text()').get().split('=')[-1],
             title=item.xpath('./title/text()').get(),
             author=item.xpath('./dc:creator/text()').get(),

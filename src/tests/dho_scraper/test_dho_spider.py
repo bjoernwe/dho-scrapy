@@ -1,47 +1,8 @@
 from pathlib import Path
-from typing import List, Dict
-
-import pytest
-
-from _pytest.tmpdir import TempPathFactory
-from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
+from typing import List
 
 from dho_scraper.items import DhOMessage
-from dho_scraper.spider import DhOSpider, DhOCategory
-
-
-@pytest.fixture(scope='session')
-def session_tmp_path(tmp_path_factory: TempPathFactory) -> Path:
-    return tmp_path_factory.mktemp('dho-scraper')
-
-
-@pytest.fixture(scope='session')
-def crawled_messages(session_tmp_path) -> List[DhOMessage]:
-
-    tmp_items_path = session_tmp_path.joinpath('items.jsonl')
-
-    settings = get_project_settings()
-    settings['FEEDS'][str(tmp_items_path)] = {'format': 'jsonlines'}
-    settings['PIPELINE_MIN_MESSAGE_WORDS'] = 1
-
-    process = CrawlerProcess(settings=settings)
-    process.crawl(DhOSpider, categories=[DhOCategory.ContemporaryBuddhism])
-    process.start()
-
-    return _messages_from_file(tmp_items_path)
-
-
-def _messages_from_file(jsonl_path: Path) -> List[DhOMessage]:
-
-    messages = []
-
-    with open(str(jsonl_path), 'r') as file:
-        for line in file.readlines():
-            dho_message = DhOMessage.parse_raw(line)
-            messages.append(dho_message)
-
-    return messages
+from dho_scraper.spider import DhOCategory, DhOSpider
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
@@ -84,6 +45,15 @@ def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
 
     # THEN all messages have a unique ID
     assert len(msg_ids) == len(crawled_messages)
+
+
+def test_crawled_messages_contain_category(crawled_messages: List[DhOMessage], test_dho_category: DhOCategory):
+
+    # GIVEN spider and a certain category
+    # WHEN the message are crawled
+    # THEN they all contain the specified category
+    for msg in crawled_messages:
+        assert msg.category == test_dho_category
 
 
 def test_feed_output_contains_uri_scheme():

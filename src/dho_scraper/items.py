@@ -7,15 +7,18 @@ from datetime import datetime
 
 from pydantic import BaseModel, validator
 
+from dho_scraper.categories import DhOCategory
+
 
 class DhOMessage(BaseModel):
     msg_id: int
     thread_id: int
-    title: str
-    author: str
     date: datetime
-    msg: str
     is_first_in_thread: bool
+    category: DhOCategory
+    author: str
+    title: str
+    msg: str
 
     @validator('date', pre=True)
     def dho_date_to_datetime(cls, dt) -> datetime:

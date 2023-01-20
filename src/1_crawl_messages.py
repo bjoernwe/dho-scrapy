@@ -11,12 +11,18 @@ from scrapy.utils.project import get_project_settings
 from dho_scraper.spider import DhOSpider, DhOCategory
 
 
-def crawl_messages(out_file: Optional[str] = None, remove_old: bool = True):
+def crawl_messages(out_file: Optional[str] = None, overwrite_old: bool = True):
+    """
+    Crawl messages from Dharma Overground and store them into a JSONL file.
+
+    :param out_file: JSONL file to store message to
+    :param overwrite_old: Whether a previous JSONL file is overwritten
+    """
 
     if not out_file:
         out_file = Path(__file__).parent.parent.joinpath('data/messages.jsonl')
 
-    if remove_old:
+    if overwrite_old:
         logging.info(f'Deleting old file {out_file}')
         out_file.unlink(missing_ok=True)
 
@@ -24,7 +30,7 @@ def crawl_messages(out_file: Optional[str] = None, remove_old: bool = True):
     DhOSpider.set_output_feed(jsonlines_path=out_file)
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl(DhOSpider, categories=[DhOCategory.PracticeLogs])
+    process.crawl(DhOSpider, categories=[DhOCategory.PracticeLogs, DhOCategory.DharmaDiagnostics])
     process.start()
 
 
