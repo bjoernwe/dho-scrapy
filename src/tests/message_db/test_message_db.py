@@ -259,6 +259,20 @@ def test_groups_are_sorted_for_size(message_db: MessageDB, key: Callable[[DhOMes
     assert group_lengths == sorted(group_lengths, reverse=True)
 
 
+@pytest.mark.parametrize(argnames='key', argvalues=[lambda m: m.author,
+                                                    lambda m: m.thread_id,
+                                                    lambda m: m.category])
+def test_groups_are_filtered_for_size(message_db: MessageDB, key: Callable[[DhOMessage], Any]):
+
+    # GIVEN a DB of messages
+    # WHEN they are grouped with size filter
+    group_dict = message_db._group_messages(key=key, min_group_size=5)
+
+    # THEN the resulting groups are sorted for number of messages
+    for group_msgs in group_dict.values():
+        assert len(group_msgs) >= 5
+
+
 def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
 
     # GIVEN a list of messages in two categories

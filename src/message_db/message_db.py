@@ -41,7 +41,7 @@ class MessageDB:
         sorted_msgs = sorted(self.get_all_messages(), key=lambda m: m.date)
         return MessageDB(msgs=sorted_msgs)
 
-    def _group_messages(self, key: Callable[[DhOMessage], Any]) -> Dict[Hashable, List[DhOMessage]]:
+    def _group_messages(self, key: Callable[[DhOMessage], Any], min_group_size: int = 1) -> Dict[Hashable, List[DhOMessage]]:
 
         grouped_msgs = defaultdict(list)
 
@@ -49,28 +49,23 @@ class MessageDB:
             group = key(msg)
             grouped_msgs[group].append(msg)
 
+        grouped_msgs = {k: v for k, v in grouped_msgs.items() if len(v) >= min_group_size}
         sorted_dict = dict(sorted(grouped_msgs.items(), key=lambda kv: len(kv[1]), reverse=True))
         return sorted_dict
 
     def group_by_author(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
-        author_msgs = self._group_messages(key=lambda m: m.author)
-        return {author: MessageDB(messages)
-                for author, messages in author_msgs.items()
-                if len(messages) >= min_num_messages}
+        author_msgs = self._group_messages(key=lambda m: m.author, min_group_size=min_num_messages)
+        return {author: MessageDB(messages) for author, messages in author_msgs.items()}
 
     def group_by_category(self, min_num_messages: int = 1) -> Dict[str, 'MessageDB']:
-        category_msgs = self._group_messages(key=lambda m: m.category)
-        return {category: MessageDB(messages)
-                for category, messages in category_msgs.items()
-                if len(messages) >= min_num_messages}
+        category_msgs = self._group_messages(key=lambda m: m.category, min_group_size=min_num_messages)
+        return {category: MessageDB(messages) for category, messages in category_msgs.items()}
 
     def group_by_thread(self, min_num_messages: int = 1) -> Dict[int, 'MessageDB']:
-        thread_msgs = self._group_messages(key=lambda m: m.thread_id)
+        thread_msgs = self._group_messages(key=lambda m: m.thread_id, min_group_size=min_num_messages)
         for tid, msgs in thread_msgs.items():
             assert thread_msgs[tid][0].is_first_in_thread, "Expecting thread groups to be sorted in a way that the initial post is first!"
-        return {thread_id: MessageDB(messages)
-                for thread_id, messages in thread_msgs.items()
-                if len(messages) >= min_num_messages}
+        return {thread_id: MessageDB(messages) for thread_id, messages in thread_msgs.items()}
 
     def filter_message_length(self, min_num_words: int = 1) -> 'MessageDB':
         msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
