@@ -81,7 +81,7 @@ class MessageDB:
             filtered_msgs = [msg for msg
                              in self.get_all_messages()
                              if msg.is_first_in_thread
-                             or msg.author == thread_author[msg.thread_id]]
+                             or msg.author == thread_author.get(msg.thread_id)]
         return MessageDB(msgs=filtered_msgs)
 
     def filter_authors(self, authors: Optional[Set[str]] = None, min_num_messages: int = 1) -> 'MessageDB':
