@@ -21,5 +21,5 @@ repos:
     hooks:
       - id: poetry-check
       - id: poetry-lock
-      - id: poetry-export
-        args: ["-f", "requirements.txt", "-o", "requirements.txt", "--with", "dev"]
+      #- id: poetry-export
+      #  args: ["-f", "requirements.txt", "-o", "requirements.txt", "--with", "dev"]
