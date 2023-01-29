@@ -1,6 +1,6 @@
 # DhO Scrapy
 
-A [Scrapy](https://scrapy.org/) spider to crawl messages from 
+A [Scrapy](https://scrapy.org/) spider to crawl messages from
 [Dharma Overground](https://www.dharmaoverground.org/).
 
 ### Setup Runtime Environment
@@ -24,4 +24,4 @@ See `examples` and `experiments` for how to use the crawled messages.
 
 ### Development
 
-- `./install_git_hooks.sh` to automatically run the tests before every commit
+- `./install-pre-commit.sh` to automatically run tests before every commit
