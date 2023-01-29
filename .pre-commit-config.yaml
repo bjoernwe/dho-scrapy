@@ -23,3 +23,12 @@ repos:
       - id: poetry-lock
       #- id: poetry-export
       #  args: ["-f", "requirements.txt", "-o", "requirements.txt", "--with", "dev"]
+
+-   repo: local
+    hooks:
+    -   id: pytest
+        name: pytest
+        entry: bash -c "cd src && pytest"
+        language: system
+        pass_filenames: false
+        always_run: true
