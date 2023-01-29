@@ -8,7 +8,7 @@ def read_dho_messages(jsonl_path: Path) -> List[DhOMessage]:
 
     messages = []
 
-    with open(jsonl_path, 'r') as f:
+    with open(jsonl_path, "r") as f:
         for line in f.readlines():
             msg = DhOMessage.parse_raw(line)
             messages.append(msg)
@@ -20,7 +20,7 @@ def read_strings(file: str) -> List[str]:
 
     strings = []
 
-    with open(file, 'r') as f:
+    with open(file, "r") as f:
         for line in f.readlines():
             strings.append(line)
 

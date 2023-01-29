@@ -1,4 +1,6 @@
-from typing import List, Any, Callable
+from typing import Any
+from typing import Callable
+from typing import List
 
 import pytest
 
@@ -15,8 +17,8 @@ def message_db(jsonl_path) -> MessageDB:
 @pytest.fixture
 def msgs_in_threads(dho_msg: DhOMessage) -> List[DhOMessage]:
 
-    author_1 = 'AUTHOR 1'
-    author_2 = 'AUTHOR 2'
+    author_1 = "AUTHOR 1"
+    author_2 = "AUTHOR 2"
     thread_1 = 111
     thread_2 = 222
 
@@ -56,97 +58,99 @@ def test_messages_are_grouped_by_author(message_db: MessageDB):
     author_msgs = message_db.group_by_author()
 
     # THEN there are messages of at least one of the known authors
-    assert len(author_msgs['J W']) >= 7
+    assert len(author_msgs["J W"]) >= 7
 
 
 def test_author_grouping_contains_all_messages(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].author = 'AUTHOR_1'
-    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+    msgs[0].author = "AUTHOR_1"
+    msgs[1].author = msgs[2].author = "AUTHOR_2"
 
     # WHEN messages are grouped by author
     author_msgs = MessageDB(msgs=msgs).group_by_author()
 
     # THEN all messages are in the groups
-    assert len(author_msgs['AUTHOR_1']) == 1
-    assert len(author_msgs['AUTHOR_2']) == 2
+    assert len(author_msgs["AUTHOR_1"]) == 1
+    assert len(author_msgs["AUTHOR_2"]) == 2
 
 
 def test_author_grouping_is_filtered_for_min_num_messages(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].author = 'AUTHOR_1'
-    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+    msgs[0].author = "AUTHOR_1"
+    msgs[1].author = msgs[2].author = "AUTHOR_2"
 
     # WHEN messages are grouped by author
     author_msgs = MessageDB(msgs=msgs).group_by_author(min_num_messages=2)
 
     # THEN all messages are in the groups
-    assert 'AUTHOR_1' not in author_msgs
-    assert len(author_msgs['AUTHOR_2']) == 2
+    assert "AUTHOR_1" not in author_msgs
+    assert len(author_msgs["AUTHOR_2"]) == 2
 
 
 def test_messages_are_sorted_by_date(message_db: MessageDB):
 
     # GIVEN a message DB with messages not sorted by date
     msgs = message_db.get_all_messages()
-    assert False in [msgs[i].date <= msgs[i+1].date for i in range(len(msgs)-1)]
+    assert False in [msgs[i].date <= msgs[i + 1].date for i in range(len(msgs) - 1)]
 
     # WHEN the DB is sorted
     sorted_msgs = message_db.sorted_by_date().get_all_messages()
 
     # THEN all resulting messages are sorted
-    assert False not in [sorted_msgs[i].date <= sorted_msgs[i+1].date for i in range(len(msgs)-1)]
+    assert False not in [
+        sorted_msgs[i].date <= sorted_msgs[i + 1].date for i in range(len(msgs) - 1)
+    ]
 
 
 def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].category = 'CATEGORY_1'
-    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+    msgs[0].category = "CATEGORY_1"
+    msgs[1].category = msgs[2].category = "CATEGORY_2"
 
     # WHEN messages are grouped by author
     category_msgs = MessageDB(msgs=msgs).group_by_category()
 
     # THEN all messages are in the groups
-    assert len(category_msgs['CATEGORY_1']) == 1
-    assert len(category_msgs['CATEGORY_2']) == 2
+    assert len(category_msgs["CATEGORY_1"]) == 1
+    assert len(category_msgs["CATEGORY_2"]) == 2
 
 
 def test_category_groups_are_filtered_for_length(dho_msg: DhOMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].category = 'CATEGORY_1'
-    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+    msgs[0].category = "CATEGORY_1"
+    msgs[1].category = msgs[2].category = "CATEGORY_2"
 
     # WHEN messages are grouped by author
     category_msgs = MessageDB(msgs=msgs).group_by_category(min_num_messages=2)
 
     # THEN all messages are in the groups
-    assert 'CATEGORY_1' not in category_msgs
-    assert len(category_msgs['CATEGORY_2']) == 2
+    assert "CATEGORY_1" not in category_msgs
+    assert len(category_msgs["CATEGORY_2"]) == 2
 
 
 def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
 
     # GIVEN messages of different lengths
     msgs = [dho_msg.copy() for _ in range(2)]
-    msgs[0].msg = 'two words'
-    msgs[1].msg = 'two plus words'
+    msgs[0].msg = "two words"
+    msgs[1].msg = "two plus words"
 
     # WHEN they are filtered for their length
-    filtered_msgs = MessageDB(msgs=msgs) \
-        .filter_message_length(min_num_words=3) \
-        .get_all_messages()
+    filtered_msgs = (
+        MessageDB(msgs=msgs).filter_message_length(min_num_words=3).get_all_messages()
+    )
 
     # THEN the short message was filtered out
     assert len(filtered_msgs) == 1
-    assert filtered_msgs[0].msg == 'two plus words'
+    assert filtered_msgs[0].msg == "two plus words"
 
 
 def test_thread_grouping_contains_all_messages(msgs_in_threads: List[DhOMessage]):
@@ -205,39 +209,45 @@ def test_authors_are_filtered(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].author = 'AUTHOR_1'
-    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+    msgs[0].author = "AUTHOR_1"
+    msgs[1].author = msgs[2].author = "AUTHOR_2"
 
     # WHEN messages are filtered for one author
-    author_msgs = MessageDB(msgs=msgs).filter_authors(authors={'AUTHOR_1'}).group_by_author()
+    author_msgs = (
+        MessageDB(msgs=msgs).filter_authors(authors={"AUTHOR_1"}).group_by_author()
+    )
 
     # THEN the only this author remains
     assert len(author_msgs) == 1
-    assert 'AUTHOR_1' in author_msgs
+    assert "AUTHOR_1" in author_msgs
 
 
 def test_authors_are_filtered_with_min_message_number(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].author = 'AUTHOR_1'
-    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+    msgs[0].author = "AUTHOR_1"
+    msgs[1].author = msgs[2].author = "AUTHOR_2"
 
     # WHEN messages are filtered for one author
-    authors = {'AUTHOR_1', 'AUTHOR_2'}
-    filtered_msgs = MessageDB(msgs=msgs).filter_authors(authors=authors, min_num_messages=2).get_all_messages()
+    authors = {"AUTHOR_1", "AUTHOR_2"}
+    filtered_msgs = (
+        MessageDB(msgs=msgs)
+        .filter_authors(authors=authors, min_num_messages=2)
+        .get_all_messages()
+    )
 
     # THEN all messages are in the groups
     assert len(filtered_msgs) == 2
-    assert filtered_msgs[0].author == filtered_msgs[0].author == 'AUTHOR_2'
+    assert filtered_msgs[0].author == filtered_msgs[0].author == "AUTHOR_2"
 
 
 def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].author = 'AUTHOR_1'
-    msgs[1].author = msgs[2].author = 'AUTHOR_2'
+    msgs[0].author = "AUTHOR_1"
+    msgs[1].author = msgs[2].author = "AUTHOR_2"
 
     # WHEN messages are filtered for author, no author specified
     filtered_db = MessageDB(msgs=msgs).filter_authors()
@@ -246,10 +256,13 @@ def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
     assert len(filtered_db) == 3
 
 
-@pytest.mark.parametrize(argnames='key', argvalues=[lambda m: m.author,
-                                                    lambda m: m.thread_id,
-                                                    lambda m: m.category])
-def test_groups_are_sorted_for_size(message_db: MessageDB, key: Callable[[DhOMessage], Any]):
+@pytest.mark.parametrize(
+    argnames="key",
+    argvalues=[lambda m: m.author, lambda m: m.thread_id, lambda m: m.category],
+)
+def test_groups_are_sorted_for_size(
+    message_db: MessageDB, key: Callable[[DhOMessage], Any]
+):
 
     # GIVEN a DB of messages
     # WHEN they are grouped
@@ -260,10 +273,13 @@ def test_groups_are_sorted_for_size(message_db: MessageDB, key: Callable[[DhOMes
     assert group_lengths == sorted(group_lengths, reverse=True)
 
 
-@pytest.mark.parametrize(argnames='key', argvalues=[lambda m: m.author,
-                                                    lambda m: m.thread_id,
-                                                    lambda m: m.category])
-def test_groups_are_filtered_for_size(message_db: MessageDB, key: Callable[[DhOMessage], Any]):
+@pytest.mark.parametrize(
+    argnames="key",
+    argvalues=[lambda m: m.author, lambda m: m.thread_id, lambda m: m.category],
+)
+def test_groups_are_filtered_for_size(
+    message_db: MessageDB, key: Callable[[DhOMessage], Any]
+):
 
     # GIVEN a DB of messages
     # WHEN they are grouped with size filter
@@ -282,7 +298,9 @@ def test_categories_are_filtered(dho_msg: DhOMessage):
     msgs[1].category = msgs[2].category = DhOCategory.PracticeLogs
 
     # WHEN messages are filtered for author, no author specified
-    filtered_db = MessageDB(msgs=msgs).filter_categories(categories={DhOCategory.PracticeLogs})
+    filtered_db = MessageDB(msgs=msgs).filter_categories(
+        categories={DhOCategory.PracticeLogs}
+    )
 
     # THEN all messages are kept
     assert len(filtered_db) == 2
@@ -292,8 +310,8 @@ def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy() for _ in range(3)]
-    msgs[0].category = 'CATEGORY_1'
-    msgs[1].category = msgs[2].category = 'CATEGORY_2'
+    msgs[0].category = "CATEGORY_1"
+    msgs[1].category = msgs[2].category = "CATEGORY_2"
 
     # WHEN messages are filtered for author, no author specified
     filtered_db = MessageDB(msgs=msgs).filter_categories()
@@ -302,7 +320,9 @@ def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
     assert len(filtered_db) == 3
 
 
-def test_threads_are_filtered_with_min_message_number(msgs_in_threads: List[DhOMessage]):
+def test_threads_are_filtered_with_min_message_number(
+    msgs_in_threads: List[DhOMessage],
+):
 
     # GIVEN a list of messages in two threads
     db = MessageDB(msgs=msgs_in_threads)
@@ -321,10 +341,10 @@ def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessag
     db = MessageDB(msgs=msgs_in_threads)
 
     # WHEN the threads are filtered for one author
-    filtered_msgs = db.filter_threads(authors={'AUTHOR 2'}).get_all_messages()
+    filtered_msgs = db.filter_threads(authors={"AUTHOR 2"}).get_all_messages()
 
     # THEN left are the two message in the thread with corresponding author
     assert len(filtered_msgs) == 2
     assert filtered_msgs[0].thread_id == filtered_msgs[1].thread_id == 222
-    assert filtered_msgs[0].author == 'AUTHOR 2'
-    assert filtered_msgs[1].author == 'AUTHOR 1'
+    assert filtered_msgs[0].author == "AUTHOR 2"
+    assert filtered_msgs[1].author == "AUTHOR 1"

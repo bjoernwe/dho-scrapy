@@ -2,7 +2,8 @@ from pathlib import Path
 from typing import List
 
 from dho_scraper.items import DhOMessage
-from dho_scraper.spider import DhOCategory, DhOSpider
+from dho_scraper.spider import DhOCategory
+from dho_scraper.spider import DhOSpider
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
@@ -16,7 +17,9 @@ def _find_msg_by_id(msg_id: int, msgs: List[DhOMessage]) -> DhOMessage:
     return next(filter(lambda m: m.msg_id == msg_id, msgs))
 
 
-def test_spider_finds_known_message(crawled_messages: List[DhOMessage], dho_msg: DhOMessage):
+def test_spider_finds_known_message(
+    crawled_messages: List[DhOMessage], dho_msg: DhOMessage
+):
     # GIVEN a known message
     # WHEN all messages are crawled by the spider
     # THEN they contain the known message
@@ -28,13 +31,13 @@ def test_spider_finds_known_message(crawled_messages: List[DhOMessage], dho_msg:
 def test_spider_removes_html(crawled_messages: List[DhOMessage], dho_msg: DhOMessage):
 
     # GIVEN a DhO spider and a known message with HTML tags
-    assert '<' in dho_msg.msg
+    assert "<" in dho_msg.msg
 
     # WHEN the known message has been crawled
     msg = _find_msg_by_id(msg_id=dho_msg.msg_id, msgs=crawled_messages)
 
     # THEN it does not contain HTML tags
-    assert '<' not in msg.msg
+    assert "<" not in msg.msg
 
 
 def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
@@ -47,7 +50,9 @@ def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
     assert len(msg_ids) == len(crawled_messages)
 
 
-def test_crawled_messages_contain_category(crawled_messages: List[DhOMessage], test_dho_category: DhOCategory):
+def test_crawled_messages_contain_category(
+    crawled_messages: List[DhOMessage], test_dho_category: DhOCategory
+):
 
     # GIVEN spider and a certain category
     # WHEN the message are crawled
@@ -62,11 +67,11 @@ def test_feed_output_contains_uri_scheme():
     spider = DhOSpider()
 
     # WHEN an output file is set
-    path = Path('foo')
+    path = Path("foo")
     spider.set_output_feed(jsonlines_path=path)
 
     # THEN scrapy is configured with a file:// scheme
     # (otherwise, on Windows, "C:" would be interpreted as scheme)
-    feed_files: List[str] = list(spider.custom_settings['FEEDS'].keys())
+    feed_files: List[str] = list(spider.custom_settings["FEEDS"].keys())
     assert len(feed_files) == 1
-    assert feed_files[0].startswith('file://')
+    assert feed_files[0].startswith("file://")
