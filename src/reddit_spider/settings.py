@@ -1,7 +1,7 @@
 from pydantic import BaseSettings
 
 
-class ScrapySettings(BaseSettings):
+class RedditSettings(BaseSettings):
 
     reddit_public_id: str
     reddit_secret: str
@@ -9,5 +9,5 @@ class ScrapySettings(BaseSettings):
     reddit_password: str
 
     class Config:
-        env_file = ".env"
+        env_file = "reddit_spider/.env"
         env_prefix = "scrapy_"

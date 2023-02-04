@@ -1,8 +1,8 @@
 import requests
 
-from settings import ScrapySettings
+from reddit_spider.settings import RedditSettings
 
-settings = ScrapySettings()
+settings = RedditSettings()
 
 auth = requests.auth.HTTPBasicAuth(settings.reddit_public_id, settings.reddit_secret)
 
