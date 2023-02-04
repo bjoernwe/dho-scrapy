@@ -2,39 +2,50 @@ import requests
 
 from reddit_spider.settings import RedditSettings
 
-settings = RedditSettings()
 
-auth = requests.auth.HTTPBasicAuth(settings.reddit_public_id, settings.reddit_secret)
+def main():
 
-subreddit = "streamentry"
-url = f"https://oauth.reddit.com/r/{subreddit}/hot"
+    settings = RedditSettings()
 
-data = {
-    "grant_type": "password",
-    "username": settings.reddit_username,
-    "password": settings.reddit_password,
-}
+    auth = requests.auth.HTTPBasicAuth(
+        settings.reddit_public_id, settings.reddit_secret
+    )
 
-headers = {"User-Agent": "MyAPI/0.0.1"}
+    subreddit = "streamentry"
+    url = f"https://oauth.reddit.com/r/{subreddit}/hot"
 
-res = requests.post(
-    "https://www.reddit.com/api/v1/access_token", auth=auth, data=data, headers=headers
-)
+    data = {
+        "grant_type": "password",
+        "username": settings.reddit_username,
+        "password": settings.reddit_password,
+    }
 
-TOKEN = res.json()["access_token"]
+    headers = {"User-Agent": "MyAPI/0.0.1"}
 
-headers["Authorization"] = f"bearer {TOKEN}"
+    res = requests.post(
+        "https://www.reddit.com/api/v1/access_token",
+        auth=auth,
+        data=data,
+        headers=headers,
+    )
 
-requests.get("https://oauth.reddit.com/api/v1/me", headers=headers).json()
-response = requests.get(url, headers=headers)
-data = response.json()
+    TOKEN = res.json()["access_token"]
 
-# Get the top 10 hot threads
-threads = data["data"]["children"][:10]
+    headers["Authorization"] = f"bearer {TOKEN}"
 
-# Print the title and score of each thread
-for thread in threads:
-    title = thread["data"]["title"]
-    score = thread["data"]["score"]
-    print(f"{title}: {score}")
-#
+    requests.get("https://oauth.reddit.com/api/v1/me", headers=headers).json()
+    response = requests.get(url, headers=headers)
+    data = response.json()
+
+    # Get the top 10 hot threads
+    threads = data["data"]["children"][:10]
+
+    # Print the title and score of each thread
+    for thread in threads:
+        title = thread["data"]["title"]
+        score = thread["data"]["score"]
+        print(f"{title}: {score}")
+
+
+if __name__ == "__main__":
+    main()
