@@ -25,3 +25,8 @@ See `examples` and `experiments` for how to use the crawled messages.
 ### Development
 
 - `./install-pre-commit.sh` to automatically run tests before every commit
+
+#### Reddit Spider
+
+If you want to run `RedditSpider`, copy `src/.env.template` to `src/.env` and fill out the missing values for
+`SCRAPY_REDDIT_SECRET` and `SCRAPY_REDDIT_PASSWORD`.
