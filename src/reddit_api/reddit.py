@@ -1,15 +1,19 @@
-PUBLIC = "3heTn63poakqQLY2FJarag"
-SECRET = "N236hpjVEgeyVOphiBeYbZUVYC4RqA"
-
-
 import requests
 
-auth = requests.auth.HTTPBasicAuth(PUBLIC, SECRET)
+from settings import ScrapySettings
+
+settings = ScrapySettings()
+
+auth = requests.auth.HTTPBasicAuth(settings.reddit_public_id, settings.reddit_secret)
 
 subreddit = "streamentry"
 url = f"https://oauth.reddit.com/r/{subreddit}/hot"
 
-data = {"grant_type": "password", "username": "CapaceDT", "password": "SiM9y8I#$E1K"}
+data = {
+    "grant_type": "password",
+    "username": settings.reddit_username,
+    "password": settings.reddit_password,
+}
 
 headers = {"User-Agent": "MyAPI/0.0.1"}
 
