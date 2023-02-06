@@ -34,8 +34,11 @@ def calc_embeddings(jsonl_path: Path, out_path: Path):
 
 if __name__ == "__main__":
 
+    # model_name = "all-MiniLM-L12-v2"
+    model_name = "multi-qa-mpnet-base-dot-v1"
+
     data_path = Path(__file__).parent.parent.joinpath("data")
     jsonl_path = data_path.joinpath("messages.jsonl")
-    out_path = data_path.joinpath("embeddings.pkl")
+    out_path = data_path.joinpath(f"embeddings_{model_name}.pkl")
 
     calc_embeddings(jsonl_path=jsonl_path, out_path=out_path)
