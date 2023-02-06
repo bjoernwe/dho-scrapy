@@ -12,7 +12,7 @@ from dho_scraper.categories import DhOCategory
 from message_db.message_db import MessageDB
 
 
-def main():
+def plot_pca(model_name: str):
 
     # Load messages
     data_path = Path().resolve().parent.parent.joinpath("data")
@@ -20,7 +20,7 @@ def main():
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # Load embeddings
-    embeddings_path = data_path.joinpath("embeddings.pkl")
+    embeddings_path = data_path.joinpath(f"embeddings_{model_name}.pkl")
     with open(str(embeddings_path), "rb") as f:
         embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
@@ -53,4 +53,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    model_name = "multi-qa-mpnet-base-dot-v1"
+    plot_pca(model_name=model_name)
