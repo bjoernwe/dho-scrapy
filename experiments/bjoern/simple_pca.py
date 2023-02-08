@@ -42,14 +42,20 @@ def plot_pca(model_name: str):
 
     # Create DataFrame with embeddings and message texts
     df = pd.DataFrame(
-        components, columns=[f"pca_{i}" for i in range(components.shape[1])]
+        components, columns=[f"PCA_{i}" for i in range(components.shape[1])]
     )
     df["msg_id"] = [msg.msg_id for msg in practice_logs]
     df["msg"] = ["<br>".join(wrap(msg.msg, width=100)) for msg in practice_logs]
     print(df)
 
     # Plot
-    fig = px.scatter(df, x=df.columns[0], y=df.columns[1], hover_data=["msg_id", "msg"])
+    fig = px.scatter(
+        data_frame=df,
+        x=df.columns[0],
+        y=df.columns[1],
+        title="Text Embedding",
+        hover_data=["msg_id", "msg"],
+    )
     fig.show()
 
 

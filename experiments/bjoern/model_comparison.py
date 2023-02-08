@@ -46,7 +46,15 @@ def compare_embeddings(model_names: List[str]):
     # Plot
     pca_variances = np.array([pca.explained_variance_ for pca in pca_models.values()]).T
     df = pd.DataFrame(pca_variances, columns=list(pca_models.keys()))
-    fig = px.line(df)
+    fig = px.line(
+        data_frame=df,
+        title="Explained variance of the first Principal Components",
+        labels={
+            "variable": "model",
+            "index": "PCA component",
+            "value": "explained variance (%)",
+        },
+    )
     fig.show()
 
 
