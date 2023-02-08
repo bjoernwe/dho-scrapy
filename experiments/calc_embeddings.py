@@ -6,8 +6,8 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from experiments.utils.messages import message_db
 from experiments.utils.paths import embeddings_path
+from experiments.utils.paths import jsonl_path
 from scraper.message_db.message_db import MessageDB
 
 
@@ -25,6 +25,7 @@ def calc_and_store_embeddings(model_names: List[str]):
 
     for model_name in model_names:
 
+        message_db = MessageDB.from_file(jsonl_path=jsonl_path)
         msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
         out_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
 
