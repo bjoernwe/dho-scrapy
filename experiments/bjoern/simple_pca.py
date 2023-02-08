@@ -20,7 +20,7 @@ def plot_pca(model_name: str):
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # Load embeddings
-    embeddings_path = data_path.joinpath(f"embeddings_{model_name}.pkl")
+    embeddings_path = data_path.joinpath(f"models/embeddings_{model_name}.pkl")
     with open(str(embeddings_path), "rb") as f:
         embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
@@ -53,5 +53,7 @@ def plot_pca(model_name: str):
 
 
 if __name__ == "__main__":
+    # model_name = "all-MiniLM-L12-v2"
     model_name = "multi-qa-mpnet-base-dot-v1"
+
     plot_pca(model_name=model_name)
