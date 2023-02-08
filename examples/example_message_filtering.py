@@ -1,18 +1,11 @@
-from pathlib import Path
-
 from dho_scraper.categories import DhOCategory
-from message_db.message_db import MessageDB
+from experiments.utils.messages import message_db
 
 
 def example_message_filtering():
     """
     Two examples for how to load and filter DhO messages through the MessageDB interface.
     """
-
-    # Input
-    data_path = Path().resolve().parent.joinpath("data")
-    jsonl_path = data_path.joinpath("messages.jsonl")
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # EXAMPLE 1:
     # Load dharma diagnostics questions (i.e., all the initial posts that started a thread)
