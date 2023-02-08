@@ -32,5 +32,4 @@ jobs:
         poetry install --without experiments
     - name: Test with pytest
       run: |
-        cd src
         poetry run python -m pytest

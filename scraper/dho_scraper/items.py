@@ -7,7 +7,7 @@ from datetime import datetime
 from pydantic import BaseModel
 from pydantic import validator
 
-from dho_scraper.categories import DhOCategory
+from scraper.dho_scraper.categories import DhOCategory
 
 
 class DhOMessage(BaseModel):

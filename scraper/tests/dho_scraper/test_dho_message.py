@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dho_scraper.items import DhOMessage
+from scraper.dho_scraper.items import DhOMessage
 
 
 def test_dho_message_accepts_datetime(dho_msg: DhOMessage):
