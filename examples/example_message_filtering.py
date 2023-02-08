@@ -1,6 +1,5 @@
-from pathlib import Path
-
 from dho_scraper.categories import DhOCategory
+from experiments.utils.paths import jsonl_path
 from message_db.message_db import MessageDB
 
 
@@ -10,8 +9,6 @@ def example_message_filtering():
     """
 
     # Input
-    data_path = Path().resolve().parent.joinpath("data")
-    jsonl_path = data_path.joinpath("messages.jsonl")
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # EXAMPLE 1:

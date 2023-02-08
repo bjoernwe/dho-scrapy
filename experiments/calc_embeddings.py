@@ -1,5 +1,4 @@
 import pickle
-from pathlib import Path
 from typing import Dict
 from typing import List
 
@@ -7,20 +6,19 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
+from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import model_path
 from message_db.message_db import MessageDB
 
 
 def calc_and_store_embeddings(model_names: List[str]):
-
-    data_path = Path(__file__).parent.parent.joinpath("data")
-    jsonl_path = data_path.joinpath("messages.jsonl")
 
     for model_name in model_names:
 
         db = MessageDB.from_file(jsonl_path=jsonl_path)
         msg_embeddings = calc_embeddings(db=db, model_name=model_name)
 
-        out_path = data_path.joinpath(f"models/embeddings_{model_name}.pkl")
+        out_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
         with open(str(out_path), "wb") as f:
             pickle.dump(msg_embeddings, f)
         print(f"Saved: {out_path}")

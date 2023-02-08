@@ -1,5 +1,4 @@
 import pickle
-from pathlib import Path
 from typing import Dict
 from typing import List
 
@@ -9,14 +8,14 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 
 from dho_scraper.categories import DhOCategory
+from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import model_path
 from message_db.message_db import MessageDB
 
 
 def compare_embeddings(model_names: List[str]):
 
     # Load messages
-    data_path = Path().resolve().parent.parent.joinpath("data")
-    jsonl_path = data_path.joinpath("messages.jsonl")
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # Load practice logs of a certain user
@@ -34,7 +33,7 @@ def compare_embeddings(model_names: List[str]):
     for model_name in model_names:
 
         # Load embeddings
-        embeddings_path = data_path.joinpath(f"models/embeddings_{model_name}.pkl")
+        embeddings_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
         with open(str(embeddings_path), "rb") as f:
             embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
