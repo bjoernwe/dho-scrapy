@@ -7,9 +7,9 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from dho_scraper.categories import DhOCategory
 from experiments.utils.messages import message_db
-from experiments.utils.paths import model_path
+from experiments.utils.paths import embeddings_path
+from scraper.dho_scraper.categories import DhOCategory
 
 
 def main():
@@ -21,8 +21,8 @@ def main():
 def plot_pca(model_name: str):
 
     # Load embeddings
-    embeddings_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
-    with open(str(embeddings_path), "rb") as f:
+    embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+    with open(str(embd_path), "rb") as f:
         embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
     # Load practice logs of a certain user

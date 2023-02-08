@@ -7,8 +7,8 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from experiments.utils.messages import message_db
-from experiments.utils.paths import model_path
-from message_db.message_db import MessageDB
+from experiments.utils.paths import embeddings_path
+from scraper.message_db.message_db import MessageDB
 
 
 def main():
@@ -26,7 +26,7 @@ def calc_and_store_embeddings(model_names: List[str]):
     for model_name in model_names:
 
         msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
-        out_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
+        out_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
 
         with open(str(out_path), "wb") as f:
             pickle.dump(msg_embeddings, f)
