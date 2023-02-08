@@ -1,5 +1,5 @@
-from dho_scraper.categories import DhOCategory
 from experiments.utils.messages import message_db
+from scraper.dho_scraper.categories import DhOCategory
 
 
 def example_message_filtering():
