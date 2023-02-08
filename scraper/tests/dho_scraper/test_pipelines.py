@@ -1,11 +1,11 @@
 import pytest
 
-from dho_scraper.items import DhOMessage
-from dho_scraper.pipelines import HtmlToTextPipeline
-from dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
-from dho_scraper.pipelines import RemoveDuplicateSpacesPipeline
-from dho_scraper.pipelines import RemoveShortMessagePipeline
-from dho_scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
+from scraper.dho_scraper.items import DhOMessage
+from scraper.dho_scraper.pipelines import HtmlToTextPipeline
+from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
+from scraper.dho_scraper.pipelines import RemoveDuplicateSpacesPipeline
+from scraper.dho_scraper.pipelines import RemoveShortMessagePipeline
+from scraper.dho_scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
 
 
 def test_dho_blockquotes_are_removed():
