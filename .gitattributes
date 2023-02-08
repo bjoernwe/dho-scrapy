@@ -1,0 +1,2 @@
+data/embeddings/embeddings_multi-qa-mpnet-base-dot-v1.pkl filter=lfs diff=lfs merge=lfs -text
+data/embeddings/embeddings_all-MiniLM-L12-v2.pkl filter=lfs diff=lfs merge=lfs -text
