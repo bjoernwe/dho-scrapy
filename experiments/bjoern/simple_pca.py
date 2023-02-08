@@ -8,15 +8,17 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 
 from dho_scraper.categories import DhOCategory
-from experiments.utils.paths import jsonl_path
+from experiments.utils.messages import message_db
 from experiments.utils.paths import model_path
-from message_db.message_db import MessageDB
+
+
+def main():
+    # model_name = "all-MiniLM-L12-v2"
+    model_name = "multi-qa-mpnet-base-dot-v1"
+    plot_pca(model_name=model_name)
 
 
 def plot_pca(model_name: str):
-
-    # Load messages
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # Load embeddings
     embeddings_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
@@ -52,7 +54,4 @@ def plot_pca(model_name: str):
 
 
 if __name__ == "__main__":
-    # model_name = "all-MiniLM-L12-v2"
-    model_name = "multi-qa-mpnet-base-dot-v1"
-
-    plot_pca(model_name=model_name)
+    main()

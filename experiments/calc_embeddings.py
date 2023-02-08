@@ -6,21 +6,31 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from experiments.utils.paths import jsonl_path
+from experiments.utils.messages import message_db
 from experiments.utils.paths import model_path
 from message_db.message_db import MessageDB
+
+
+def main():
+
+    model_names = [
+        "all-MiniLM-L12-v2",
+        "multi-qa-mpnet-base-dot-v1",
+    ]
+
+    calc_and_store_embeddings(model_names=model_names)
 
 
 def calc_and_store_embeddings(model_names: List[str]):
 
     for model_name in model_names:
 
-        db = MessageDB.from_file(jsonl_path=jsonl_path)
-        msg_embeddings = calc_embeddings(db=db, model_name=model_name)
-
+        msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
         out_path = model_path.joinpath(f"embeddings_{model_name}.pkl")
+
         with open(str(out_path), "wb") as f:
             pickle.dump(msg_embeddings, f)
+
         print(f"Saved: {out_path}")
 
 
@@ -43,10 +53,4 @@ def calc_embeddings(db: MessageDB, model_name: str) -> Dict[int, np.ndarray]:
 
 
 if __name__ == "__main__":
-
-    model_names = [
-        "all-MiniLM-L12-v2",
-        "multi-qa-mpnet-base-dot-v1",
-    ]
-
-    calc_and_store_embeddings(model_names=model_names)
+    main()

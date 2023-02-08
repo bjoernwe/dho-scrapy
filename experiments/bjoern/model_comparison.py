@@ -8,15 +8,16 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 
 from dho_scraper.categories import DhOCategory
-from experiments.utils.paths import jsonl_path
+from experiments.utils.messages import message_db
 from experiments.utils.paths import model_path
-from message_db.message_db import MessageDB
+
+
+def main():
+    model_names = ["all-MiniLM-L12-v2", "multi-qa-mpnet-base-dot-v1"]
+    compare_embeddings(model_names=model_names)
 
 
 def compare_embeddings(model_names: List[str]):
-
-    # Load messages
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
 
     # Load practice logs of a certain user
     author_id = "Linda ”Polly Ester” Ö"
@@ -50,7 +51,4 @@ def compare_embeddings(model_names: List[str]):
 
 
 if __name__ == "__main__":
-
-    model_names = ["all-MiniLM-L12-v2", "multi-qa-mpnet-base-dot-v1"]
-
-    compare_embeddings(model_names=model_names)
+    main()
