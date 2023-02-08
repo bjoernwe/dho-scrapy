@@ -12,6 +12,7 @@ from scrapy.utils.project import get_project_settings
 from scraper.dho_scraper.categories import DhOCategory
 from scraper.dho_scraper.items import DhOMessage
 from scraper.dho_scraper.spider import DhOSpider
+from scraper.message_db.message_db import MessageDB
 
 
 @pytest.fixture
@@ -41,7 +42,7 @@ def test_dho_category() -> DhOCategory:
 @pytest.fixture(scope="session")
 def scrapy_settings() -> Settings:
     old_cwd = os.getcwd()
-    scraper_path = Path(__file__).parent.parent
+    scraper_path = Path(__file__).parent.parent.joinpath("scraper")
     os.chdir(str(scraper_path))
     yield get_project_settings()
     os.chdir(old_cwd)
@@ -62,6 +63,11 @@ def jsonl_path(
     process.start()
 
     return jsonl_out_path
+
+
+@pytest.fixture(scope="session")
+def message_db(jsonl_path: Path) -> MessageDB:
+    return MessageDB.from_file(jsonl_path=jsonl_path)
 
 
 @pytest.fixture(scope="session")

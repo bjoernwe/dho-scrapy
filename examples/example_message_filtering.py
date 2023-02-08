@@ -1,8 +1,14 @@
-from experiments.utils.messages import message_db
+from experiments.utils.paths import jsonl_path
 from scraper.dho_scraper.categories import DhOCategory
+from scraper.message_db.message_db import MessageDB
 
 
-def example_message_filtering():
+def main():
+    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    example_message_filtering(message_db=message_db)
+
+
+def example_message_filtering(message_db: MessageDB):
     """
     Two examples for how to load and filter DhO messages through the MessageDB interface.
     """
@@ -40,4 +46,4 @@ def example_message_filtering():
 
 
 if __name__ == "__main__":
-    example_message_filtering()
+    main()
