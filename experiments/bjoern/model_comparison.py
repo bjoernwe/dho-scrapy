@@ -7,9 +7,10 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from experiments.utils.messages import message_db
 from experiments.utils.paths import embeddings_path
+from experiments.utils.paths import jsonl_path
 from scraper.dho_scraper.categories import DhOCategory
+from scraper.message_db.message_db import MessageDB
 
 
 def main():
@@ -20,6 +21,7 @@ def main():
 def compare_embeddings(model_names: List[str]):
 
     # Load practice logs of a certain user
+    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
     author_id = "Linda ”Polly Ester” Ö"
     practice_logs = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
