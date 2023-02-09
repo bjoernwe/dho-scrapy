@@ -14,12 +14,13 @@ from scraper.message_db.message_db import MessageDB
 
 
 def main():
-    # model_name = "all-MiniLM-L12-v2"
-    model_name = "multi-qa-mpnet-base-dot-v1"
-    plot_pca(model_name=model_name)
+    model_name = "paraphrase-albert-small-v2"
+    # model_name = "multi-qa-mpnet-base-dot-v1"
+    # model_name = "paraphrase-MiniLM-L3-v2"
+    plot_pca(model_name=model_name, show_plot=True)
 
 
-def plot_pca(model_name: str):
+def plot_pca(model_name: str, show_plot: bool = True):
 
     # Load embeddings
     embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
@@ -55,10 +56,11 @@ def plot_pca(model_name: str):
         data_frame=df,
         x=df.columns[0],
         y=df.columns[1],
-        title="Text Embedding",
+        title=f"Text Embedding (Model: {model_name})",
         hover_data=["msg_id", "msg"],
     )
-    fig.show()
+    if show_plot:
+        fig.show()
 
 
 if __name__ == "__main__":
