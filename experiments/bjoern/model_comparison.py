@@ -1,4 +1,5 @@
 import pickle
+from typing import Callable
 from typing import Dict
 from typing import List
 
@@ -14,11 +15,25 @@ from scraper.message_db.message_db import MessageDB
 
 
 def main():
-    model_names = ["all-MiniLM-L12-v2", "multi-qa-mpnet-base-dot-v1"]
-    compare_embeddings(model_names=model_names)
+    model_names = [
+        "all-mpnet-base-v2",
+        "multi-qa-mpnet-base-dot-v1",
+        "all-distilroberta-v1",
+        "all-MiniLM-L12-v2",
+        "multi-qa-distilbert-cos-v1",
+        "all-MiniLM-L6-v2",
+        "multi-qa-MiniLM-L6-cos-v1",
+        "paraphrase-multilingual-mpnet-base-v2",
+        "paraphrase-albert-small-v2",
+        "paraphrase-multilingual-MiniLM-L12-v2",
+        "paraphrase-MiniLM-L3-v2",
+        "distiluse-base-multilingual-cased-v1",
+        "distiluse-base-multilingual-cased-v2",
+    ]
+    compare_embeddings(model_names=model_names, show_plot=True)
 
 
-def compare_embeddings(model_names: List[str]):
+def compare_embeddings(model_names: List[str], show_plot: bool = True):
 
     # Load practice logs of a certain user
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
@@ -42,10 +57,11 @@ def compare_embeddings(model_names: List[str]):
 
         # Calc PCA
         embeddings = np.vstack([embedding_db[msg.msg_id] for msg in practice_logs])
-        pca_models[model_name] = PCA(n_components=10)
+        pca_models[model_name] = PCA(n_components=100)
         pca_models[model_name].fit(embeddings)
 
     # Plot
+    pca_models = _sort_dict(d=pca_models, key=lambda x: x[1].explained_variance_[0])
     pca_variances = np.array([pca.explained_variance_ for pca in pca_models.values()]).T
     df = pd.DataFrame(pca_variances, columns=list(pca_models.keys()))
     fig = px.line(
@@ -57,7 +73,12 @@ def compare_embeddings(model_names: List[str]):
             "value": "explained variance (%)",
         },
     )
-    fig.show()
+    if show_plot:
+        fig.show()
+
+
+def _sort_dict(d: dict, key: Callable):
+    return dict(sorted(d.items(), key=key, reverse=True))
 
 
 if __name__ == "__main__":
