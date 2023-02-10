@@ -24,11 +24,6 @@ tqdm = "^4.64.1"
 plotly = "^5.13.0"
 pandas = "^1.5.3"
 
-[tool.pytest.ini_options]
-markers = [
-    "experiment: allows to deselct experiments (with '-m \" not experiment\"') because they are slow and may have many dependencies"
-]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
