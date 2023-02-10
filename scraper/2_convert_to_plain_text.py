@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from message_db.message_db import MessageDB
+from data_models.message_db import MessageDB
 
 
 def convert_messages_to_text(path_in_jsonl: Path, path_out_txt: Path):

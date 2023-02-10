@@ -9,10 +9,10 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
-from scraper.dho_scraper.categories import DhOCategory
-from scraper.dho_scraper.items import DhOMessage
+from data_models.categories import DhOCategory
+from data_models.dho_message import DhOMessage
+from data_models.message_db import MessageDB
 from scraper.dho_scraper.spider import DhOSpider
-from scraper.message_db.message_db import MessageDB
 
 
 @pytest.fixture

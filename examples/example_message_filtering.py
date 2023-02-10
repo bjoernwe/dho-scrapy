@@ -1,6 +1,6 @@
+from data_models.categories import DhOCategory
+from data_models.message_db import MessageDB
 from experiments.utils.paths import jsonl_path
-from scraper.dho_scraper.categories import DhOCategory
-from scraper.message_db.message_db import MessageDB
 
 
 def main():
