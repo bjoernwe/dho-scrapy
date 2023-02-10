@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import List
 
-from scraper.dho_scraper.items import DhOMessage
+from data_models.dho_message import DhOMessage
 from scraper.dho_scraper.spider import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
 

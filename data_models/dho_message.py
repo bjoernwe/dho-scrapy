@@ -1,13 +1,9 @@
-# Define here the models for your scraped items
-#
-# See documentation in:
-# https://docs.scrapy.org/en/latest/topics/items.html
 from datetime import datetime
 
 from pydantic import BaseModel
 from pydantic import validator
 
-from scraper.dho_scraper.categories import DhOCategory
+from data_models.categories import DhOCategory
 
 
 class DhOMessage(BaseModel):
