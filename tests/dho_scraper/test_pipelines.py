@@ -1,6 +1,6 @@
 import pytest
 
-from scraper.dho_scraper.items import DhOMessage
+from data_models.dho_message import DhOMessage
 from scraper.dho_scraper.pipelines import HtmlToTextPipeline
 from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
 from scraper.dho_scraper.pipelines import RemoveDuplicateSpacesPipeline

@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 
-from scraper.dho_scraper.items import DhOMessage
+from data_models.dho_message import DhOMessage
 
 
 class RemoveDuplicatesPipeline:

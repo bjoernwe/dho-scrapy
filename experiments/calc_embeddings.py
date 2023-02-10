@@ -6,9 +6,9 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
+from data_models.message_db import MessageDB
 from experiments.utils.paths import embeddings_path
 from experiments.utils.paths import jsonl_path
-from scraper.message_db.message_db import MessageDB
 
 
 def main():

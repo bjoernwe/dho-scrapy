@@ -6,7 +6,7 @@ import typer
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from scraper.dho_scraper.categories import DhOCategory
+from data_models.categories import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
 
 
