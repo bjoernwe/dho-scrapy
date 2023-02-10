@@ -32,4 +32,4 @@ jobs:
         poetry install --without experiments
     - name: Test with pytest
       run: |
-        poetry run python -m pytest
+        poetry run python -m pytest -m "not experiment"

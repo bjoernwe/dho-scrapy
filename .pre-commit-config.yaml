@@ -36,7 +36,7 @@ repos:
     hooks:
     -   id: pytest
         name: pytest
-        entry: pytest
+        entry: pytest -m "not experiment"
         language: system
         pass_filenames: false
         always_run: true
