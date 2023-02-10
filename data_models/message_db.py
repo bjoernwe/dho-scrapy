@@ -8,8 +8,8 @@ from typing import List
 from typing import Optional
 from typing import Set
 
-from scraper.dho_scraper.categories import DhOCategory
-from scraper.dho_scraper.items import DhOMessage
+from data_models.categories import DhOCategory
+from data_models.dho_message import DhOMessage
 
 
 class MessageDB:
