@@ -22,11 +22,6 @@ def main():
 
 def plot_pca(model_name: str, show_plot: bool = True):
 
-    # Load embeddings
-    embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
-    with open(str(embd_path), "rb") as f:
-        embedding_db: Dict[int, np.ndarray] = pickle.load(f)
-
     # Load practice logs of a certain user
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
     author_id = "Linda ”Polly Ester” Ö"
@@ -37,6 +32,11 @@ def plot_pca(model_name: str, show_plot: bool = True):
         .sorted_by_date()
         .get_all_messages()
     )
+
+    # Load embeddings
+    embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+    with open(str(embd_path), "rb") as f:
+        embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
     # Calc PCA
     pca = PCA(n_components=10)
