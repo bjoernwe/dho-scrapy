@@ -7,7 +7,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 
-from settings import ScrapySettings
+from scraper.reddit_spider.settings import RedditSettings
 
 
 class RedditSpider(scrapy.Spider):
@@ -33,7 +33,7 @@ class RedditSpider(scrapy.Spider):
     @staticmethod
     def _get_auth_headers() -> dict:
 
-        settings = ScrapySettings()
+        settings = RedditSettings()
 
         auth = requests.auth.HTTPBasicAuth(
             settings.reddit_public_id, settings.reddit_secret
