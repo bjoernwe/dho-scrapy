@@ -33,8 +33,8 @@ def calc_sentences(msg_db: MessageDB) -> Dict[str, Sentence]:
     sentences: Dict[str, Sentence] = {}
 
     for msg in tqdm(msg_db.get_all_messages()):
-        for sntc_txt in nltk.sent_tokenize(text=msg.msg):
-            sentence = Sentence(msg_id=msg.msg_id, sentence=sntc_txt)
+        for i, sntc_txt in enumerate(nltk.sent_tokenize(text=msg.msg)):
+            sentence = Sentence(msg_id=msg.msg_id, sentence_idx=i, sentence=sntc_txt)
             sentences[sentence.sid] = sentence
 
     return sentences
