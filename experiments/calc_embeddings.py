@@ -1,41 +1,68 @@
 import pickle
-from pathlib import Path
 from typing import Dict
+from typing import List
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from message_db.message_db import MessageDB
+from data_models.message_db import MessageDB
+from experiments.utils.paths import embeddings_path
+from experiments.utils.paths import jsonl_path
 
 
-def calc_embeddings(jsonl_path: Path, out_path: Path):
+def main():
+
+    model_names = [
+        "all-mpnet-base-v2",
+        "multi-qa-mpnet-base-dot-v1",
+        "all-distilroberta-v1",
+        "all-MiniLM-L12-v2",
+        "multi-qa-distilbert-cos-v1",
+        "all-MiniLM-L6-v2",
+        "multi-qa-MiniLM-L6-cos-v1",
+        "paraphrase-multilingual-mpnet-base-v2",
+        "paraphrase-albert-small-v2",
+        "paraphrase-multilingual-MiniLM-L12-v2",
+        "paraphrase-MiniLM-L3-v2",
+        "distiluse-base-multilingual-cased-v1",
+        "distiluse-base-multilingual-cased-v2",
+    ]
+
+    calc_and_store_embeddings(model_names=model_names)
+
+
+def calc_and_store_embeddings(model_names: List[str]):
+
+    for model_name in model_names:
+
+        message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+        msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
+        out_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+
+        with open(str(out_path), "wb") as f:
+            pickle.dump(msg_embeddings, f)
+
+        print(f"Saved: {out_path}")
+
+
+def calc_embeddings(db: MessageDB, model_name: str) -> Dict[int, np.ndarray]:
     """
-    Calculate embeddings (based on the message body) for all messages in jsonl_path and store them in a
+    Calculate embeddings (based on the message body) for all messages in MessageDB and store them in a
     dictionary (msg_id -> embedding-vector).
     """
 
-    db = MessageDB.from_file(jsonl_path=jsonl_path)
-    model = SentenceTransformer("all-MiniLM-L12-v2")
-
+    model = SentenceTransformer(model_name)
     msg_embeddings: Dict[int, np.ndarray] = {}
 
     print(f"Calculating embeddings for {len(db)} messages ...")
 
     for msg in tqdm(db.get_all_messages()):
         msg_emb = model.encode([msg.msg])
-        assert msg_emb.shape == (1, 384)
         msg_embeddings[msg.msg_id] = msg_emb
 
-    with open(str(out_path), "wb") as f:
-        pickle.dump(msg_embeddings, f)
-    print(f"Saved: {out_path}")
+    return msg_embeddings
 
 
 if __name__ == "__main__":
-
-    data_path = Path(__file__).parent.parent.joinpath("data")
-    jsonl_path = data_path.joinpath("messages.jsonl")
-    out_path = data_path.joinpath("embeddings.pkl")
-
-    calc_embeddings(jsonl_path=jsonl_path, out_path=out_path)
+    main()
