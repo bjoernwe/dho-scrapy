@@ -14,29 +14,32 @@ from experiments.utils.paths import jsonl_path
 
 
 def main():
+
+    author = "Linda ”Polly Ester” Ö"
+
     model_name = "paraphrase-albert-small-v2"
     # model_name = "multi-qa-mpnet-base-dot-v1"
     # model_name = "paraphrase-MiniLM-L3-v2"
-    plot_pca(model_name=model_name, show_plot=True)
+
+    plot_pca(author=author, model_name=model_name, show_plot=True)
 
 
-def plot_pca(model_name: str, show_plot: bool = True):
+def plot_pca(author: str, model_name: str, show_plot: bool = True):
+
+    # Load practice logs of a certain user
+    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    practice_logs = (
+        message_db.filter_categories(categories={DhOCategory.PracticeLogs})
+        .filter_threads(authors={author})
+        .filter_thread_responses(keep_op=True)
+        .sorted_by_date()
+        .get_all_messages()
+    )
 
     # Load embeddings
     embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
     with open(str(embd_path), "rb") as f:
         embedding_db: Dict[int, np.ndarray] = pickle.load(f)
-
-    # Load practice logs of a certain user
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
-    author_id = "Linda ”Polly Ester” Ö"
-    practice_logs = (
-        message_db.filter_categories(categories={DhOCategory.PracticeLogs})
-        .filter_threads(authors={author_id})
-        .filter_thread_responses(keep_op=True)
-        .sorted_by_date()
-        .get_all_messages()
-    )
 
     # Calc PCA
     pca = PCA(n_components=10)
