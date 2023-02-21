@@ -71,7 +71,7 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
         data_frame=df,
         x=df.columns[0],
         y=df.columns[1],
-        title=f"Sentence Embedding (Model: {model_name})",
+        title=f"PCA of Sentence Embeddings (Author: {author} / Model: {model_name})",
         hover_data=["sid", "sentence"],
     )
     if show_plot:
