@@ -16,18 +16,18 @@ from experiments.utils.paths import jsonl_path
 
 
 def main():
+    author = "Linda ”Polly Ester” Ö"
     model_name = "paraphrase-albert-small-v2"
-    plot_sentence_pca(model_name=model_name, show_plot=True)
+    plot_sentence_pca(author=author, model_name=model_name, show_plot=True)
 
 
-def plot_sentence_pca(model_name: str, show_plot: bool = True):
+def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
 
     # Load & filter messages
     message_db = MessageDB.from_file(jsonl_path=jsonl_path)
-    author_id = "Linda ”Polly Ester” Ö"
     practice_logs = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
-        .filter_threads(authors={author_id})
+        .filter_threads(authors={author})
         .filter_thread_responses(keep_op=True)
         .sorted_by_date()
         .get_all_messages()
