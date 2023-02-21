@@ -1,3 +1,5 @@
+from collections import defaultdict
+from pathlib import Path
 from typing import List
 from typing import Optional
 
@@ -7,28 +9,37 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.http import HtmlResponse
 from scrapy.utils.project import get_project_settings
 
+from data_models.dho_message import DhOMessage
 from scraper.reddit_spider.settings import RedditSettings
 
 
 class RedditSpider(scrapy.Spider):
 
     name = "reddit"
+    custom_settings = defaultdict(dict)
 
     def __init__(self, subreddits: Optional[List[str]] = None, **kwargs):
         super().__init__(**kwargs)
         self._subreddits = subreddits or ["streamentry"]
         self._headers = self._get_auth_headers()
 
+    @classmethod
+    def set_output_feed(cls, jsonlines_path: Path):
+        jsonlines_uri: str = (
+            jsonlines_path.absolute().as_uri()
+        )  # Add file:// scheme to work on Windows
+        cls.custom_settings["FEEDS"][jsonlines_uri] = {"format": "jsonlines"}
+
     def start_requests(self):
         for subreddit in self._subreddits:
             url = f"https://oauth.reddit.com/r/{subreddit}/hot"
             yield scrapy.Request(url=url, callback=self.parse, headers=self._headers)
 
-    def parse(self, response: HtmlResponse, **kwargs):
+    def parse(self, response: HtmlResponse, **kwargs) -> DhOMessage:
         data = response.json()
         print(data)
         # TODO Return a DhOMessage object
-        return data
+        return DhOMessage()
 
     @staticmethod
     def _get_auth_headers() -> dict:

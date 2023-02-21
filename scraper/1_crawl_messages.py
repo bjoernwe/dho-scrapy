@@ -8,6 +8,7 @@ from scrapy.utils.project import get_project_settings
 
 from data_models.categories import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
+from scraper.reddit_spider.spider import RedditSpider
 
 
 def crawl_messages(out_file: Optional[str] = None, overwrite_old: bool = True):
@@ -26,12 +27,10 @@ def crawl_messages(out_file: Optional[str] = None, overwrite_old: bool = True):
         out_file.unlink(missing_ok=True)
 
     logging.info(f"Writing DhO messages to {out_file} ...")
-    DhOSpider.set_output_feed(jsonlines_path=out_file)
+    RedditSpider.set_output_feed(jsonlines_path=out_file)
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl(
-        DhOSpider, categories=[DhOCategory.PracticeLogs, DhOCategory.DharmaDiagnostics]
-    )
+    process.crawl(RedditSpider, subreddits=["streamentry"])
     process.start()
 
 
