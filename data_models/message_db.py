@@ -20,7 +20,10 @@ class MessageDB:
     """
 
     def __init__(self, msgs: List[DhOMessage]):
-        self._msgs = msgs
+        self._msgs: Dict[int, DhOMessage] = {msg.msg_id: msg for msg in msgs}
+        assert len(self._msgs) == len(
+            msgs
+        ), "Message lists seem to contain duplicate IDs"
 
     @classmethod
     def from_file(cls, jsonl_path: Path) -> "MessageDB":
@@ -37,11 +40,14 @@ class MessageDB:
     def __len__(self):
         return self._msgs.__len__()
 
-    def __getitem__(self, item):
-        return self._msgs[item]
+    # def __getitem__(self, item):
+    #    return self._msgs[item]
 
     def get_all_messages(self) -> List[DhOMessage]:
-        return self._msgs.copy()
+        return list(self._msgs.values())
+
+    def get_first_message(self) -> DhOMessage:
+        return self.get_all_messages()[0]
 
     def get_all_message_bodies(self) -> List[str]:
         return [msg.msg for msg in self.get_all_messages()]
@@ -59,7 +65,7 @@ class MessageDB:
 
         grouped_msgs = defaultdict(list)
 
-        for msg in self._msgs:
+        for msg in self._msgs.values():
             group = key(msg)
             grouped_msgs[group].append(msg)
 
@@ -67,8 +73,8 @@ class MessageDB:
             k: v
             for k, v in grouped_msgs.items()
             if len(v) >= min_group_size  # filter length
-            and (keep_keys is None or k in keep_keys)
-        }  # filter keys (if specified)
+            and (keep_keys is None or k in keep_keys)  # filter keys (if specified)
+        }
 
         sorted_dict = dict(
             sorted(filtered_msgs.items(), key=lambda kv: len(kv[1]), reverse=True)
@@ -98,13 +104,15 @@ class MessageDB:
             key=lambda m: m.thread_id, min_group_size=min_num_messages
         )
         for tid, msgs in thread_msgs.items():
-            assert thread_msgs[tid][
-                0
-            ].is_first_in_thread, "Expecting thread groups to be sorted in a way that the initial post is first!"
+            assert (
+                thread_msgs[tid].get_first_message().is_first_in_thread
+            ), "Expecting thread groups to be sorted in a way that the initial post is first!"
         return thread_msgs
 
     def filter_message_length(self, min_num_words: int = 1) -> "MessageDB":
-        msgs = [msg for msg in self._msgs if len(msg.msg.split()) >= min_num_words]
+        msgs = [
+            msg for msg in self._msgs.values() if len(msg.msg.split()) >= min_num_words
+        ]
         return MessageDB(msgs=msgs)
 
     def filter_thread_responses(self, keep_op: bool) -> "MessageDB":
@@ -155,6 +163,6 @@ class MessageDB:
             msg
             for thread_id, thread_msgs in thread_groups.items()
             for msg in thread_msgs.get_all_messages()
-            if authors is None or thread_msgs[0].author in authors
+            if authors is None or thread_msgs.get_first_message().author in authors
         ]
         return MessageDB(msgs=filtered_msgs)
