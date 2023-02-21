@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "dho-scrapy"
-version = "0.2.0"
+version = "0.3.0"
 description = ""
 authors = ["Björn <bjoernwe@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = []
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -13,6 +13,7 @@ pydantic = "^1.10.4"
 beautifulsoup4 = "^4.11.1"
 typer = "^0.7.0"
 pre-commit = "^3.0.1"
+nltk = "^3.8.1"
 python-dotenv = "^0.21.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -22,6 +23,8 @@ pytest = "^7.2.1"
 sentence-transformers = "^2.2.2"
 numpy = "^1.24.1"
 tqdm = "^4.64.1"
+plotly = "^5.13.0"
+pandas = "^1.5.3"
 
 [build-system]
 requires = ["poetry-core"]

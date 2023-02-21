@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from pathlib import Path
 from typing import List
@@ -5,11 +6,13 @@ from typing import List
 import pytest
 from _pytest.tmpdir import TempPathFactory
 from scrapy.crawler import CrawlerProcess
+from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
-from dho_scraper.categories import DhOCategory
-from dho_scraper.items import DhOMessage
-from dho_scraper.spider import DhOSpider
+from data_models.categories import DhOCategory
+from data_models.dho_message import DhOMessage
+from data_models.message_db import MessageDB
+from scraper.dho_scraper.spider import DhOSpider
 
 
 @pytest.fixture
@@ -37,19 +40,34 @@ def test_dho_category() -> DhOCategory:
 
 
 @pytest.fixture(scope="session")
-def jsonl_path(session_tmp_path: Path, test_dho_category: DhOCategory) -> Path:
+def scrapy_settings() -> Settings:
+    old_cwd = os.getcwd()
+    scraper_path = Path(__file__).parent.parent.joinpath("scraper")
+    os.chdir(str(scraper_path))
+    yield get_project_settings()
+    os.chdir(old_cwd)
+
+
+@pytest.fixture(scope="session")
+def jsonl_path(
+    session_tmp_path: Path, test_dho_category: DhOCategory, scrapy_settings: Settings
+) -> Path:
 
     jsonl_out_path = session_tmp_path.joinpath("items.jsonl")
 
-    settings = get_project_settings()
-    settings["FEEDS"][str(jsonl_out_path)] = {"format": "jsonlines"}
-    settings["PIPELINE_MIN_MESSAGE_WORDS"] = 1
+    scrapy_settings["FEEDS"][str(jsonl_out_path)] = {"format": "jsonlines"}
+    scrapy_settings["PIPELINE_MIN_MESSAGE_WORDS"] = 1
 
-    process = CrawlerProcess(settings=settings)
+    process = CrawlerProcess(settings=scrapy_settings)
     process.crawl(DhOSpider, categories=[test_dho_category])
     process.start()
 
     return jsonl_out_path
+
+
+@pytest.fixture(scope="session")
+def message_db(jsonl_path: Path) -> MessageDB:
+    return MessageDB.from_file(jsonl_path=jsonl_path)
 
 
 @pytest.fixture(scope="session")

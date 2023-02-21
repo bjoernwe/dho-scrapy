@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import List
 
-from dho_scraper.items import DhOMessage
-from dho_scraper.spider import DhOCategory
-from dho_scraper.spider import DhOSpider
+from data_models.dho_message import DhOMessage
+from scraper.dho_scraper.spider import DhOCategory
+from scraper.dho_scraper.spider import DhOSpider
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
