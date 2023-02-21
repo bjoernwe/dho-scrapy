@@ -40,8 +40,8 @@ class MessageDB:
     def __len__(self):
         return self._msgs.__len__()
 
-    # def __getitem__(self, item):
-    #    return self._msgs[item]
+    def __getitem__(self, item):
+        return self._msgs[item]
 
     def get_all_messages(self) -> List[DhOMessage]:
         return list(self._msgs.values())
