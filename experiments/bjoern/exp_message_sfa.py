@@ -5,6 +5,7 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from sklearn.decomposition import PCA
 from sksfa import SFA
 
 from data_models.categories import DhOCategory
@@ -36,14 +37,18 @@ def plot_pca(author: str, model_name: str, show_plot: bool = True):
         .get_all_messages()
     )
 
-    # Load embeddings
+    # Load & calc embeddings
     embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
     with open(str(embd_path), "rb") as f:
         embedding_db: Dict[int, np.ndarray] = pickle.load(f)
+    embeddings = np.vstack([embedding_db[msg.msg_id] for msg in practice_logs])
+
+    # Calc PCA
+    pca = PCA(n_components=30)
+    embeddings = pca.fit_transform(embeddings)
 
     # Calc SFA
     sfa = SFA(n_components=3)
-    embeddings = np.vstack([embedding_db[msg.msg_id] for msg in practice_logs])
     slow_features = sfa.fit_transform(embeddings)
 
     # Create DataFrame with embeddings and message texts
@@ -60,7 +65,7 @@ def plot_pca(author: str, model_name: str, show_plot: bool = True):
         data_frame=df,
         x=df["date"],
         y=df["SFA_0"],
-        title=f"SFA on Embedded Messages (Model: {model_name})",
+        title=f"SFA on Embedded Messages (Author: {author} / Model: {model_name})",
         hover_data=["msg_id", "msg"],
     )
     if show_plot:

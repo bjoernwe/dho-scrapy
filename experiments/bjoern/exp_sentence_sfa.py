@@ -1,10 +1,12 @@
 import pickle
+from math import log
 from textwrap import wrap
 from typing import Dict
 
 import numpy as np
 import pandas as pd
 import plotly.express as px
+from sklearn.decomposition import PCA
 from sksfa import SFA
 
 from data_models.categories import DhOCategory
@@ -56,6 +58,11 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     print("Calculating embeddings ...")
     embeddings = np.vstack([sent_emb_db[s.sid] for s in sentences])
 
+    # Calc PCA
+    pca = PCA(n_components=30)
+    print(f"Training PCA on {embeddings.shape[0]} embeddings ...")
+    embeddings = pca.fit_transform(embeddings)
+
     # Calc SFA
     sfa = SFA(n_components=3)
     print(f"Training SFA on {embeddings.shape[0]} embeddings ...")
@@ -66,6 +73,7 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
         slow_features, columns=[f"SFA_{i}" for i in range(slow_features.shape[1])]
     )
     df["sid"] = [s.sid for s in sentences]
+    df["sentence_idx"] = [log(s.sentence_idx + 1) for s in sentences]
     df["date"] = [message_db[s.msg_id].date for s in sentences]
     df["sentence"] = ["<br>".join(wrap(s.sentence, width=100)) for s in sentences]
     print(df)
@@ -75,6 +83,7 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
         data_frame=df,
         x=df["date"],
         y=df["SFA_0"],
+        color="sentence_idx",
         title=f"Sentence Embedding (Model: {model_name})",
         hover_data=["sid", "sentence"],
     )
