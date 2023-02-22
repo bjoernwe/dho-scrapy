@@ -1,6 +1,7 @@
 import pickle
 from textwrap import wrap
 from typing import Dict
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -20,7 +21,7 @@ from experiments.utils.paths import jsonl_path
 
 def main():
     model_name = "paraphrase-albert-small-v2"
-    plot_sentence_pca(model_name=model_name, show_plot=True)
+    plot_sentence_pca(model_name=model_name)
 
 
 def plot_sentence_pca(model_name: str):
@@ -61,6 +62,16 @@ def plot_sentence_pca(model_name: str):
     print(f"Training PCA on {embeddings.shape[0]} embeddings ...")
     components = pca.fit_transform(embeddings)
 
+    df = _create_dataframe(
+        sent_db=sent_db, sentence_ids=sentence_ids, components=components
+    )
+    _plot(df=df)
+
+
+def _create_dataframe(
+    sent_db: Dict[str, Sentence], sentence_ids: List[str], components: np.ndarray
+):
+
     # Create DataFrame with embeddings and message texts
     df = pd.DataFrame(
         components, columns=[f"PCA_{i}" for i in range(components.shape[1])]
@@ -70,10 +81,10 @@ def plot_sentence_pca(model_name: str):
     df = df.drop_duplicates(subset=["sentence"])
     print(df)
 
-    plot(df=df)
+    return df
 
 
-def plot(df: DataFrame):
+def _plot(df: DataFrame):
 
     fig = px.scatter(
         data_frame=df,
