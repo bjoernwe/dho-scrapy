@@ -95,6 +95,8 @@ def _plot(df: DataFrame):
 
     fig.show()
 
+    num_bars = 20
+
     for i, title in [
         (0, '"Recognition" vs "Sleepiness"'),
         (1, '"Noticing" vs ???'),
@@ -104,7 +106,6 @@ def _plot(df: DataFrame):
         (5, '"Mental Action" vs "Bodily Discomfort"'),
     ]:
 
-        num_bars = 20
         df = df.sort_values(f"PCA_{i}")
 
         fig = make_subplots(
