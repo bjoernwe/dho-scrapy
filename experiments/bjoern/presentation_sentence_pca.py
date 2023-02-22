@@ -28,8 +28,10 @@ def main():
 def _plot_sentence_pca(model_name: str):
 
     message_ids = _get_relevant_message_ids()
+    print(f"Got {len(message_ids)} messages.")
 
     sentence_db = _get_sentence_db(msg_ids=message_ids, min_length=3)
+    print(f"Got {len(sentence_db)} sentences.")
 
     embeddings = _get_embeddings(
         sentence_ids=list(sentence_db.keys()), model_name=model_name
