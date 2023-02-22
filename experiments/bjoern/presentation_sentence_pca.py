@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
-from pandas import DataFrame
 from plotly.subplots import make_subplots
 from sklearn.decomposition import PCA
 
