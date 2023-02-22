@@ -2,6 +2,7 @@ import pickle
 from textwrap import wrap
 from typing import Dict
 from typing import List
+from typing import Set
 
 import numpy as np
 import pandas as pd
@@ -26,28 +27,8 @@ def main():
 
 def plot_sentence_pca(model_name: str):
 
-    # Load & filter messages
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
-    practice_logs = (
-        message_db.filter_categories(categories={DhOCategory.PracticeLogs})
-        # .filter_threads(authors={author})
-        .filter_thread_responses(keep_op=True)
-        # .sorted_by_date()
-        # .filter_message_length(min_num_words=3)
-        .get_all_messages()
-    )
-    msg_ids = {msg.msg_id for msg in practice_logs}
-
-    # Load & filter sentences
-    sent_db_path = data_path.joinpath(f"sentences.pkl")
-    print(f"Loading {sent_db_path} ...")
-    with open(str(sent_db_path), "rb") as f:
-        sent_db: Dict[str, Sentence] = pickle.load(f)
-    sentence_ids = [
-        sentence.sid
-        for sentence in sent_db.values()
-        if sentence.msg_id in msg_ids and len(sentence.sentence.split()) >= 3
-    ]
+    msg_ids = _get_relevant_message_ids()
+    sent_db = _get_sentence_db(msg_ids=msg_ids, min_length=3)
 
     # Load & filter embeddings
     sent_emb_db_path = embeddings_path.joinpath(f"sent_embeddings_{model_name}.pkl")
@@ -55,29 +36,53 @@ def plot_sentence_pca(model_name: str):
     with open(str(sent_emb_db_path), "rb") as f:
         sent_emb_db: Dict[str, np.ndarray] = pickle.load(f)
     print("Calculating embeddings ...")
-    embeddings = np.vstack([sent_emb_db[sid] for sid in sentence_ids])
+    embeddings = np.vstack([sent_emb_db[sid] for sid in sent_db])
 
     # Calc PCA
     pca = PCA(n_components=100)
     print(f"Training PCA on {embeddings.shape[0]} embeddings ...")
     components = pca.fit_transform(embeddings)
 
-    df = _create_dataframe(
-        sent_db=sent_db, sentence_ids=sentence_ids, components=components
-    )
+    df = _create_dataframe(sent_db=sent_db, components=components)
     _plot(df=df)
 
 
-def _create_dataframe(
-    sent_db: Dict[str, Sentence], sentence_ids: List[str], components: np.ndarray
-):
+def _get_relevant_message_ids() -> Set[int]:
+
+    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+
+    practice_logs = (
+        message_db.filter_categories(categories={DhOCategory.PracticeLogs})
+        .filter_thread_responses(keep_op=True)
+        .get_all_messages()
+    )
+
+    return {msg.msg_id for msg in practice_logs}
+
+
+def _get_sentence_db(msg_ids: Set[int], min_length: int) -> Dict[str, Sentence]:
+
+    sent_db_path = data_path.joinpath(f"sentences.pkl")
+    print(f"Loading {sent_db_path} ...")
+
+    with open(str(sent_db_path), "rb") as f:
+        sent_db: Dict[str, Sentence] = pickle.load(f)
+
+    sent_db = {
+        k: v
+        for k, v in sent_db.items()
+        if v.msg_id in msg_ids and len(v.sentence.split()) >= min_length
+    }
+    return sent_db
+
+
+def _create_dataframe(sent_db: Dict[str, Sentence], components: np.ndarray):
 
     # Create DataFrame with embeddings and message texts
     df = pd.DataFrame(
         components, columns=[f"PCA_{i}" for i in range(components.shape[1])]
     )
-    df["sid"] = sentence_ids
-    df["sentence"] = [wrap(sent_db[sid].sentence, width=80)[0] for sid in sentence_ids]
+    df["sentence"] = [wrap(sent_db[sid].sentence, width=80)[0] for sid in sent_db]
     df = df.drop_duplicates(subset=["sentence"])
     print(df)
 
@@ -90,12 +95,12 @@ def _plot(df: DataFrame):
         data_frame=df,
         x="PCA_0",
         y="PCA_1",
-        hover_data=["sid", "sentence"],
+        hover_data=["sentence"],
     )
 
-    fig.show()
-
     num_bars = 20
+
+    fig.show()
 
     for i, title in [
         (0, '"Recognition" vs "Sleepiness"'),
