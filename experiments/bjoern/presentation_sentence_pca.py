@@ -22,29 +22,22 @@ from experiments.utils.paths import jsonl_path
 
 def main():
     model_name = "paraphrase-albert-small-v2"
-    plot_sentence_pca(model_name=model_name)
+    _plot_sentence_pca(model_name=model_name)
 
 
-def plot_sentence_pca(model_name: str):
+def _plot_sentence_pca(model_name: str):
 
-    msg_ids = _get_relevant_message_ids()
-    sent_db = _get_sentence_db(msg_ids=msg_ids, min_length=3)
+    message_ids = _get_relevant_message_ids()
 
-    # Load & filter embeddings
-    sent_emb_db_path = embeddings_path.joinpath(f"sent_embeddings_{model_name}.pkl")
-    print(f"Loading {sent_emb_db_path} ...")
-    with open(str(sent_emb_db_path), "rb") as f:
-        sent_emb_db: Dict[str, np.ndarray] = pickle.load(f)
-    print("Calculating embeddings ...")
-    embeddings = np.vstack([sent_emb_db[sid] for sid in sent_db])
+    sentence_db = _get_sentence_db(msg_ids=message_ids, min_length=3)
 
-    # Calc PCA
-    pca = PCA(n_components=100)
-    print(f"Training PCA on {embeddings.shape[0]} embeddings ...")
-    components = pca.fit_transform(embeddings)
+    embeddings = _get_embeddings(
+        sentence_ids=list(sentence_db.keys()), model_name=model_name
+    )
 
-    df = _create_dataframe(sent_db=sent_db, components=components)
-    _plot(df=df)
+    embeddings = _calc_pca(data=embeddings)
+
+    _plot(embeddings=embeddings, sent_db=sentence_db)
 
 
 def _get_relevant_message_ids() -> Set[int]:
@@ -76,11 +69,31 @@ def _get_sentence_db(msg_ids: Set[int], min_length: int) -> Dict[str, Sentence]:
     return sent_db
 
 
-def _create_dataframe(sent_db: Dict[str, Sentence], components: np.ndarray):
+def _get_embeddings(sentence_ids: List[str], model_name: str) -> np.ndarray:
+
+    sent_emb_db_path = embeddings_path.joinpath(f"sent_embeddings_{model_name}.pkl")
+    print(f"Loading {sent_emb_db_path} ...")
+
+    with open(str(sent_emb_db_path), "rb") as f:
+        sent_emb_db: Dict[str, np.ndarray] = pickle.load(f)
+
+    print("Calculating embeddings ...")
+    embeddings = np.vstack([sent_emb_db[sid] for sid in sentence_ids])
+
+    return embeddings
+
+
+def _calc_pca(data: np.ndarray, n_components=10) -> np.ndarray:
+    pca = PCA(n_components=n_components)
+    print(f"Training PCA on {data.shape[0]} embeddings ...")
+    return pca.fit_transform(data)
+
+
+def _create_embedding_dataframe(embeddings: np.ndarray, sent_db: Dict[str, Sentence]):
 
     # Create DataFrame with embeddings and message texts
     df = pd.DataFrame(
-        components, columns=[f"PCA_{i}" for i in range(components.shape[1])]
+        embeddings, columns=[f"PCA_{i}" for i in range(embeddings.shape[1])]
     )
     df["sentence"] = [wrap(sent_db[sid].sentence, width=80)[0] for sid in sent_db]
     df = df.drop_duplicates(subset=["sentence"])
@@ -89,7 +102,9 @@ def _create_dataframe(sent_db: Dict[str, Sentence], components: np.ndarray):
     return df
 
 
-def _plot(df: DataFrame):
+def _plot(embeddings: np.ndarray, sent_db: Dict[str, Sentence]):
+
+    df = _create_embedding_dataframe(embeddings=embeddings, sent_db=sent_db)
 
     fig = px.scatter(
         data_frame=df,
