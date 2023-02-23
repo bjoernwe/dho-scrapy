@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 
 from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
-from experiments.bjoern.sentence import Sentence
+from data_models.sentence import Sentence
 from experiments.utils.paths import data_path
 from experiments.utils.paths import embeddings_path
 from experiments.utils.paths import jsonl_path

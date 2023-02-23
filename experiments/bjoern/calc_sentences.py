@@ -6,7 +6,7 @@ import nltk
 from tqdm import tqdm
 
 from data_models.message_db import MessageDB
-from experiments.bjoern.sentence import Sentence
+from data_models.sentence import Sentence
 from experiments.utils.paths import data_path
 from experiments.utils.paths import jsonl_path
 
