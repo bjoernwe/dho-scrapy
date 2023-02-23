@@ -6,7 +6,7 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from experiments.bjoern.sentence import Sentence
+from data_models.sentence import Sentence
 from experiments.utils.paths import data_path
 from experiments.utils.paths import embeddings_path
 
