@@ -362,7 +362,7 @@ def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessag
     assert filtered_msgs[1].author == "AUTHOR 1"
 
 
-def test_sentences(dho_msg: DhOMessage):
+def test_all_messages_are_split_into_sentences(dho_msg: DhOMessage):
 
     # GIVEN a message DB with two messages
     db = MessageDB(
