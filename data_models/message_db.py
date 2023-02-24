@@ -160,15 +160,20 @@ class MessageDB:
         return MessageDB(msgs=filtered_msgs)
 
     def filter_threads(
-        self, authors: Optional[Set[str]] = None, min_num_messages: int = 1
+        self,
+        authors: Optional[Set[str]] = None,
+        min_num_messages: int = 1,
     ) -> "MessageDB":
+
         thread_groups = self.group_by_thread(min_num_messages=min_num_messages)
+
         filtered_msgs = [
             msg
             for thread_id, thread_msgs in thread_groups.items()
             for msg in thread_msgs.get_all_messages()
             if authors is None or thread_msgs.get_first_message().author in authors
         ]
+
         return MessageDB(msgs=filtered_msgs)
 
     def get_sentences(self) -> List[Sentence]:
