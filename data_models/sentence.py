@@ -14,7 +14,7 @@ class Sentence(BaseModel):
 
     def __add__(self, other: "Sentence"):
         assert other.msg_id == self.msg_id
-        assert other.sentence_idx == self.sentence_idx + 1
+        assert other.sentence_idx > self.sentence_idx
         return Sentence(
             msg_id=self.msg_id,
             sentence_idx=self.sentence_idx,
