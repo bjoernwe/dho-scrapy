@@ -7,6 +7,7 @@ from typing import Hashable
 from typing import List
 from typing import Optional
 from typing import Set
+from typing import Union
 
 from data_models.categories import DhOCategory
 from data_models.dho_message import DhOMessage
@@ -62,7 +63,7 @@ class MessageDB:
         key: Callable[[DhOMessage], Any],
         keep_keys: Optional[Set[Hashable]] = None,
         min_group_size: int = 1,
-    ) -> Dict[Hashable, "MessageDB"]:
+    ) -> Dict[Union[int, str], "MessageDB"]:
 
         grouped_msgs = defaultdict(list)
 
