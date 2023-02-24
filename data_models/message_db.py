@@ -9,6 +9,8 @@ from typing import Optional
 from typing import Set
 from typing import Union
 
+from tqdm import tqdm
+
 from data_models.categories import DhOCategory
 from data_models.dho_message import DhOMessage
 from data_models.sentence import Sentence
@@ -171,9 +173,9 @@ class MessageDB:
 
     def get_sentences(self) -> List[Sentence]:
 
-        sentences = []
+        sentences: List[Sentence] = []
 
-        for msg in self.get_all_messages():
+        for msg in tqdm(self.get_all_messages()):
             sentences += msg.sentences
 
         return sentences
