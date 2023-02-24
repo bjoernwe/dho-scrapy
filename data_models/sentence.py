@@ -12,6 +12,15 @@ class Sentence(BaseModel):
     class Config:
         frozen = True
 
+    def __add__(self, other: "Sentence"):
+        assert other.msg_id == self.msg_id
+        assert other.sentence_idx == self.sentence_idx + 1
+        return Sentence(
+            msg_id=self.msg_id,
+            sentence_idx=self.sentence_idx,
+            sentence=self.sentence + " " + other.sentence,
+        )
+
     @property
     def sid(self) -> str:
         key = (
