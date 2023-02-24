@@ -29,3 +29,20 @@ def test_dho_message_accepts_date_string_in_dho_format(dho_msg: DhOMessage):
 
     # THEN the resulting message contains the correct date
     assert msg.date == datetime(2020, 11, 21, 4, 14, 6)
+
+
+def test_message_is_split_into_sentences(dho_msg: DhOMessage):
+
+    # GIVEN a message that contains several sentences
+    dho_msg.msg = "This is sentence 1. This is sentence two. This is another one."
+
+    # WHEN the individual sentences are queried
+    sentences = dho_msg.sentences
+
+    # THEN they are split correctly
+    snts = [s.sentence for s in sentences]
+    assert snts == [
+        "This is sentence 1.",
+        "This is sentence two.",
+        "This is another one.",
+    ]

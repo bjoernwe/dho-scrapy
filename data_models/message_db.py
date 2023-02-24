@@ -10,6 +10,7 @@ from typing import Set
 
 from data_models.categories import DhOCategory
 from data_models.dho_message import DhOMessage
+from data_models.sentence import Sentence
 
 
 class MessageDB:
@@ -166,3 +167,12 @@ class MessageDB:
             if authors is None or thread_msgs.get_first_message().author in authors
         ]
         return MessageDB(msgs=filtered_msgs)
+
+    def get_sentences(self) -> List[Sentence]:
+
+        sentences = []
+
+        for msg in self.get_all_messages():
+            sentences += msg.sentences
+
+        return sentences
