@@ -44,3 +44,16 @@ class DhOMessage(BaseModel):
         ]
 
         return sentences
+
+    def get_sentences(self, window_size: int = 1) -> List[Sentence]:
+
+        sentences = self.sentences
+
+        if window_size > 1:
+            windows = [
+                sentences[i : i + window_size]
+                for i in range(max(0, len(sentences) - window_size) + 1)
+            ]
+            sentences = [sum(window[1:], start=window[0]) for window in windows]
+
+        return sentences
