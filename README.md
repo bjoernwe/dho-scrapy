@@ -7,6 +7,7 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 
 - `pip install poetry` to install `poetry`
 - `poetry install` to prepare environment incl. all dependencies
+  - Or alternatively: `poetry install --without experiments` to skip large dependencies like `torch` and `cudas` that are only needed for the experiments
 - `poetry shell` to activate virtual environment
 - `python -m pytest` to run tests
 
