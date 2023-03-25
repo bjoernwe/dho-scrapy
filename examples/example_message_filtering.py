@@ -29,7 +29,7 @@ def example_message_filtering(message_db: MessageDB):
 
     # EXAMPLE 2
     # Load practice logs of a certain user
-    author_id = "Linda ”Polly Ester” Ö"
+    author_id = "curious-frame"
     practice_logs = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_threads(authors={author_id})
