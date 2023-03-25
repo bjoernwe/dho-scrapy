@@ -2,13 +2,27 @@ import pytest
 
 from data_models.dho_message import DhOMessage
 from scraper.dho_scraper.pipelines import HtmlToTextPipeline
+from scraper.dho_scraper.pipelines import RedactUserPipeline
 from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
 from scraper.dho_scraper.pipelines import RemoveDuplicateSpacesPipeline
 from scraper.dho_scraper.pipelines import RemoveShortMessagePipeline
 from scraper.dho_scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
 
 
-def test_dho_blockquotes_are_removed():
+def test_dho_blockquote_title_tags_are_removed():
+
+    # GIVEN some HTML with DhO-style block quote title tag
+    html = '<div class="quote-title other">TITLE</div>OTHER TEXT'
+
+    # WHEN the HTML is filtered
+    filtered = RemoveDhOBlockquotesPipeline._remove_blockquotes(html)
+
+    # THEN the result does not contain quote title anymore (but other text)
+    assert "OTHER TEXT" in filtered
+    assert "TITLE" not in filtered
+
+
+def test_dho_blockquote_tags_are_removed():
 
     # GIVEN some HTML with DhO-style block quote tag
     html = '<div class="quote other">A QUOTE</div>OTHER TEXT'
@@ -71,7 +85,9 @@ def test_duplicate_spaces_are_removed_from_message():
     argnames=["msg", "min_words", "too_short"],
     argvalues=[("foo", 2, True), ("foo bar", 2, False)],
 )
-def test_(msg: str, min_words: int, too_short: bool):
+def test_messages_can_be_filtered_for_number_of_words(
+    msg: str, min_words: int, too_short: bool
+):
 
     # GIVEN a message and a min number of words
     # WHEN the message is filtered for length
@@ -81,3 +97,17 @@ def test_(msg: str, min_words: int, too_short: bool):
 
     # THEN it is filtered as expected
     assert is_msg_too_short == too_short
+
+
+def test_user_name_can_be_redacted(dho_msg: DhOMessage):
+
+    # GIVEN a RedactUserPipeline
+    redact_pipeline = RedactUserPipeline()
+
+    # WHEN a message is processed
+    dho_msg.author = "TEST AUTHOR"
+    processed_msg = redact_pipeline.process_item(item=dho_msg.copy())
+
+    # THEN the author has been redacted
+    assert processed_msg.author != dho_msg.author
+    assert processed_msg.author == "squalid-big"
