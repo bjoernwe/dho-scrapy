@@ -11,7 +11,13 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 - `poetry shell` to activate virtual environment
 - `python -m pytest` to run tests
 
-### Quickstart
+### Downlaod Data
+
+- `sudo apt-get install git-lfs`
+- `git lfs fetch --all`
+
+
+### Scrape Data
 
 - `poetry shell` to activate virtual environment
 - `cd scraper`
