@@ -67,9 +67,15 @@ class RemoveDhOBlockquotesPipeline:
 
     @staticmethod
     def _remove_blockquotes(html: str) -> str:
+
         soup = BeautifulSoup(html, "html.parser")
+
+        for tag in soup.findAll("div", class_="quote-title"):
+            tag.decompose()
+
         for tag in soup.findAll("div", class_="quote"):
             tag.decompose()
+
         return str(soup)
 
 

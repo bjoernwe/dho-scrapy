@@ -9,7 +9,20 @@ from scraper.dho_scraper.pipelines import RemoveShortMessagePipeline
 from scraper.dho_scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
 
 
-def test_dho_blockquotes_are_removed():
+def test_dho_blockquote_title_tags_are_removed():
+
+    # GIVEN some HTML with DhO-style block quote title tag
+    html = '<div class="quote-title other">TITLE</div>OTHER TEXT'
+
+    # WHEN the HTML is filtered
+    filtered = RemoveDhOBlockquotesPipeline._remove_blockquotes(html)
+
+    # THEN the result does not contain quote title anymore (but other text)
+    assert "OTHER TEXT" in filtered
+    assert "TITLE" not in filtered
+
+
+def test_dho_blockquote_tags_are_removed():
 
     # GIVEN some HTML with DhO-style block quote tag
     html = '<div class="quote other">A QUOTE</div>OTHER TEXT'
