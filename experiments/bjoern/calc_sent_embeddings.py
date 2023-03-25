@@ -26,7 +26,7 @@ def calc_sentence_embeddings(
 ):
 
     embedding_db = EmbeddingsDB(
-        model_name=model_name, shelve_path=embeddings_shelve_path
+        model_name=model_name, shelf_path=embeddings_shelve_path
     )
 
     sentences = message_db.get_sentences()
