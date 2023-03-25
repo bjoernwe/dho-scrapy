@@ -176,11 +176,11 @@ class MessageDB:
 
         return MessageDB(msgs=filtered_msgs)
 
-    def get_sentences(self) -> List[Sentence]:
+    def get_sentences(self, window_size: int = 1) -> List[Sentence]:
 
         sentences: List[Sentence] = []
 
         for msg in tqdm(self.get_all_messages()):
-            sentences += msg.sentences
+            sentences += msg.get_sentences(window_size=window_size)
 
         return sentences
