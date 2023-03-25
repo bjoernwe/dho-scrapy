@@ -71,7 +71,9 @@ def test_duplicate_spaces_are_removed_from_message():
     argnames=["msg", "min_words", "too_short"],
     argvalues=[("foo", 2, True), ("foo bar", 2, False)],
 )
-def test_(msg: str, min_words: int, too_short: bool):
+def test_messages_can_be_filtered_for_number_of_words(
+    msg: str, min_words: int, too_short: bool
+):
 
     # GIVEN a message and a min number of words
     # WHEN the message is filtered for length
