@@ -8,11 +8,11 @@ from tqdm import tqdm
 from data_models.message_db import MessageDB
 from data_models.sentence import Sentence
 from experiments.utils.paths import data_path
-from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import default_jsonl_path
 
 
 def main():
-    msg_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    msg_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     out_path = data_path.joinpath("sentences.pkl")
     calc_and_store_sentences(msg_db=msg_db, out_path=out_path)
 

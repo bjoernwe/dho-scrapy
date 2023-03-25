@@ -7,14 +7,14 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from data_models.sentence import Sentence
-from experiments.utils.paths import embeddings_path
+from experiments.utils.paths import default_embeddings_path
 
 
 class EmbeddingsDB:
     def __init__(self, model_name: str, shelf_path: Optional[Path] = None):
         self._model_name = model_name
         self._model = SentenceTransformer(model_name)
-        self._shelf_path = shelf_path or embeddings_path.joinpath(
+        self._shelf_path = shelf_path or default_embeddings_path.joinpath(
             f"sentences_{model_name}.shelf"
         )
 
