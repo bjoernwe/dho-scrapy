@@ -70,7 +70,7 @@ def test_messages_are_grouped_by_author(message_db: MessageDB):
     author_msgs = message_db.group_by_author()
 
     # THEN there are messages of at least one of the known authors
-    assert len(author_msgs["J W"]) >= 7
+    assert len(author_msgs["loving-tone"]) >= 77
 
 
 def test_author_grouping_contains_all_messages(dho_msg: DhOMessage):
