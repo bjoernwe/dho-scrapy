@@ -34,9 +34,10 @@ def main():
 
 def calc_and_store_embeddings(model_names: List[str]):
 
+    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
+
     for model_name in model_names:
 
-        message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
         msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
         out_path = default_embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
 
