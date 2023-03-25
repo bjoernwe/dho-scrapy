@@ -10,8 +10,8 @@ from sklearn.decomposition import PCA
 
 from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
-from experiments.utils.paths import embeddings_path
-from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import default_embeddings_path
+from experiments.utils.paths import default_jsonl_path
 
 
 def main():
@@ -36,7 +36,7 @@ def main():
 def compare_embeddings(model_names: List[str], show_plot: bool = True):
 
     # Load practice logs of a certain user
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     author_id = "Linda ”Polly Ester” Ö"
     practice_logs = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
@@ -51,7 +51,7 @@ def compare_embeddings(model_names: List[str], show_plot: bool = True):
     for model_name in model_names:
 
         # Load embeddings
-        embd_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+        embd_path = default_embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
         with open(str(embd_path), "rb") as f:
             embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 

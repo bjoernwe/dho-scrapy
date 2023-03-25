@@ -7,8 +7,8 @@ from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from data_models.message_db import MessageDB
-from experiments.utils.paths import embeddings_path
-from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import default_embeddings_path
+from experiments.utils.paths import default_jsonl_path
 
 
 def main():
@@ -36,9 +36,9 @@ def calc_and_store_embeddings(model_names: List[str]):
 
     for model_name in model_names:
 
-        message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+        message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
         msg_embeddings = calc_embeddings(db=message_db, model_name=model_name)
-        out_path = embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+        out_path = default_embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
 
         with open(str(out_path), "wb") as f:
             pickle.dump(msg_embeddings, f)

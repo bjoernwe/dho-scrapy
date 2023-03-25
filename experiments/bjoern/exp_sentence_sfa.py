@@ -13,8 +13,8 @@ from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
 from data_models.sentence import Sentence
 from experiments.utils.paths import data_path
-from experiments.utils.paths import embeddings_path
-from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import default_embeddings_path
+from experiments.utils.paths import default_jsonl_path
 
 
 def main():
@@ -26,7 +26,7 @@ def main():
 def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
 
     # Load message IDs
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     practice_logs = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_threads(authors={author})
@@ -51,7 +51,9 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     )
 
     # Load embeddings
-    sent_emb_db_path = embeddings_path.joinpath(f"sent_embeddings_{model_name}.pkl")
+    sent_emb_db_path = default_embeddings_path.joinpath(
+        f"sent_embeddings_{model_name}.pkl"
+    )
     print(f"Loading {sent_emb_db_path} ...")
     with open(str(sent_emb_db_path), "rb") as f:
         sent_emb_db: Dict[str, np.ndarray] = pickle.load(f)

@@ -2,15 +2,15 @@ from pathlib import Path
 
 from data_models.embeddings_db import EmbeddingsDB
 from data_models.message_db import MessageDB
-from experiments.utils.paths import embeddings_path
-from experiments.utils.paths import jsonl_path
+from experiments.utils.paths import default_embeddings_path
+from experiments.utils.paths import default_jsonl_path
 
 
 def main():
 
     model_name = "paraphrase-albert-small-v2"
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
-    embeddings_shelve_path = embeddings_path.joinpath(
+    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
+    embeddings_shelve_path = default_embeddings_path.joinpath(
         f"sentences_1_{model_name}.shelve"
     )
 
