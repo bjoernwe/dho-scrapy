@@ -75,3 +75,13 @@ def test_feed_output_contains_uri_scheme():
     feed_files: List[str] = list(spider.custom_settings["FEEDS"].keys())
     assert len(feed_files) == 1
     assert feed_files[0].startswith("file://")
+
+
+def test_crawled_messages_are_redacted(crawled_messages: List[DhOMessage]):
+
+    # GIVEN a list of messages crawled by the spider
+    # WHEN all authors are collected
+    authors = {msg.author for msg in crawled_messages}
+
+    # THEN it contains redacted versions of known author names
+    assert "materialistic-gift" in authors

@@ -2,6 +2,7 @@ import pytest
 
 from data_models.dho_message import DhOMessage
 from scraper.dho_scraper.pipelines import HtmlToTextPipeline
+from scraper.dho_scraper.pipelines import RedactUserPipeline
 from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
 from scraper.dho_scraper.pipelines import RemoveDuplicateSpacesPipeline
 from scraper.dho_scraper.pipelines import RemoveShortMessagePipeline
@@ -83,3 +84,17 @@ def test_messages_can_be_filtered_for_number_of_words(
 
     # THEN it is filtered as expected
     assert is_msg_too_short == too_short
+
+
+def test_user_name_can_be_redacted(dho_msg: DhOMessage):
+
+    # GIVEN a RedactUserPipeline
+    redact_pipeline = RedactUserPipeline()
+
+    # WHEN a message is processed
+    dho_msg.author = "TEST AUTHOR"
+    processed_msg = redact_pipeline.process_item(item=dho_msg.copy())
+
+    # THEN the author has been redacted
+    assert processed_msg.author != dho_msg.author
+    assert processed_msg.author == "squalid-big"

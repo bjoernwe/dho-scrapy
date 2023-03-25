@@ -3,6 +3,7 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 from bs4 import BeautifulSoup
+from codenamize import codenamize
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 
@@ -21,6 +22,13 @@ class RemoveDuplicatesPipeline:
             raise DropItem(f"Duplicate item found: {item!r}")
 
         self.ids_seen.add(msg_id)
+        return item
+
+
+class RedactUserPipeline:
+    @staticmethod
+    def process_item(item: DhOMessage, _=None):
+        item.author = codenamize(item.author)
         return item
 
 
