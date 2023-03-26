@@ -373,7 +373,7 @@ def test_all_messages_are_split_into_sentences(dho_msg: DhOMessage):
     )
 
     # WHEN sentences are queried
-    sentences = db.get_sentences()
+    sentences = db.get_snippets(sentences_per_snippet=1)
 
     # THEN
     snts = [s.text for s in sentences]

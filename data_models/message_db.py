@@ -35,7 +35,7 @@ class MessageDB:
         msgs = []
 
         with open(jsonl_path, "r") as f:
-            for line in f.readlines():
+            for line in tqdm(f.readlines()):
                 msg = DhOMessage.parse_raw(line)
                 msgs.append(msg)
 
@@ -176,11 +176,11 @@ class MessageDB:
 
         return MessageDB(msgs=filtered_msgs)
 
-    def get_sentences(self, window_size: int = 1) -> List[TextSnippet]:
+    def get_snippets(self, sentences_per_snippet: int = 1) -> List[TextSnippet]:
 
-        sentences: List[TextSnippet] = []
+        snippets: List[TextSnippet] = []
 
         for msg in tqdm(self.get_all_messages()):
-            sentences += msg.get_sentences(window_size=window_size)
+            snippets += msg.get_snippets(sentences_per_snippet=sentences_per_snippet)
 
-        return sentences
+        return snippets
