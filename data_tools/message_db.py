@@ -184,3 +184,8 @@ class MessageDB:
             snippets += msg.get_snippets(sentences_per_snippet=sentences_per_snippet)
 
         return snippets
+
+    def get_snippet_texts(self, sentences_per_snippet: int = 0) -> List[str]:
+        snippets = self.get_snippets(sentences_per_snippet=sentences_per_snippet)
+        texts = [snippet.text for snippet in snippets]
+        return texts
