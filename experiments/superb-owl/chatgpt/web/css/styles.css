@@ -9,17 +9,3 @@ select {
   border-width: 2px;
 }
 
-div.character {
-  width: 600px;
-  background-size: cover;
-  padding: 10px;
-  color: #fff;
-  display: inline-block;
-  margin-bottom: 15px;
-  margin-right: 10px;
-}
-
-img.character-image {
-  max-width: 200px;
-  vertical-align: top;
-}
