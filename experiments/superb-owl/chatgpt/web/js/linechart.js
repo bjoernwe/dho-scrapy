@@ -1,3 +1,21 @@
+function movingAverage(a, window) {
+  window = Math.round(window);
+  if (window % 2 == 0) {
+    window += 1;
+  }
+  if (a.length < window || window < 2) return null;
+  let halfWindow = Math.floor((window-1)/2);
+  const out = [];
+  for (let i = 0; i < a.length; i++) {
+    const start = Math.max(0, i - halfWindow);
+    const end = Math.min(a.length, i + halfWindow);
+    const sample = a.slice(start, end);
+    const avg = sample.reduce((total, cur) => total + cur, 0.0) / sample.length;
+    out.push(avg);
+  }
+  return out;
+}
+
 // Copyright 2021 Observable, Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/line-with-tooltip
@@ -81,8 +99,8 @@ function LineChart(data, {
   function pointermoved(event) {
     const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
     tooltip.style("display", null);
-    // yScale(0) replaced yScale(Y[i])
-    tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(0)})`);
+    // yScale(5) replaced yScale(Y[i])
+    tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(5)})`);
 
     const path = tooltip.selectAll("path")
       .data([,])
@@ -115,7 +133,8 @@ function LineChart(data, {
   }
 
   ys.forEach((y, idx) => {
-    const Y = d3.map(data, y);
+    let Y = d3.map(data, y);
+    Y = movingAverage(Y, 21);
     console.log('y', Y)
     if (title === undefined) {
       const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
