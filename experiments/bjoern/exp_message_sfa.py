@@ -1,19 +1,15 @@
-import pickle
 from textwrap import wrap
-from typing import Dict
 
-import numpy as np
 import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
+from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
-from data_tools.embedders.embedder_transformer import EmbedderTransformer
 from data_tools.embeddings_db import EmbeddingsDB
 from data_tools.message_db import MessageDB
-from experiments.utils.paths import default_embeddings_path
-from experiments.utils.paths import default_jsonl_path
 
 
 def main():

@@ -7,9 +7,9 @@ from typing import Optional
 import numpy as np
 from tqdm import tqdm
 
+from data_tools.default_paths import default_embeddings_path
 from data_tools.embedders.embedder import Embedder
 from data_tools.textsnippet import TextSnippet
-from experiments.utils.paths import default_embeddings_path
 
 
 class EmbeddingsDB:
