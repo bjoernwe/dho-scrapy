@@ -14,7 +14,7 @@ def test_embeddings_are_stored_persistently(tmp_path: Path):
     sentence = TextSnippet(source_msg_id=123, idx=0, text="foo bar")
 
     # WHEN the sentence is added to the DB
-    emb_db.add_sentences([sentence])
+    emb_db.add_snippets([sentence])
 
     # THEN the DB with sentence embedding can be restored again from disk
     restored_emb_db = EmbeddingsDB(shelf_path=db_path, embedder=embedder_mock)

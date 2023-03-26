@@ -24,9 +24,13 @@ class EmbeddingsDB:
         with shelve.open(filename=str(self._shelf_path)) as shelf:
             return item in shelf
 
-    def add_sentences(self, sentences: Iterable[TextSnippet]):
+    @property
+    def shelf_path(self) -> Path:
+        return self._shelf_path
+
+    def add_snippets(self, snippets: Iterable[TextSnippet]):
         with shelve.open(filename=str(self._shelf_path)) as shelf:
-            for sentence in tqdm(sentences):
+            for sentence in tqdm(snippets):
                 if sentence.sid in shelf:
                     continue
                 embedding = self._embedder.embed(text=[sentence.text])
