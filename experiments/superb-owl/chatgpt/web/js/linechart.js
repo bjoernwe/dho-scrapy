@@ -3,7 +3,7 @@
 // https://observablehq.com/@d3/line-with-tooltip
 function LineChart(data, {
   x = ([x]) => x, // given d in data, returns the (temporal) x-value
-  y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
+  ys = [([, y]) => y], // given d in data, returns the (quantitative) y-value
   title, // given d in data, returns the title text
   defined, // for gaps in data
   curve = d3.curveLinear, // method of interpolation between points
@@ -19,51 +19,30 @@ function LineChart(data, {
   yType = d3.scaleLinear, // type of y-scale
   yDomain, // [ymin, ymax]
   yRange = [height - marginBottom, marginTop], // [bottom, top]
-  color = "currentColor", // stroke color of line
+  colors = ["currentColor"], // stroke color of line
   strokeWidth = 1.5, // stroke width of line, in pixels
   strokeLinejoin = "round", // stroke line join of line
   strokeLinecap = "round", // stroke line cap of line
   yFormat, // a format specifier string for the y-axis
   yLabel, // a label for the y-axis
 } = {}) {
-  // Compute values.
   const X = d3.map(data, x);
-  const Y = d3.map(data, y);
   const O = d3.map(data, d => d);
   const I = d3.map(data, (_, i) => i);
 
-  // Compute which data points are considered defined.
-  if (defined === undefined) defined = (d, i) => !isNaN(X[i]) && !isNaN(Y[i]);
-  const D = d3.map(data, defined);
-
-  // Compute default domains.
+  console.log('ys', ys.length);
   if (xDomain === undefined) xDomain = d3.extent(X);
-  if (yDomain === undefined) yDomain = [0, d3.max(Y)];
+  //if (yDomain === undefined) yDomain = [0, d3.max(Y)];
 
-  // Construct scales and axes.
   const xScale = xType(xDomain, xRange);
   const yScale = yType(yDomain, yRange);
   const xAxis = d3.axisBottom(xScale).ticks(width / 80).tickSizeOuter(0);
   const yAxis = d3.axisLeft(yScale).ticks(height / 40, yFormat);
 
-  // Compute titles.
-  if (title === undefined) {
-    const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
-    const formatValue = yScale.tickFormat(100, yFormat);
-    title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
-  } else {
-    const O = d3.map(data, d => d);
-    const T = title;
-    title = i => T(O[i], i, data);
-  }
+  if (defined === undefined) defined = (d, i) => true;
+  const D = d3.map(data, defined);
 
-  // Construct a line generator.
-  const line = d3.line()
-      .defined(i => D[i])
-      .curve(curve)
-      .x(i => xScale(X[i]))
-      .y(i => yScale(Y[i]));
-  console.log('line', data, D, X, Y)
+
 
   const svg = d3.create("svg")
       .attr("width", width)
@@ -96,21 +75,14 @@ function LineChart(data, {
           .attr("text-anchor", "start")
           .text(yLabel));
 
-  svg.append("path")
-      .attr("fill", "none")
-      .attr("stroke", color)
-      .attr("stroke-width", strokeWidth)
-      .attr("stroke-linejoin", strokeLinejoin)
-      .attr("stroke-linecap", strokeLinecap)
-      .attr("d", line(I));
-
   const tooltip = svg.append("g")
       .style("pointer-events", "none");
 
   function pointermoved(event) {
     const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
     tooltip.style("display", null);
-    tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(Y[i])})`);
+    // yScale(0) replaced yScale(Y[i])
+    tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(0)})`);
 
     const path = tooltip.selectAll("path")
       .data([,])
@@ -142,5 +114,33 @@ function LineChart(data, {
     svg.dispatch("input", {bubbles: true});
   }
 
+  ys.forEach((y, idx) => {
+    const Y = d3.map(data, y);
+    console.log('y', Y)
+    if (title === undefined) {
+      const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
+      const formatValue = yScale.tickFormat(100, yFormat);
+      title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
+    } else {
+      const O = d3.map(data, d => d);
+      const T = title;
+      title = i => T(O[i], i, data);
+    }
+    color = colors[idx];
+
+    // Construct a line generator.
+    const line = d3.line()
+        .defined(i => D[i])
+        .curve(curve)
+        .x(i => xScale(X[i]))
+        .y(i => yScale(Y[i]));
+    svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", color)
+        .attr("stroke-width", strokeWidth)
+        .attr("stroke-linejoin", strokeLinejoin)
+        .attr("stroke-linecap", strokeLinecap)
+        .attr("d", line(I));
+  });
   return Object.assign(svg.node(), {value: null});
 }

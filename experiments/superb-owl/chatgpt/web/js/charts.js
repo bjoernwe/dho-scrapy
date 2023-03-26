@@ -21,12 +21,17 @@ function renderChart(data) {
   console.log("render chart", data);
   let chart = LineChart(data, {
     x: d => new Date(d.date),
-    y: d => d.pleasure,
+    ys: [
+      d => d.pleasure,
+      d => d.pain,
+      d => d.concentration,
+      d => d.peak_experience,
+    ],
     defined: d => true,
     yDomain: [1, 5],
     width: 600,
     height: 500,
-    color: 'red',
+    colors: ['green', 'red', 'steelblue', 'orange'],
   });
   $("#Chart").append(chart);
 }
