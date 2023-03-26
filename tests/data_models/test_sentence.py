@@ -4,8 +4,8 @@ from data_models.textsnippet import TextSnippet
 def test_different_objects_with_same_content_have_same_sid():
 
     # GIVEN two sentences with same content
-    s1 = TextSnippet(source_msg_id=123, idx=99, text="foo")
-    s2 = TextSnippet(source_msg_id=123, idx=99, text="foo")
+    s1 = TextSnippet(source_msg_id=123, text="foo")
+    s2 = TextSnippet(source_msg_id=123, text="foo")
 
     # WHEN their ID is calculated
     # THEN it is the same for both sentences

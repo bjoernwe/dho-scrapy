@@ -56,7 +56,7 @@ def test_subsequent_sentences_are_concatenated_in_sliding_window(dho_msg: DhOMes
     dho_msg.msg = "This is sentence 1. This is sentence two. This is another one."
 
     # WHEN a window of sentences is extracted
-    sentences = dho_msg.get_sentences(window_size=2)
+    sentences = dho_msg.get_snippets(sentences_per_snippet=2)
 
     # THE result is as expected
     snts = [s.text for s in sentences]
@@ -76,8 +76,20 @@ def test_sentence_windows_work_with_extreme_values(
     dho_msg.msg = "This is sentence 1. This is sentence two. This is another one."
 
     # WHEN a window of unreasonable size is requested
-    sentences = dho_msg.get_sentences(window_size=window_size)
+    sentences = dho_msg.get_snippets(sentences_per_snippet=window_size)
 
     # THEN the result is the original sentence
     assert len(sentences) == 1
     assert sentences[0].text == dho_msg.msg
+
+
+def test_sentences_can_be_calculated_for_empty_message(dho_msg: DhOMessage):
+
+    # GIVEN a message with empty body
+    dho_msg.msg = ""
+
+    # WHEN sentence snippets are calculated
+    snippets = dho_msg.get_snippets(sentences_per_snippet=2)
+
+    # THEN it is an empty list
+    assert snippets == []
