@@ -44,7 +44,7 @@ function renderChart(data) {
   let chart = LineChart(data, {
     title: d => attributes.map(attr => `${attr}: ${d[attr]}`).join("\n"),
     x: d => new Date(d.date),
-    ys: attributes.map(attr => d => d[attr]),
+    ys: attributes.map(attr => d => d[attr] || 0),
     defined: d => true,
     yDomain: [1, 5],
     width: 600,

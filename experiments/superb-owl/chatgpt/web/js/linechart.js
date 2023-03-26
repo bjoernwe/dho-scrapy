@@ -136,7 +136,7 @@ function LineChart(data, {
 
   ys.forEach((y, idx) => {
     let Y = d3.map(data, y);
-    //Y = movingAverage(Y, 21);
+    Y = movingAverage(Y, 21);
     if (title === undefined) {
       const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
       const formatValue = yScale.tickFormat(100, yFormat);
