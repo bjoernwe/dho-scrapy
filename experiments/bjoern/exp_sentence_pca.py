@@ -8,7 +8,7 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 
 from data_tools.default_paths import data_path
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
@@ -46,9 +46,7 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     ]
 
     # Load & filter embeddings
-    sent_emb_db_path = default_embeddings_path.joinpath(
-        f"sent_embeddings_{model_name}.pkl"
-    )
+    sent_emb_db_path = default_cache_path.joinpath(f"sent_embeddings_{model_name}.pkl")
     print(f"Loading {sent_emb_db_path} ...")
     with open(str(sent_emb_db_path), "rb") as f:
         sent_emb_db: Dict[str, np.ndarray] = pickle.load(f)

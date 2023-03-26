@@ -1,30 +1,42 @@
 from typing import List
 
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.embedders.embedder_transformer import EmbedderTransformer
-from data_tools.embeddings_db import EmbeddingsDB
 from data_tools.message_db import MessageDB
-from data_tools.textsnippet import TextSnippet
 
 
-def main(model_name: str = "paraphrase-albert-small-v2"):
+def main():
 
-    for sentences_per_snippet in [1, 3, 5, 10]:
-        embeddings_db = EmbeddingsDB(
-            shelf_path=default_embeddings_path.joinpath(
-                f"{sentences_per_snippet}_sent_emb_{model_name}.shelf"
-            ),
-            embedder=EmbedderTransformer(model_name=model_name),
+    model_name = "paraphrase-albert-small-v2"
+
+    for sentences_per_snippet in [0, 1, 3, 5, 10]:  # 0 = all sentences / full message
+        calc_and_cache_embeddings(
+            sentences_per_snippet=sentences_per_snippet,
+            model_name=model_name,
         )
-        snippets = _get_snippets(sentences_per_snippet=sentences_per_snippet)
-        embeddings_db.add_snippets(snippets=snippets)
 
 
-def _get_snippets(sentences_per_snippet: int) -> List[TextSnippet]:
+def calc_and_cache_embeddings(sentences_per_snippet: int, model_name: str):
+
+    # Get Embedder (with cache)
+    cache_path = default_cache_path.joinpath(
+        f"emb_snt_{sentences_per_snippet}_{model_name}.shelf"
+    )
+    embedder = EmbedderTransformer(model_name=model_name, cache_path=cache_path)
+
+    # Calculate embeddings (i.e., store in cache)
+    texts = _get_texts(sentences_per_snippet=sentences_per_snippet)
+    print(
+        f"Caching embeddings for {len(texts)} text snippets (sentenes per snippet: {sentences_per_snippet} / model: {model_name}) ..."
+    )
+    _ = embedder.get_embeddings(texts=texts)
+
+
+def _get_texts(sentences_per_snippet: int) -> List[str]:
     message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     snippets = message_db.get_snippets(sentences_per_snippet=sentences_per_snippet)
-    return snippets
+    return [snippet.text for snippet in snippets]
 
 
 if __name__ == "__main__":

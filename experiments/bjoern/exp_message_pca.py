@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.embeddings_db import EmbeddingsDB
@@ -34,7 +34,7 @@ def plot_pca(author: str, model_name: str, show_plot: bool = True):
     )
 
     # Load embeddings
-    shelf_path = default_embeddings_path.joinpath(f"msg_emb_{model_name}.shelf")
+    shelf_path = default_cache_path.joinpath(f"msg_emb_{model_name}.shelf")
     embeddings = EmbeddingsDB(shelf_path=shelf_path)
 
     # Calc PCA
