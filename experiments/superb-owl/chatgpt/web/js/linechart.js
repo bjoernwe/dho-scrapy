@@ -43,6 +43,7 @@ function LineChart(data, {
   strokeLinecap = "round", // stroke line cap of line
   yFormat, // a format specifier string for the y-axis
   yLabel, // a label for the y-axis
+  selected = () => {},
 } = {}) {
   const X = d3.map(data, x);
   const O = d3.map(data, d => d);
@@ -98,6 +99,7 @@ function LineChart(data, {
   function pointermoved(event) {
     const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
     const dataPoint = data[i];
+    selected(dataPoint);
     tooltip.style("display", null);
     // yScale(5) replaced yScale(Y[i])
     tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(5)})`);
@@ -117,6 +119,7 @@ function LineChart(data, {
         .join("tspan")
           .attr("x", 0)
           .attr("y", (_, i) => `${i * 1.1}em`)
+          .attr("fill", (_, i) => colors[i])
           .text(d => d));
 
     const {x, y, width: w, height: h} = text.node().getBBox();
@@ -133,7 +136,7 @@ function LineChart(data, {
 
   ys.forEach((y, idx) => {
     let Y = d3.map(data, y);
-    Y = movingAverage(Y, 21);
+    //Y = movingAverage(Y, 21);
     if (title === undefined) {
       const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
       const formatValue = yScale.tickFormat(100, yFormat);
