@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from data_models.dho_message import DhOMessage
+from data_tools.dho_message import DhOMessage
 
 
 def test_dho_message_accepts_datetime(dho_msg: DhOMessage):

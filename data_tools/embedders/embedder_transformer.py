@@ -3,7 +3,7 @@ from typing import List
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
-from data_models.embedders.embedder import Embedder
+from data_tools.embedders.embedder import Embedder
 
 
 class EmbedderTransformer(Embedder):

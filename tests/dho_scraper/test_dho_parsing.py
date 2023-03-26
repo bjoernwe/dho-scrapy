@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from scrapy.http import XmlResponse
 
-from data_models.categories import DhOCategory
+from data_tools.dho_categories import DhOCategory
 from scraper.dho_scraper.spider import _get_messages_from_rss
 
 

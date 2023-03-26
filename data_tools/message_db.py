@@ -11,9 +11,9 @@ from typing import Union
 
 from tqdm import tqdm
 
-from data_models.categories import DhOCategory
-from data_models.dho_message import DhOMessage
-from data_models.textsnippet import TextSnippet
+from data_tools.dho_categories import DhOCategory
+from data_tools.dho_message import DhOMessage
+from data_tools.textsnippet import TextSnippet
 
 
 class MessageDB:

@@ -1,4 +1,4 @@
-from data_models.message_db import MessageDB
+from data_tools.message_db import MessageDB
 from examples.example_message_filtering import example_message_filtering
 
 

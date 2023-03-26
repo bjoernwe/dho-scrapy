@@ -7,7 +7,7 @@ from codenamize import codenamize
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 
-from data_models.dho_message import DhOMessage
+from data_tools.dho_message import DhOMessage
 
 
 class RemoveDuplicatesPipeline:

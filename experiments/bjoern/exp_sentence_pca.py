@@ -7,9 +7,9 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from data_models.categories import DhOCategory
-from data_models.message_db import MessageDB
-from data_models.textsnippet import TextSnippet
+from data_tools.dho_categories import DhOCategory
+from data_tools.message_db import MessageDB
+from data_tools.textsnippet import TextSnippet
 from experiments.utils.paths import data_path
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path

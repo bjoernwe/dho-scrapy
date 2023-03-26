@@ -11,9 +11,9 @@ import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from sklearn.decomposition import PCA
 
-from data_models.categories import DhOCategory
-from data_models.message_db import MessageDB
-from data_models.textsnippet import TextSnippet
+from data_tools.dho_categories import DhOCategory
+from data_tools.message_db import MessageDB
+from data_tools.textsnippet import TextSnippet
 from experiments.utils.paths import data_path
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path

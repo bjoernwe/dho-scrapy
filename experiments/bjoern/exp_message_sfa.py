@@ -8,10 +8,10 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
-from data_models.categories import DhOCategory
-from data_models.embedders.embedder_transformer import EmbedderTransformer
-from data_models.embeddings_db import EmbeddingsDB
-from data_models.message_db import MessageDB
+from data_tools.dho_categories import DhOCategory
+from data_tools.embedders.embedder_transformer import EmbedderTransformer
+from data_tools.embeddings_db import EmbeddingsDB
+from data_tools.message_db import MessageDB
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path
 

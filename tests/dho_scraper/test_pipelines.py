@@ -1,6 +1,6 @@
 import pytest
 
-from data_models.dho_message import DhOMessage
+from data_tools.dho_message import DhOMessage
 from scraper.dho_scraper.pipelines import HtmlToTextPipeline
 from scraper.dho_scraper.pipelines import RedactUserPipeline
 from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
