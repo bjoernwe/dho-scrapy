@@ -176,7 +176,7 @@ class MessageDB:
 
         return MessageDB(msgs=filtered_msgs)
 
-    def get_snippets(self, sentences_per_snippet: int = 1) -> List[TextSnippet]:
+    def get_snippets(self, sentences_per_snippet: int = 0) -> List[TextSnippet]:
 
         snippets: List[TextSnippet] = []
 

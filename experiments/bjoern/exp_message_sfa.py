@@ -9,6 +9,8 @@ from sklearn.decomposition import PCA
 from sksfa import SFA
 
 from data_models.categories import DhOCategory
+from data_models.embedders.embedder_transformer import EmbedderTransformer
+from data_models.embeddings_db import EmbeddingsDB
 from data_models.message_db import MessageDB
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path
@@ -16,32 +18,30 @@ from experiments.utils.paths import default_jsonl_path
 
 def main():
 
-    author = "Linda ”Polly Ester” Ö"
-
+    author = "curious-frame"
     model_name = "paraphrase-albert-small-v2"
     # model_name = "multi-qa-mpnet-base-dot-v1"
     # model_name = "paraphrase-MiniLM-L3-v2"
 
-    plot_pca(author=author, model_name=model_name, show_plot=True)
+    plot_sfa(author=author, model_name=model_name, show_plot=True)
 
 
-def plot_pca(author: str, model_name: str, show_plot: bool = True):
+def plot_sfa(author: str, model_name: str, show_plot: bool = True):
 
     # Load practice logs of a certain user
     message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
-    practice_logs = (
+    text_snippets = (
         message_db.filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_threads(authors={author})
         .filter_thread_responses(keep_op=True)
         .sorted_by_date()
-        .get_all_messages()
+        .get_snippets(sentences_per_snippet=0)
     )
 
     # Load & calc embeddings
-    embd_path = default_embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
-    with open(str(embd_path), "rb") as f:
-        embedding_db: Dict[int, np.ndarray] = pickle.load(f)
-    embeddings = np.vstack([embedding_db[msg.msg_id] for msg in practice_logs])
+    shelf_path = default_embeddings_path.joinpath(f"msg_emb_{model_name}.shelf")
+    embeddings_db = EmbeddingsDB(shelf_path=shelf_path)
+    embeddings = embeddings_db.get_embeddings(text_snippets=text_snippets)
 
     # Calc PCA
     pca = PCA(n_components=30)
@@ -55,9 +55,11 @@ def plot_pca(author: str, model_name: str, show_plot: bool = True):
     df = pd.DataFrame(
         slow_features, columns=[f"SFA_{i}" for i in range(slow_features.shape[1])]
     )
-    df["msg_id"] = [msg.msg_id for msg in practice_logs]
-    df["date"] = [msg.date for msg in practice_logs]
-    df["msg"] = ["<br>".join(wrap(msg.msg, width=100)) for msg in practice_logs]
+    df["msg_id"] = [snippet.source_msg_id for snippet in text_snippets]
+    df["date"] = [message_db[snippet.source_msg_id].date for snippet in text_snippets]
+    df["msg"] = [
+        "<br>".join(wrap(snippet.text, width=100)) for snippet in text_snippets
+    ]
     print(df)
 
     # Plot
