@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 from data_models.categories import DhOCategory
 from data_models.dho_message import DhOMessage
-from data_models.sentence import Sentence
+from data_models.textsnippet import TextSnippet
 
 
 class MessageDB:
@@ -176,9 +176,9 @@ class MessageDB:
 
         return MessageDB(msgs=filtered_msgs)
 
-    def get_sentences(self, window_size: int = 1) -> List[Sentence]:
+    def get_sentences(self, window_size: int = 1) -> List[TextSnippet]:
 
-        sentences: List[Sentence] = []
+        sentences: List[TextSnippet] = []
 
         for msg in tqdm(self.get_all_messages()):
             sentences += msg.get_sentences(window_size=window_size)

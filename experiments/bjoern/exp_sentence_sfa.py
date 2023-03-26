@@ -11,7 +11,7 @@ from sksfa import SFA
 
 from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
-from data_models.sentence import Sentence
+from data_models.textsnippet import TextSnippet
 from experiments.utils.paths import data_path
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path
@@ -40,14 +40,14 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     sent_db_path = data_path.joinpath(f"sentences.pkl")
     print(f"Loading {sent_db_path} ...")
     with open(str(sent_db_path), "rb") as f:
-        sent_db: Dict[str, Sentence] = pickle.load(f)
+        sent_db: Dict[str, TextSnippet] = pickle.load(f)
 
     # Filter and sort sentences
     sentences = [
-        sentence for sentence in sent_db.values() if sentence.msg_id in msg_ids
+        sentence for sentence in sent_db.values() if sentence.source_msg_id in msg_ids
     ]
     sentences = sorted(
-        sentences, key=lambda s: (message_db[s.msg_id].date, s.sentence_idx)
+        sentences, key=lambda s: (message_db[s.source_msg_id].date, s.idx)
     )
 
     # Load embeddings
@@ -75,9 +75,9 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
         slow_features, columns=[f"SFA_{i}" for i in range(slow_features.shape[1])]
     )
     df["sid"] = [s.sid for s in sentences]
-    df["sentence_idx"] = [log(s.sentence_idx + 1) for s in sentences]
-    df["date"] = [message_db[s.msg_id].date for s in sentences]
-    df["sentence"] = ["<br>".join(wrap(s.sentence, width=100)) for s in sentences]
+    df["sentence_idx"] = [log(s.idx + 1) for s in sentences]
+    df["date"] = [message_db[s.source_msg_id].date for s in sentences]
+    df["sentence"] = ["<br>".join(wrap(s.text, width=100)) for s in sentences]
     print(df)
 
     # Plot

@@ -376,7 +376,7 @@ def test_all_messages_are_split_into_sentences(dho_msg: DhOMessage):
     sentences = db.get_sentences()
 
     # THEN
-    snts = [s.sentence for s in sentences]
+    snts = [s.text for s in sentences]
     assert snts == [
         "sentence one.",
         "sentence two.",
