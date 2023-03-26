@@ -1,6 +1,6 @@
+from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
-from experiments.utils.paths import default_jsonl_path
 
 
 def main():

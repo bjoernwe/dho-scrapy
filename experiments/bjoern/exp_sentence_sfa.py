@@ -9,12 +9,12 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
+from data_tools.default_paths import data_path
+from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
 from data_tools.textsnippet import TextSnippet
-from experiments.utils.paths import data_path
-from experiments.utils.paths import default_embeddings_path
-from experiments.utils.paths import default_jsonl_path
 
 
 def main():

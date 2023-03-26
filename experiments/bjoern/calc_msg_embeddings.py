@@ -1,11 +1,11 @@
 from typing import List
 
+from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_jsonl_path
 from data_tools.embedders.embedder_transformer import EmbedderTransformer
 from data_tools.embeddings_db import EmbeddingsDB
 from data_tools.message_db import MessageDB
 from data_tools.textsnippet import TextSnippet
-from experiments.utils.paths import default_embeddings_path
-from experiments.utils.paths import default_jsonl_path
 
 
 def main():
