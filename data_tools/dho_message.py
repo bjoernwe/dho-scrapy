@@ -5,8 +5,8 @@ import nltk
 from pydantic import BaseModel
 from pydantic import validator
 
-from data_models.categories import DhOCategory
-from data_models.textsnippet import TextSnippet
+from data_tools.dho_categories import DhOCategory
+from data_tools.textsnippet import TextSnippet
 
 
 class DhOMessage(BaseModel):

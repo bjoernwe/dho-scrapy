@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from data_models.embedders.embedder_mock import EmbedderMock
-from data_models.embeddings_db import EmbeddingsDB
-from data_models.textsnippet import TextSnippet
+from data_tools.embedders.embedder_mock import EmbedderMock
+from data_tools.embeddings_db import EmbeddingsDB
+from data_tools.textsnippet import TextSnippet
 
 
 def test_embeddings_are_stored_persistently(tmp_path: Path):

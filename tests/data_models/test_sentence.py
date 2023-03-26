@@ -1,4 +1,4 @@
-from data_models.textsnippet import TextSnippet
+from data_tools.textsnippet import TextSnippet
 
 
 def test_different_objects_with_same_content_have_same_sid():

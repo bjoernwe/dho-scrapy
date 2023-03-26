@@ -4,9 +4,9 @@ from typing import List
 
 import pytest
 
-from data_models.categories import DhOCategory
-from data_models.dho_message import DhOMessage
-from data_models.message_db import MessageDB
+from data_tools.dho_categories import DhOCategory
+from data_tools.dho_message import DhOMessage
+from data_tools.message_db import MessageDB
 
 
 @pytest.fixture
