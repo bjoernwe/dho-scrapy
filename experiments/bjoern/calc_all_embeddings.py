@@ -20,10 +20,9 @@ def calc_and_cache_embeddings(sentences_per_snippet: int, model_name: str):
         sentences_per_snippet=sentences_per_snippet,
     )
 
-    snippets = experiment.message_db.get_snippets(
+    texts = experiment.message_db.get_snippet_texts(
         sentences_per_snippet=sentences_per_snippet
     )
-    texts = [snippet.text for snippet in snippets]
 
     # Calculate embeddings (i.e., store in cache)
     print(
