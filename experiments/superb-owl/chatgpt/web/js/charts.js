@@ -30,12 +30,12 @@ const attributeColors = {
   'auditory_phenomena': '#7257C5',
   'tactile_phenomena': '#917CD3',
   'energetic_phenomena': '#B1A1E0',
-  'gratitude': '',
-  'compassion': '',
-  'bitterness': '',
-  'fear': '',
-  'equanimity': '',
-  'insight': '',
+  'gratitude': 'aquamarine',
+  'compassion': 'darkgreen',
+  'bitterness': 'brown',
+  'fear': 'black',
+  'equanimity': 'dimgrey',
+  'insight': 'deeppink',
 }
 
 function renderChart(data) {
