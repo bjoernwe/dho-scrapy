@@ -8,7 +8,6 @@ import numpy as np
 from tqdm import tqdm
 
 from data_models.embedders.embedder import Embedder
-from data_models.embedders.embedder_transformer import EmbedderTransformer
 from data_models.textsnippet import TextSnippet
 from experiments.utils.paths import default_embeddings_path
 

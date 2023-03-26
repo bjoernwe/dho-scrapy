@@ -11,7 +11,7 @@ def test_embeddings_are_stored_persistently(tmp_path: Path):
     db_path = tmp_path.joinpath("emb_db.shelf")
     embedder_mock = EmbedderMock()
     emb_db = EmbeddingsDB(shelf_path=db_path, embedder=embedder_mock)
-    sentence = TextSnippet(source_msg_id=123, idx=0, text="foo bar")
+    sentence = TextSnippet(source_msg_id=123, text="foo bar")
 
     # WHEN the sentence is added to the DB
     emb_db.add_snippets([sentence])
