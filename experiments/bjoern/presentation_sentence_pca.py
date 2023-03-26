@@ -12,7 +12,7 @@ from plotly.subplots import make_subplots
 from sklearn.decomposition import PCA
 
 from data_tools.default_paths import data_path
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
@@ -72,9 +72,7 @@ def _get_sentence_db(msg_ids: Set[int], min_length: int) -> Dict[str, TextSnippe
 
 def _get_embeddings(sentence_ids: List[str], model_name: str) -> np.ndarray:
 
-    sent_emb_db_path = default_embeddings_path.joinpath(
-        f"sent_embeddings_{model_name}.pkl"
-    )
+    sent_emb_db_path = default_cache_path.joinpath(f"sent_embeddings_{model_name}.pkl")
     print(f"Loading {sent_emb_db_path} ...")
 
     with open(str(sent_emb_db_path), "rb") as f:

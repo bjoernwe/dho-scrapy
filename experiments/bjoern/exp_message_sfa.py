@@ -5,7 +5,7 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.embeddings_db import EmbeddingsDB
@@ -35,7 +35,7 @@ def plot_sfa(author: str, model_name: str, show_plot: bool = True):
     )
 
     # Load & calc embeddings
-    shelf_path = default_embeddings_path.joinpath(f"msg_emb_{model_name}.shelf")
+    shelf_path = default_cache_path.joinpath(f"msg_emb_{model_name}.shelf")
     embeddings_db = EmbeddingsDB(shelf_path=shelf_path)
     embeddings = embeddings_db.get_embeddings(text_snippets=text_snippets)
 

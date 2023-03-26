@@ -8,7 +8,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from data_tools.default_paths import default_embeddings_path
+from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
 from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
@@ -51,7 +51,7 @@ def compare_embeddings(model_names: List[str], show_plot: bool = True):
     for model_name in model_names:
 
         # Load embeddings
-        embd_path = default_embeddings_path.joinpath(f"embeddings_{model_name}.pkl")
+        embd_path = default_cache_path.joinpath(f"embeddings_{model_name}.pkl")
         with open(str(embd_path), "rb") as f:
             embedding_db: Dict[int, np.ndarray] = pickle.load(f)
 
