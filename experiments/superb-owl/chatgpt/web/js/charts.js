@@ -20,6 +20,7 @@ function renderUser(user) {
 function renderChart(data) {
   console.log("render chart", data);
   let chart = LineChart(data, {
+    title: d => `Pleasure: ${d.pleasure}\nPain: ${d.pain}\nConcentration: ${d.concentration}\nPeak Experience: ${d.peak_experience}`,
     x: d => new Date(d.date),
     ys: [
       d => d.pleasure,

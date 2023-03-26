@@ -48,7 +48,6 @@ function LineChart(data, {
   const O = d3.map(data, d => d);
   const I = d3.map(data, (_, i) => i);
 
-  console.log('ys', ys.length);
   if (xDomain === undefined) xDomain = d3.extent(X);
   //if (yDomain === undefined) yDomain = [0, d3.max(Y)];
 
@@ -98,6 +97,7 @@ function LineChart(data, {
 
   function pointermoved(event) {
     const i = d3.bisectCenter(X, xScale.invert(d3.pointer(event)[0]));
+    const dataPoint = data[i];
     tooltip.style("display", null);
     // yScale(5) replaced yScale(Y[i])
     tooltip.attr("transform", `translate(${xScale(X[i])},${yScale(5)})`);
@@ -113,11 +113,10 @@ function LineChart(data, {
       .join("text")
       .call(text => text
         .selectAll("tspan")
-        .data(`${title(i)}`.split(/\n/))
+        .data(`${title(data[i])}`.split(/\n/))
         .join("tspan")
           .attr("x", 0)
           .attr("y", (_, i) => `${i * 1.1}em`)
-          .attr("font-weight", (_, i) => i ? null : "bold")
           .text(d => d));
 
     const {x, y, width: w, height: h} = text.node().getBBox();
@@ -135,15 +134,10 @@ function LineChart(data, {
   ys.forEach((y, idx) => {
     let Y = d3.map(data, y);
     Y = movingAverage(Y, 21);
-    console.log('y', Y)
     if (title === undefined) {
       const formatDate = xScale.tickFormat(null, "%b %-d, %Y");
       const formatValue = yScale.tickFormat(100, yFormat);
       title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
-    } else {
-      const O = d3.map(data, d => d);
-      const T = title;
-      title = i => T(O[i], i, data);
     }
     color = colors[idx];
 
