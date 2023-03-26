@@ -7,7 +7,7 @@ function renderPage() {
     <option value="${user.id}">${user.title}</option>
     `)}
   `);
-  const startUserID = window.location.hash.replace('#', '') || "something-frame"
+  const startUserID = window.location.hash.replace('#', '') || "curious-frame"
   $('select').val(startUserID);
   pickUser();
 }
@@ -17,22 +17,35 @@ function renderUser(user) {
   renderChart(user)
 }
 
+const attributeColors = {
+  'pain': 'red',
+  'pleasure': 'green',
+  'concentration': 'steelblue',
+  'peak_experience': 'orange',
+  'visual_phenomena': '',
+  'auditory_phenomena': '',
+  'tactile_phenomena': '',
+  'energetic_phenomena': '',
+  'gratitude': '',
+  'compassion': '',
+  'bitterness': '',
+  'fear': '',
+  'equanimity': '',
+  'insight': '',
+}
+
 function renderChart(data) {
   console.log("render chart", data);
+  const attributes = Object.keys(data[0]).filter(key => key !== "date" && key != "msg_id" && key != "msg");
   let chart = LineChart(data, {
-    title: d => `Pleasure: ${d.pleasure}\nPain: ${d.pain}\nConcentration: ${d.concentration}\nPeak Experience: ${d.peak_experience}`,
+    title: d => attributes.map(attr => `${attr}: ${d[attr]}`).join("\n"),
     x: d => new Date(d.date),
-    ys: [
-      d => d.pleasure,
-      d => d.pain,
-      d => d.concentration,
-      d => d.peak_experience,
-    ],
+    ys: attributes.map(attr => d => d[attr]),
     defined: d => true,
     yDomain: [1, 5],
     width: 600,
     height: 500,
-    colors: ['green', 'red', 'steelblue', 'orange'],
+    colors: attributes.map(attr => attributeColors[attr]),
   });
   $("#Chart").append(chart);
 }

@@ -139,7 +139,7 @@ function LineChart(data, {
       const formatValue = yScale.tickFormat(100, yFormat);
       title = i => `${formatDate(X[i])}\n${formatValue(Y[i])}`;
     }
-    color = colors[idx];
+    color = colors[idx] || 'black';
 
     // Construct a line generator.
     const line = d3.line()
