@@ -17,15 +17,19 @@ function renderUser(user) {
   renderChart(user)
 }
 
+function renderMessage(datum) {
+  $("#Message").text(datum.msg);
+}
+
 const attributeColors = {
   'pain': 'red',
   'pleasure': 'green',
   'concentration': 'steelblue',
   'peak_experience': 'orange',
-  'visual_phenomena': '',
-  'auditory_phenomena': '',
-  'tactile_phenomena': '',
-  'energetic_phenomena': '',
+  'visual_phenomena': '#593DAB',
+  'auditory_phenomena': '#7257C5',
+  'tactile_phenomena': '#917CD3',
+  'energetic_phenomena': '#B1A1E0',
   'gratitude': '',
   'compassion': '',
   'bitterness': '',
@@ -46,6 +50,7 @@ function renderChart(data) {
     width: 600,
     height: 500,
     colors: attributes.map(attr => attributeColors[attr]),
+    selected: d => renderMessage(d),
   });
   $("#Chart").append(chart);
 }
