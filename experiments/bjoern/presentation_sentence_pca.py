@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 
 from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
-from data_models.sentence import Sentence
+from data_models.textsnippet import TextSnippet
 from experiments.utils.paths import data_path
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path
@@ -54,18 +54,18 @@ def _get_relevant_message_ids() -> Set[int]:
     return {msg.msg_id for msg in practice_logs}
 
 
-def _get_sentence_db(msg_ids: Set[int], min_length: int) -> Dict[str, Sentence]:
+def _get_sentence_db(msg_ids: Set[int], min_length: int) -> Dict[str, TextSnippet]:
 
     sent_db_path = data_path.joinpath(f"sentences.pkl")
     print(f"Loading {sent_db_path} ...")
 
     with open(str(sent_db_path), "rb") as f:
-        sent_db: Dict[str, Sentence] = pickle.load(f)
+        sent_db: Dict[str, TextSnippet] = pickle.load(f)
 
     sent_db = {
         k: v
         for k, v in sent_db.items()
-        if v.msg_id in msg_ids and len(v.sentence.split()) >= min_length
+        if v.source_msg_id in msg_ids and len(v.text.split()) >= min_length
     }
     return sent_db
 
@@ -92,20 +92,22 @@ def _calc_pca(data: np.ndarray, n_components=10) -> np.ndarray:
     return pca.fit_transform(data)
 
 
-def _create_embedding_dataframe(embeddings: np.ndarray, sent_db: Dict[str, Sentence]):
+def _create_embedding_dataframe(
+    embeddings: np.ndarray, sent_db: Dict[str, TextSnippet]
+):
 
     # Create DataFrame with embeddings and message texts
     df = pd.DataFrame(
         embeddings, columns=[f"PCA_{i}" for i in range(embeddings.shape[1])]
     )
-    df["sentence"] = [wrap(sent_db[sid].sentence, width=80)[0] for sid in sent_db]
+    df["sentence"] = [wrap(sent_db[sid].text, width=80)[0] for sid in sent_db]
     df = df.drop_duplicates(subset=["sentence"])
     print(df)
 
     return df
 
 
-def _plot(embeddings: np.ndarray, sent_db: Dict[str, Sentence]):
+def _plot(embeddings: np.ndarray, sent_db: Dict[str, TextSnippet]):
 
     df = _create_embedding_dataframe(embeddings=embeddings, sent_db=sent_db)
 

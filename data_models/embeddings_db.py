@@ -3,29 +3,31 @@ from pathlib import Path
 from typing import Iterable
 from typing import Optional
 
-from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from data_models.sentence import Sentence
+from data_models.embedders.embedder import Embedder
+from data_models.embedders.embedder_transformer import EmbedderTransformer
+from data_models.textsnippet import TextSnippet
 from experiments.utils.paths import default_embeddings_path
 
 
 class EmbeddingsDB:
-    def __init__(self, model_name: str, shelf_path: Optional[Path] = None):
-        self._model_name = model_name
-        self._model = SentenceTransformer(model_name)
+    def __init__(
+        self, shelf_path: Optional[Path] = None, embedder: Optional[Embedder] = None
+    ):
+        self._embedder = embedder or EmbedderTransformer()
         self._shelf_path = shelf_path or default_embeddings_path.joinpath(
-            f"sentences_{model_name}.shelf"
+            f"sentences_{embedder.name}.shelf"
         )
 
     def __contains__(self, item):
         with shelve.open(filename=str(self._shelf_path)) as shelf:
             return item in shelf
 
-    def add_sentences(self, sentences: Iterable[Sentence]):
+    def add_sentences(self, sentences: Iterable[TextSnippet]):
         with shelve.open(filename=str(self._shelf_path)) as shelf:
             for sentence in tqdm(sentences):
                 if sentence.sid in shelf:
                     continue
-                embedding = self._model.encode([sentence.sentence])
+                embedding = self._embedder.embed(text=[sentence.text])
                 shelf[sentence.sid] = embedding

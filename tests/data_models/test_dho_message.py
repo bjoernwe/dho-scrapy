@@ -42,7 +42,7 @@ def test_message_is_split_into_sentences(dho_msg: DhOMessage):
     sentences = dho_msg.sentences
 
     # THEN they are split correctly
-    snts = [s.sentence for s in sentences]
+    snts = [s.text for s in sentences]
     assert snts == [
         "This is sentence 1.",
         "This is sentence two.",
@@ -59,7 +59,7 @@ def test_subsequent_sentences_are_concatenated_in_sliding_window(dho_msg: DhOMes
     sentences = dho_msg.get_sentences(window_size=2)
 
     # THE result is as expected
-    snts = [s.sentence for s in sentences]
+    snts = [s.text for s in sentences]
     assert snts == [
         "This is sentence 1. This is sentence two.",
         "This is sentence two. This is another one.",
@@ -80,4 +80,4 @@ def test_sentence_windows_work_with_extreme_values(
 
     # THEN the result is the original sentence
     assert len(sentences) == 1
-    assert sentences[0].sentence == dho_msg.msg
+    assert sentences[0].text == dho_msg.msg

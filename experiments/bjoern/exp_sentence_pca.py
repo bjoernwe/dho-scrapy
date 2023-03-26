@@ -9,7 +9,7 @@ from sklearn.decomposition import PCA
 
 from data_models.categories import DhOCategory
 from data_models.message_db import MessageDB
-from data_models.sentence import Sentence
+from data_models.textsnippet import TextSnippet
 from experiments.utils.paths import data_path
 from experiments.utils.paths import default_embeddings_path
 from experiments.utils.paths import default_jsonl_path
@@ -38,9 +38,11 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     sent_db_path = data_path.joinpath(f"sentences.pkl")
     print(f"Loading {sent_db_path} ...")
     with open(str(sent_db_path), "rb") as f:
-        sent_db: Dict[str, Sentence] = pickle.load(f)
+        sent_db: Dict[str, TextSnippet] = pickle.load(f)
     sentence_ids = [
-        sentence.sid for sentence in sent_db.values() if sentence.msg_id in msg_ids
+        sentence.sid
+        for sentence in sent_db.values()
+        if sentence.source_msg_id in msg_ids
     ]
 
     # Load & filter embeddings
@@ -64,7 +66,7 @@ def plot_sentence_pca(author: str, model_name: str, show_plot: bool = True):
     )
     df["sid"] = sentence_ids
     df["sentence"] = [
-        "<br>".join(wrap(sent_db[sid].sentence, width=100)) for sid in sentence_ids
+        "<br>".join(wrap(sent_db[sid].text, width=100)) for sid in sentence_ids
     ]
     print(df)
 

@@ -1,11 +1,11 @@
-from data_models.sentence import Sentence
+from data_models.textsnippet import TextSnippet
 
 
 def test_different_objects_with_same_content_have_same_sid():
 
     # GIVEN two sentences with same content
-    s1 = Sentence(msg_id=123, sentence_idx=99, sentence="foo")
-    s2 = Sentence(msg_id=123, sentence_idx=99, sentence="foo")
+    s1 = TextSnippet(source_msg_id=123, idx=99, text="foo")
+    s2 = TextSnippet(source_msg_id=123, idx=99, text="foo")
 
     # WHEN their ID is calculated
     # THEN it is the same for both sentences
@@ -15,13 +15,13 @@ def test_different_objects_with_same_content_have_same_sid():
 def test_sentences_can_be_concatenated_through_addition():
 
     # GIVEN two sentences with
-    s1 = Sentence(msg_id=123, sentence_idx=0, sentence="foo")
-    s2 = Sentence(msg_id=123, sentence_idx=1, sentence="bar")
+    s1 = TextSnippet(source_msg_id=123, idx=0, text="foo")
+    s2 = TextSnippet(source_msg_id=123, idx=1, text="bar")
 
     # WHEN the sentences are added
     s = s1 + s2
 
     # THEN their content is concatenated
-    assert s.msg_id == 123
-    assert s.sentence_idx == 0
-    assert s.sentence == f"{s1.sentence} {s2.sentence}"
+    assert s.source_msg_id == 123
+    assert s.idx == 0
+    assert s.text == f"{s1.text} {s2.text}"
