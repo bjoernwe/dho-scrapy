@@ -10,11 +10,15 @@ from sklearn.decomposition import PCA
 
 from data_tools.default_paths import default_cache_path
 from data_tools.default_paths import default_jsonl_path
+from data_tools.default_paths import get_default_cache_path
 from data_tools.dho_categories import DhOCategory
+from data_tools.embedders.embedder_transformer import EmbedderTransformer
 from data_tools.message_db import MessageDB
+from experiments.experiment_setup import ExperimentSetup
 
 
 def main():
+
     model_names = [
         "all-mpnet-base-v2",
         "multi-qa-mpnet-base-dot-v1",
@@ -33,32 +37,35 @@ def main():
     compare_embeddings(model_names=model_names, show_plot=True)
 
 
-def compare_embeddings(model_names: List[str], show_plot: bool = True):
+def compare_embeddings(
+    model_names: List[str], sentence_per_snippet: int = 0, show_plot: bool = True
+):
 
     # Load practice logs of a certain user
-    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
-    author_id = "Linda ”Polly Ester” Ö"
-    practice_logs = (
-        message_db.filter_categories(categories={DhOCategory.PracticeLogs})
+    author_id = "curious-frame"
+    message_db = (
+        MessageDB.from_file(jsonl_path=default_jsonl_path)
+        .filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_threads(authors={author_id})
         .filter_thread_responses(keep_op=True)
         .sorted_by_date()
-        .get_all_messages()
     )
+    snippets = message_db.get_snippets(sentences_per_snippet=sentence_per_snippet)
+    texts = [snippet.text for snippet in snippets]
 
-    pca_models = {}
+    pca_models = dict()
 
     for model_name in model_names:
 
-        # Load embeddings
-        embd_path = default_cache_path.joinpath(f"embeddings_{model_name}.pkl")
-        with open(str(embd_path), "rb") as f:
-            embedding_db: Dict[int, np.ndarray] = pickle.load(f)
+        embeddings = EmbedderTransformer(
+            model_name=model_name,
+            cache_path=get_default_cache_path(
+                sentences_per_snippet=sentence_per_snippet, model_name=model_name
+            ),
+        ).get_embeddings(texts=texts)
 
         # Calc PCA
-        embeddings = np.vstack([embedding_db[msg.msg_id] for msg in practice_logs])
-        pca_models[model_name] = PCA(n_components=100)
-        pca_models[model_name].fit(embeddings)
+        pca_models[model_name] = PCA(n_components=100).fit(embeddings)
 
     # Plot
     pca_models = _sort_dict(d=pca_models, key=lambda x: x[1].explained_variance_[0])
