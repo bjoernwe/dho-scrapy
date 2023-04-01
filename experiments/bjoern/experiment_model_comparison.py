@@ -1,6 +1,4 @@
-import pickle
 from typing import Callable
-from typing import Dict
 from typing import List
 
 import numpy as np
@@ -8,12 +6,7 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from data_tools.default_paths import default_cache_path
-from data_tools.default_paths import default_jsonl_path
-from data_tools.default_paths import get_default_cache_path
 from data_tools.dho_categories import DhOCategory
-from data_tools.embedders.embedder_transformer import EmbedderTransformer
-from data_tools.message_db import MessageDB
 from experiments.experiment_setup import ExperimentSetup
 
 
@@ -38,31 +31,29 @@ def main():
 
 
 def compare_embeddings(
-    model_names: List[str], sentence_per_snippet: int = 0, show_plot: bool = True
+    model_names: List[str],
+    sentence_per_snippet: int = 0,
+    show_plot: bool = True,
 ):
-
-    # Load practice logs of a certain user
-    author_id = "curious-frame"
-    message_db = (
-        MessageDB.from_file(jsonl_path=default_jsonl_path)
-        .filter_categories(categories={DhOCategory.PracticeLogs})
-        .filter_threads(authors={author_id})
-        .filter_thread_responses(keep_op=True)
-        .sorted_by_date()
-    )
-    snippets = message_db.get_snippets(sentences_per_snippet=sentence_per_snippet)
-    texts = [snippet.text for snippet in snippets]
 
     pca_models = dict()
 
     for model_name in model_names:
 
-        embeddings = EmbedderTransformer(
+        experiment = ExperimentSetup(
             model_name=model_name,
-            cache_path=get_default_cache_path(
-                sentences_per_snippet=sentence_per_snippet, model_name=model_name
-            ),
-        ).get_embeddings(texts=texts)
+            sentences_per_snippet=sentence_per_snippet,
+        )
+
+        texts = (
+            experiment.message_db.filter_categories(
+                categories={DhOCategory.PracticeLogs}
+            )
+            .filter_threads(authors={"curious-frame"})
+            .filter_thread_responses(keep_op=True)
+            .get_snippet_texts(sentences_per_snippet=sentence_per_snippet)
+        )
+        embeddings = experiment.embedder.get_embeddings(texts=texts)
 
         # Calc PCA
         pca_models[model_name] = PCA(n_components=100).fit(embeddings)
