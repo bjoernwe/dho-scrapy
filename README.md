@@ -14,8 +14,8 @@ A [Scrapy](https://scrapy.org/) spider to crawl messages from
 ### Quickstart
 
 - `poetry shell` to activate virtual environment
-- `python scraper.1_crawl_messages` to crawl messages from DhO (to be stored in `./data/`)
-- `python scraper.2_convert_to_plain_text` to convert messages to simple txt (in `./data/`)
+- `python -m scraper.1_crawl_messages` to crawl messages from DhO (to be stored in `./data/`)
+- `python -m scraper.2_convert_to_plain_text` to convert messages to simple txt (in `./data/`)
 
 ### Examples & Experiments
 
