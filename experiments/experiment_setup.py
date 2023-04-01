@@ -30,6 +30,14 @@ class ExperimentSetup:
         )
 
     @property
+    def model_name(self) -> str:
+        return self._model_name
+
+    @property
+    def sentences_per_snippet(self) -> int:
+        return self._sentences_per_snippet
+
+    @property
     def message_db(self) -> MessageDB:
         return self._msg_db
 
