@@ -1,2 +1,0 @@
-data/embeddings/*.pkl filter=lfs diff=lfs merge=lfs -text
-data/messages.jsonl filter=lfs diff=lfs merge=lfs -text
