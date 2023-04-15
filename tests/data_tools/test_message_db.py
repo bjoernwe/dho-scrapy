@@ -4,9 +4,9 @@ from typing import List
 
 import pytest
 
-from data_models.categories import DhOCategory
-from data_models.dho_message import DhOMessage
-from data_models.message_db import MessageDB
+from data_tools.dho_categories import DhOCategory
+from data_tools.dho_message import DhOMessage
+from data_tools.message_db import MessageDB
 
 
 @pytest.fixture
@@ -360,3 +360,26 @@ def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessag
     assert filtered_msgs[0].thread_id == filtered_msgs[1].thread_id == 222
     assert filtered_msgs[0].author == "AUTHOR 2"
     assert filtered_msgs[1].author == "AUTHOR 1"
+
+
+def test_all_messages_are_split_into_sentences(dho_msg: DhOMessage):
+
+    # GIVEN a message DB with two messages
+    db = MessageDB(
+        msgs=[
+            dho_msg.copy(update={"msg_id": 1, "msg": "sentence one. sentence two."}),
+            dho_msg.copy(update={"msg_id": 2, "msg": "sentence one. sentence two."}),
+        ]
+    )
+
+    # WHEN sentences are queried
+    sentences = db.get_snippets(sentences_per_snippet=1)
+
+    # THEN
+    snts = [s.text for s in sentences]
+    assert snts == [
+        "sentence one.",
+        "sentence two.",
+        "sentence one.",
+        "sentence two.",
+    ]

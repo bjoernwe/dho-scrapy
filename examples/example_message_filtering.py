@@ -1,10 +1,10 @@
-from data_models.categories import DhOCategory
-from data_models.message_db import MessageDB
-from experiments.utils.paths import jsonl_path
+from data_tools.default_paths import default_jsonl_path
+from data_tools.dho_categories import DhOCategory
+from data_tools.message_db import MessageDB
 
 
 def main():
-    message_db = MessageDB.from_file(jsonl_path=jsonl_path)
+    message_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     example_message_filtering(message_db=message_db)
 
 

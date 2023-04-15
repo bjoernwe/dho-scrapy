@@ -1,7 +1,7 @@
 import plotly.express as px
 
-from data_models.message_db import MessageDB
-from experiments.utils.paths import jsonl_path
+from data_tools.default_paths import default_jsonl_path
+from data_tools.message_db import MessageDB
 
 
 def main():
@@ -11,7 +11,7 @@ def main():
 def experiment(show_plot: bool = True):
 
     # Load data
-    messages = MessageDB.from_file(jsonl_path=jsonl_path).get_all_messages()
+    messages = MessageDB.from_file(jsonl_path=default_jsonl_path).get_all_messages()
 
     # Experiment
     # ...
