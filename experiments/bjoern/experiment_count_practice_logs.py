@@ -1,6 +1,6 @@
-from data_models.categories import DhOCategory
-from data_models.message_db import MessageDB
-from experiments.utils.paths import jsonl_path
+from data_tools.default_paths import default_jsonl_path
+from data_tools.dho_categories import DhOCategory
+from data_tools.message_db import MessageDB
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
 def print_practice_log_counts():
 
     author_logs = (
-        MessageDB.from_file(jsonl_path=jsonl_path)
+        MessageDB.from_file(jsonl_path=default_jsonl_path)
         .filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_thread_responses(keep_op=True)
         .group_by_author()

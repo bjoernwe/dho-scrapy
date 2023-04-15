@@ -7,9 +7,13 @@ from typing import Hashable
 from typing import List
 from typing import Optional
 from typing import Set
+from typing import Union
 
-from data_models.categories import DhOCategory
-from data_models.dho_message import DhOMessage
+from tqdm import tqdm
+
+from data_tools.dho_categories import DhOCategory
+from data_tools.dho_message import DhOMessage
+from data_tools.textsnippet import TextSnippet
 
 
 class MessageDB:
@@ -31,7 +35,7 @@ class MessageDB:
         msgs = []
 
         with open(jsonl_path, "r") as f:
-            for line in f.readlines():
+            for line in tqdm(f.readlines()):
                 msg = DhOMessage.parse_raw(line)
                 msgs.append(msg)
 
@@ -61,7 +65,7 @@ class MessageDB:
         key: Callable[[DhOMessage], Any],
         keep_keys: Optional[Set[Hashable]] = None,
         min_group_size: int = 1,
-    ) -> Dict[Hashable, "MessageDB"]:
+    ) -> Dict[Union[int, str], "MessageDB"]:
 
         grouped_msgs = defaultdict(list)
 
@@ -156,13 +160,32 @@ class MessageDB:
         return MessageDB(msgs=filtered_msgs)
 
     def filter_threads(
-        self, authors: Optional[Set[str]] = None, min_num_messages: int = 1
+        self,
+        authors: Optional[Set[str]] = None,
+        min_num_messages: int = 1,
     ) -> "MessageDB":
+
         thread_groups = self.group_by_thread(min_num_messages=min_num_messages)
+
         filtered_msgs = [
             msg
             for thread_id, thread_msgs in thread_groups.items()
             for msg in thread_msgs.get_all_messages()
             if authors is None or thread_msgs.get_first_message().author in authors
         ]
+
         return MessageDB(msgs=filtered_msgs)
+
+    def get_snippets(self, sentences_per_snippet: int = 0) -> List[TextSnippet]:
+
+        snippets: List[TextSnippet] = []
+
+        for msg in tqdm(self.get_all_messages()):
+            snippets += msg.get_snippets(sentences_per_snippet=sentences_per_snippet)
+
+        return snippets
+
+    def get_snippet_texts(self, sentences_per_snippet: int = 0) -> List[str]:
+        snippets = self.get_snippets(sentences_per_snippet=sentences_per_snippet)
+        texts = [snippet.text for snippet in snippets]
+        return texts
