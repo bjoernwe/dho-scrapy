@@ -11,6 +11,7 @@ def main():
     msg_db = MessageDB.from_file(jsonl_path=default_jsonl_path)
     snippets = (
         msg_db.filter_categories(categories={DhOCategory.DharmaDiagnostics})
+        .filter_thread_responses(keep_op=False)
         .filter_message_length(min_num_words=3)
         .get_snippet_texts(sentences_per_snippet=3)
     )
