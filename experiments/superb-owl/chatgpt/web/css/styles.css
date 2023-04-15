@@ -1,0 +1,11 @@
+
+p {
+  max-width: 800px;
+}
+
+select {
+  height: 40px;
+  font-size: 18px;
+  border-width: 2px;
+}
+
