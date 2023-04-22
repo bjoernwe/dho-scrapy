@@ -26,7 +26,7 @@ psql -f migrations/1_posts.sql
 
 Then you can run the script
 ```bash
-python main.py --subreddit=streamentry
+python main.py streamentry
 ```
 
 ## Local Postgres
