@@ -47,7 +47,7 @@ def get_posts(subreddit, limit=None, before=None):
     if before is not None:
         print(before)
         ago = datetime.now() - before
-        params["before"] = "%ds" % ago.total_seconds()
+        params["before"] = "%ds" % (ago.total_seconds() + 1)
     response = requests.get(PUSHSHIFT_API_URL, params=params)
     if response.status_code == 200:
         return response.json()["data"]
@@ -59,26 +59,39 @@ def get_posts(subreddit, limit=None, before=None):
 # Define the subreddit to scrape
 subreddit = args.subreddit
 
-# Retrieve min created_utc for the given subreddit from postgres
-min_created_utc = retrieve_min_created(subreddit)
+def get_next_posts():
+    # Retrieve min created_utc for the given subreddit from postgres
+    min_created_utc = retrieve_min_created(subreddit)
 
-# Get the posts from the Pushshift API
-posts = get_posts(subreddit, before=min_created_utc)
+    # Get the posts from the Pushshift API
+    posts = get_posts(subreddit, before=min_created_utc)
+    if len(posts) == 0:
+        return False
 
-# Iterate through all the posts in the subreddit
-for post in posts:
-    created = datetime.fromtimestamp(post["created_utc"])
+    # Iterate through all the posts in the subreddit
+    for post in posts:
+        created = datetime.fromtimestamp(post["created_utc"])
 
+        try:
+            # Insert the post data into the database
+            connection = connect()
+            cursor = connection.cursor()
+            cursor.execute("""
+                INSERT INTO posts (id, subreddit, title, author, created_utc, num_comments, score, url, text)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
+            """, (post["id"], subreddit, post["title"], post["author"], created, post["num_comments"], post["score"], post["url"], post["selftext"]))
+            connection.commit()
+        except (Exception, Error) as error:
+            print("Error while inserting post into PostgreSQL database:", error)
+    return True
+
+while True:
+    print("getting next batch...")
     try:
-        # Insert the post data into the database
-        connection = connect()
-        cursor = connection.cursor()
-        cursor.execute("""
-            INSERT INTO posts (id, subreddit, title, author, created_utc, num_comments, score, url, text)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);
-        """, (post["id"], subreddit, post["title"], post["author"], created, post["num_comments"], post["score"], post["url"], post["selftext"]))
-        connection.commit()
-        print("Post inserted successfully")
-    except (Exception, Error) as error:
-        print("Error while inserting post into PostgreSQL database:", error)
+        some_left = get_next_posts()
+    except Exception as error:
+        print("error getting batch")
+    if not some_left:
+        break
 
+print("done!")
