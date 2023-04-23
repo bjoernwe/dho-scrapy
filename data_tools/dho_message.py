@@ -8,7 +8,7 @@ from pydantic import validator
 from data_tools.textsnippet import TextSnippet
 
 
-class DhOMessage(BaseModel):
+class ForumMessage(BaseModel):
 
     msg_id: int
     thread_id: int

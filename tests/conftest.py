@@ -9,15 +9,15 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
-from data_tools.dho_message import DhOMessage
+from data_tools.dho_message import ForumMessage
 from data_tools.message_db import MessageDB
 from scraper.dho_scraper.categories import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
 
 
 @pytest.fixture
-def dho_msg() -> DhOMessage:
-    return DhOMessage(
+def dho_msg() -> ForumMessage:
+    return ForumMessage(
         msg_id=15662490,
         category=DhOCategory.ContemporaryBuddhism,
         thread_id=15662491,
@@ -71,17 +71,17 @@ def message_db(jsonl_path: Path) -> MessageDB:
 
 
 @pytest.fixture(scope="session")
-def crawled_messages(jsonl_path: Path) -> List[DhOMessage]:
+def crawled_messages(jsonl_path: Path) -> List[ForumMessage]:
     return _messages_from_file(jsonl_path)
 
 
-def _messages_from_file(jsonl_path: Path) -> List[DhOMessage]:
+def _messages_from_file(jsonl_path: Path) -> List[ForumMessage]:
 
     messages = []
 
     with open(str(jsonl_path), "r") as file:
         for line in file.readlines():
-            dho_message = DhOMessage.parse_raw(line)
+            dho_message = ForumMessage.parse_raw(line)
             messages.append(dho_message)
 
     return messages
