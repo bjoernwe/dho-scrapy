@@ -9,9 +9,9 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
-from data_tools.dho_categories import DhOCategory
 from data_tools.dho_message import DhOMessage
 from data_tools.message_db import MessageDB
+from scraper.dho_scraper.categories import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
 
 

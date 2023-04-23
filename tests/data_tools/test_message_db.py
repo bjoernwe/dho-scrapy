@@ -4,9 +4,9 @@ from typing import List
 
 import pytest
 
-from data_tools.dho_categories import DhOCategory
 from data_tools.dho_message import DhOMessage
 from data_tools.message_db import MessageDB
+from scraper.dho_scraper.categories import DhOCategory
 
 
 @pytest.fixture

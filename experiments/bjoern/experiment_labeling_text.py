@@ -1,8 +1,8 @@
 import pandas as pd
 
 from data_tools.default_paths import default_jsonl_path
-from data_tools.dho_categories import DhOCategory
 from data_tools.message_db import MessageDB
+from scraper.dho_scraper.categories import DhOCategory
 
 
 def main():

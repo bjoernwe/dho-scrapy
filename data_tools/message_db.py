@@ -11,8 +11,8 @@ from typing import Union
 
 from tqdm import tqdm
 
-from data_tools.dho_categories import DhOCategory
 from data_tools.dho_message import DhOMessage
+from data_tools.msg_category import MsgCategory
 from data_tools.textsnippet import TextSnippet
 
 
@@ -147,7 +147,7 @@ class MessageDB:
         return MessageDB(msgs=filtered_msgs)
 
     def filter_categories(
-        self, categories: Optional[Set[DhOCategory]] = None, min_num_message: int = 1
+        self, categories: Optional[Set[MsgCategory]] = None, min_num_message: int = 1
     ) -> "MessageDB":
         category_msgs = self.group_by_category(
             keep_categories=categories, min_num_messages=min_num_message
