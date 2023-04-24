@@ -87,6 +87,7 @@ def get_next_posts():
 
 while True:
     print("getting next batch...")
+    some_left = True
     try:
         some_left = get_next_posts()
     except Exception as error:
