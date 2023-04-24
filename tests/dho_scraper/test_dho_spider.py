@@ -1,24 +1,24 @@
 from pathlib import Path
 from typing import List
 
-from data_tools.dho_message import DhOMessage
+from data_tools.dho_message import ForumMessage
 from scraper.dho_scraper.spider import DhOCategory
 from scraper.dho_scraper.spider import DhOSpider
 
 
-def test_spider_finds_expected_number_of_messages(crawled_messages: List[DhOMessage]):
+def test_spider_finds_expected_number_of_messages(crawled_messages: List[ForumMessage]):
     # GIVEN a spider for DhO
     # WHEN the messages are crawled
     # THEN there's the expected number of them
     assert len(crawled_messages) >= 31
 
 
-def _find_msg_by_id(msg_id: int, msgs: List[DhOMessage]) -> DhOMessage:
+def _find_msg_by_id(msg_id: int, msgs: List[ForumMessage]) -> ForumMessage:
     return next(filter(lambda m: m.msg_id == msg_id, msgs))
 
 
 def test_spider_finds_known_message(
-    crawled_messages: List[DhOMessage], dho_msg: DhOMessage
+    crawled_messages: List[ForumMessage], dho_msg: ForumMessage
 ):
     # GIVEN a known message
     # WHEN all messages are crawled by the spider
@@ -28,7 +28,9 @@ def test_spider_finds_known_message(
     assert msg.author == dho_msg.author
 
 
-def test_spider_removes_html(crawled_messages: List[DhOMessage], dho_msg: DhOMessage):
+def test_spider_removes_html(
+    crawled_messages: List[ForumMessage], dho_msg: ForumMessage
+):
 
     # GIVEN a DhO spider and a known message with HTML tags
     assert "<" in dho_msg.msg
@@ -40,7 +42,7 @@ def test_spider_removes_html(crawled_messages: List[DhOMessage], dho_msg: DhOMes
     assert "<" not in msg.msg
 
 
-def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
+def test_spider_parses_message_ids(crawled_messages: List[ForumMessage]):
 
     # GIVEN a list of messages crawled by the spider
     # WHEN the message IDs are considered
@@ -51,7 +53,7 @@ def test_spider_parses_message_ids(crawled_messages: List[DhOMessage]):
 
 
 def test_crawled_messages_contain_category(
-    crawled_messages: List[DhOMessage], test_dho_category: DhOCategory
+    crawled_messages: List[ForumMessage], test_dho_category: DhOCategory
 ):
 
     # GIVEN spider and a certain category
@@ -77,7 +79,7 @@ def test_feed_output_contains_uri_scheme():
     assert feed_files[0].startswith("file://")
 
 
-def test_crawled_messages_are_redacted(crawled_messages: List[DhOMessage]):
+def test_crawled_messages_are_redacted(crawled_messages: List[ForumMessage]):
 
     # GIVEN a list of messages crawled by the spider
     # WHEN all authors are collected

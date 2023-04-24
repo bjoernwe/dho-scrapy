@@ -4,9 +4,9 @@ from typing import List
 
 import pytest
 
-from data_tools.dho_categories import DhOCategory
-from data_tools.dho_message import DhOMessage
+from data_tools.dho_message import ForumMessage
 from data_tools.message_db import MessageDB
+from scraper.dho_scraper.categories import DhOCategory
 
 
 @pytest.fixture
@@ -15,7 +15,7 @@ def message_db(jsonl_path) -> MessageDB:
 
 
 @pytest.fixture
-def msgs_in_threads(dho_msg: DhOMessage) -> List[DhOMessage]:
+def msgs_in_threads(dho_msg: ForumMessage) -> List[ForumMessage]:
 
     author_1 = "AUTHOR 1"
     author_2 = "AUTHOR 2"
@@ -51,7 +51,7 @@ def msgs_in_threads(dho_msg: DhOMessage) -> List[DhOMessage]:
     return [msg1, msg2, msg3]
 
 
-def test_all_messages_are_returned(jsonl_path, crawled_messages: List[DhOMessage]):
+def test_all_messages_are_returned(jsonl_path, crawled_messages: List[ForumMessage]):
 
     # GIVEN a list of messages
     assert len(crawled_messages) >= 1
@@ -73,7 +73,7 @@ def test_messages_are_grouped_by_author(message_db: MessageDB):
     assert len(author_msgs["loving-tone"]) >= 77
 
 
-def test_author_grouping_contains_all_messages(dho_msg: DhOMessage):
+def test_author_grouping_contains_all_messages(dho_msg: ForumMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -88,7 +88,7 @@ def test_author_grouping_contains_all_messages(dho_msg: DhOMessage):
     assert len(author_msgs["AUTHOR_2"]) == 2
 
 
-def test_author_grouping_is_filtered_for_min_num_messages(dho_msg: DhOMessage):
+def test_author_grouping_is_filtered_for_min_num_messages(dho_msg: ForumMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -118,7 +118,7 @@ def test_messages_are_sorted_by_date(message_db: MessageDB):
     ]
 
 
-def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
+def test_category_grouping_contains_all_messages(dho_msg: ForumMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -133,7 +133,7 @@ def test_category_grouping_contains_all_messages(dho_msg: DhOMessage):
     assert len(category_msgs["CATEGORY_2"]) == 2
 
 
-def test_category_groups_are_filtered_for_length(dho_msg: DhOMessage):
+def test_category_groups_are_filtered_for_length(dho_msg: ForumMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -148,7 +148,7 @@ def test_category_groups_are_filtered_for_length(dho_msg: DhOMessage):
     assert len(category_msgs["CATEGORY_2"]) == 2
 
 
-def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
+def test_messages_are_filtered_for_length(dho_msg: ForumMessage):
 
     # GIVEN messages of different lengths
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(2)]
@@ -165,7 +165,7 @@ def test_messages_are_filtered_for_length(dho_msg: DhOMessage):
     assert filtered_msgs[0].msg == "two plus words"
 
 
-def test_thread_grouping_contains_all_messages(msgs_in_threads: List[DhOMessage]):
+def test_thread_grouping_contains_all_messages(msgs_in_threads: List[ForumMessage]):
 
     # GIVEN a list of messages in two threads
     db = MessageDB(msgs=msgs_in_threads)
@@ -178,7 +178,7 @@ def test_thread_grouping_contains_all_messages(msgs_in_threads: List[DhOMessage]
     assert len(thread[222]) == 2
 
 
-def test_thread_groups_are_filtered_by_size(msgs_in_threads: List[DhOMessage]):
+def test_thread_groups_are_filtered_by_size(msgs_in_threads: List[ForumMessage]):
 
     # GIVEN a list of messages in two threads
     db = MessageDB(msgs=msgs_in_threads)
@@ -217,7 +217,7 @@ def test_non_op_thread_responses_are_filtered_out(message_db: MessageDB):
         assert len(authors_in_thread) == 1
 
 
-def test_authors_are_filtered(dho_msg: DhOMessage):
+def test_authors_are_filtered(dho_msg: ForumMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -234,7 +234,7 @@ def test_authors_are_filtered(dho_msg: DhOMessage):
     assert "AUTHOR_1" in author_msgs
 
 
-def test_authors_are_filtered_with_min_message_number(dho_msg: DhOMessage):
+def test_authors_are_filtered_with_min_message_number(dho_msg: ForumMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -254,7 +254,7 @@ def test_authors_are_filtered_with_min_message_number(dho_msg: DhOMessage):
     assert filtered_msgs[0].author == filtered_msgs[0].author == "AUTHOR_2"
 
 
-def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
+def test_filtering_no_authors_keeps_all_authors(dho_msg: ForumMessage):
 
     # GIVEN a list of messages from two authors
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -273,7 +273,7 @@ def test_filtering_no_authors_keeps_all_authors(dho_msg: DhOMessage):
     argvalues=[lambda m: m.author, lambda m: m.thread_id, lambda m: m.category],
 )
 def test_groups_are_sorted_for_size(
-    message_db: MessageDB, key: Callable[[DhOMessage], Any]
+    message_db: MessageDB, key: Callable[[ForumMessage], Any]
 ):
 
     # GIVEN a DB of messages
@@ -290,7 +290,7 @@ def test_groups_are_sorted_for_size(
     argvalues=[lambda m: m.author, lambda m: m.thread_id, lambda m: m.category],
 )
 def test_groups_are_filtered_for_size(
-    message_db: MessageDB, key: Callable[[DhOMessage], Any]
+    message_db: MessageDB, key: Callable[[ForumMessage], Any]
 ):
 
     # GIVEN a DB of messages
@@ -302,7 +302,7 @@ def test_groups_are_filtered_for_size(
         assert len(group_msgs) >= 5
 
 
-def test_categories_are_filtered(dho_msg: DhOMessage):
+def test_categories_are_filtered(dho_msg: ForumMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -318,7 +318,7 @@ def test_categories_are_filtered(dho_msg: DhOMessage):
     assert len(filtered_db) == 2
 
 
-def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
+def test_filtering_no_category_keeps_all_categories(dho_msg: ForumMessage):
 
     # GIVEN a list of messages in two categories
     msgs = [dho_msg.copy(update={"msg_id": i}) for i in range(3)]
@@ -333,7 +333,7 @@ def test_filtering_no_category_keeps_all_categories(dho_msg: DhOMessage):
 
 
 def test_threads_are_filtered_with_min_message_number(
-    msgs_in_threads: List[DhOMessage],
+    msgs_in_threads: List[ForumMessage],
 ):
 
     # GIVEN a list of messages in two threads
@@ -347,7 +347,7 @@ def test_threads_are_filtered_with_min_message_number(
     assert filtered_msgs[0].thread_id == filtered_msgs[0].thread_id == 222
 
 
-def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessage]):
+def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[ForumMessage]):
 
     # GIVEN a list of messages in two threads
     db = MessageDB(msgs=msgs_in_threads)
@@ -362,7 +362,7 @@ def tests_threads_are_filtered_for_thread_author(msgs_in_threads: List[DhOMessag
     assert filtered_msgs[1].author == "AUTHOR 1"
 
 
-def test_all_messages_are_split_into_sentences(dho_msg: DhOMessage):
+def test_all_messages_are_split_into_sentences(dho_msg: ForumMessage):
 
     # GIVEN a message DB with two messages
     db = MessageDB(
