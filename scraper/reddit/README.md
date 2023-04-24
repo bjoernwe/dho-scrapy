@@ -43,3 +43,8 @@ export PGDB=reddit
 export PGHOST=localhost
 export PGPORT=5432
 ```
+
+## Stash the data
+```
+pg_dump reddit > latest.postgres.dump
+```
