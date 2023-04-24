@@ -5,8 +5,8 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
-from data_tools.dho_categories import DhOCategory
 from experiments.experiment_setup import ExperimentSetup
+from scraper.dho_scraper.categories import DhOCategory
 
 
 def main():

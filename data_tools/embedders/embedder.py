@@ -3,7 +3,7 @@ import shelve
 from abc import ABC
 from abc import abstractmethod
 from pathlib import Path
-from typing import Iterator
+from typing import Iterable
 from typing import Optional
 
 import numpy as np
@@ -40,7 +40,7 @@ class Embedder(ABC):
 
             return embedding
 
-    def get_embeddings(self, texts: Iterator[str]) -> np.ndarray:
+    def get_embeddings(self, texts: Iterable[str]) -> np.ndarray:
 
         embeddings = []
 

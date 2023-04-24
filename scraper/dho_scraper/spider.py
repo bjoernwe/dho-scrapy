@@ -8,8 +8,8 @@ from scrapy.exceptions import CloseSpider
 from scrapy.http import HtmlResponse
 from scrapy.http import XmlResponse
 
-from data_tools.dho_categories import DhOCategory
-from data_tools.dho_message import DhOMessage
+from data_tools.dho_message import ForumMessage
+from scraper.dho_scraper.categories import DhOCategory
 
 
 class DhOSpider(scrapy.Spider):
@@ -57,10 +57,10 @@ class DhOSpider(scrapy.Spider):
 
 def _get_messages_from_rss(
     response: XmlResponse, category: DhOCategory
-) -> List[DhOMessage]:
+) -> List[ForumMessage]:
     for i, item in enumerate(reversed(response.xpath("//item"))):
         item.register_namespace("dc", "http://purl.org/dc/elements/1.1/")
-        message = DhOMessage(
+        message = ForumMessage(
             msg_id=item.xpath("./link/text()").get().split("=")[-1],
             category=category,
             thread_id=response.xpath("./channel/link/text()").get().split("=")[-1],
