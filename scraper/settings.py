@@ -9,12 +9,11 @@
 
 BOT_NAME = "dho-scraper"
 
-SPIDER_MODULES = ["dho_scraper"]
-NEWSPIDER_MODULE = "dho_scraper"
+SPIDER_MODULES = ["scraper.dho_scraper", "scraper.dummy"]
 
 LOG_FILE = "scrapy.log"
 LOG_FILE_APPEND = False
-LOG_LEVEL = "WARN"
+LOG_LEVEL = "INFO"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'scraper (+http://www.yourdomain.com)'
@@ -66,15 +65,15 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "dho_scraper.pipelines.RemoveDuplicatesPipeline": 10,
-    "dho_scraper.pipelines.RedactUserPipeline": 100,
-    #'dho_scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
-    #'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
-    "dho_scraper.pipelines.RemoveDhOBlockquotesPipeline": 400,
-    "dho_scraper.pipelines.HtmlToTextPipeline": 600,
-    "dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
-    "dho_scraper.pipelines.RemoveDuplicateSpacesPipeline": 900,
-    #'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
+    "scraper.pipelines.RemoveDuplicatesPipeline": 10,
+    "scraper.pipelines.RedactUserPipeline": 100,
+    #'scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
+    #'scraper.pipelines.RemoveAllRepliesPipeline': 200,
+    "scraper.pipelines.RemoveDhOBlockquotesPipeline": 400,
+    "scraper.pipelines.HtmlToTextPipeline": 600,
+    "scraper.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
+    "scraper.pipelines.RemoveDuplicateSpacesPipeline": 900,
+    #'scraper.pipelines.RemoveShortMessagePipeline': 1000,
 }
 
 PIPELINE_MIN_MESSAGE_WORDS = 1
