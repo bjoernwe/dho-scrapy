@@ -10,7 +10,7 @@ from plotly.subplots import make_subplots
 from sklearn.decomposition import PCA
 
 from data_tools.textsnippet import TextSnippet
-from experiments.experiment_setup import ExperimentSetup
+from experiments.experiment_helper import ExperimentHelper
 from scraper.spiders.dho.categories import DhOCategory
 
 
@@ -27,7 +27,7 @@ def main():
 
 def _plot_sentence_pca(model_name: str, sentences_per_snippet: int = 0):
 
-    experiment = ExperimentSetup(
+    experiment = ExperimentHelper(
         model_name=model_name,
         sentences_per_snippet=sentences_per_snippet,
     )
@@ -43,7 +43,7 @@ def _plot_sentence_pca(model_name: str, sentences_per_snippet: int = 0):
     _plot(df=df)
 
 
-def _get_text_snippets(experiment: ExperimentSetup) -> List[TextSnippet]:
+def _get_text_snippets(experiment: ExperimentHelper) -> List[TextSnippet]:
     return (
         experiment.message_db.filter_categories(categories={DhOCategory.PracticeLogs})
         .filter_thread_responses(keep_op=True)
