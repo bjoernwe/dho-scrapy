@@ -1,12 +1,12 @@
 import pytest
 
 from data_tools.dho_message import ForumMessage
-from scraper.pipelines import HtmlToTextPipeline
-from scraper.pipelines import RedactUserPipeline
-from scraper.pipelines import RemoveDhOBlockquotesPipeline
-from scraper.pipelines import RemoveDuplicateSpacesPipeline
-from scraper.pipelines import RemoveShortMessagePipeline
-from scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
+from scraper.pipelines.pipelines import HtmlToTextPipeline
+from scraper.pipelines.pipelines import RedactUserPipeline
+from scraper.pipelines.pipelines import RemoveDhOBlockquotesPipeline
+from scraper.pipelines.pipelines import RemoveDuplicateSpacesPipeline
+from scraper.pipelines.pipelines import RemoveShortMessagePipeline
+from scraper.pipelines.pipelines import ReplaceNonStandardWhitespacesPipeline
 
 
 def test_dho_blockquote_title_tags_are_removed():

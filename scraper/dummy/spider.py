@@ -1,6 +1,4 @@
-from collections import defaultdict
 from datetime import datetime
-from pathlib import Path
 
 import scrapy
 from scrapy.http import HtmlResponse
@@ -12,17 +10,9 @@ from scraper.dummy.categories import DummyCategory
 class DummySpider(scrapy.Spider):
 
     name = "dummy"
-    custom_settings = defaultdict(dict)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-    @classmethod
-    def set_output_feed(cls, jsonlines_path: Path):
-        jsonlines_uri: str = (
-            jsonlines_path.absolute().as_uri()
-        )  # Add file:// scheme to work on Windows
-        cls.custom_settings["FEEDS"][jsonlines_uri] = {"format": "jsonlines"}
 
     def start_requests(self):
         # List of URLs to be parsed. Like URLs to forum threads.

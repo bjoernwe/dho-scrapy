@@ -6,10 +6,27 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+from pathlib import Path
 
-BOT_NAME = "dho-scraper"
+from data_tools.dho_message import ForumMessage
+
+
+BOT_NAME = "eprc-scrapers"
 
 SPIDER_MODULES = ["scraper.dho_scraper", "scraper.dummy"]
+
+jsonl_path: str = (
+    Path(__file__).parent.parent.joinpath("data/messages.jsonl").absolute().as_uri()
+)
+
+FEEDS = {
+    jsonl_path: {
+        "format": "jsonl",
+        "overwrite": True,
+        "store_empty": True,
+        "item_classes": [ForumMessage],
+    }
+}
 
 LOG_FILE = "scrapy.log"
 LOG_FILE_APPEND = False
@@ -65,15 +82,15 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "scraper.pipelines.RemoveDuplicatesPipeline": 10,
-    "scraper.pipelines.RedactUserPipeline": 100,
-    #'scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
-    #'scraper.pipelines.RemoveAllRepliesPipeline': 200,
-    "scraper.pipelines.RemoveDhOBlockquotesPipeline": 400,
-    "scraper.pipelines.HtmlToTextPipeline": 600,
-    "scraper.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
-    "scraper.pipelines.RemoveDuplicateSpacesPipeline": 900,
-    #'scraper.pipelines.RemoveShortMessagePipeline': 1000,
+    "scraper.pipelines.pipelines.RemoveDuplicatesPipeline": 10,
+    "scraper.pipelines.pipelines.RedactUserPipeline": 100,
+    #'scraper.pipelines.pipelines.RemoveNonOpRepliesPipeline': 100,
+    #'scraper.pipelines.pipelines.RemoveAllRepliesPipeline': 200,
+    "scraper.pipelines.pipelines.RemoveDhOBlockquotesPipeline": 400,
+    "scraper.pipelines.pipelines.HtmlToTextPipeline": 600,
+    "scraper.pipelines.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
+    "scraper.pipelines.pipelines.RemoveDuplicateSpacesPipeline": 900,
+    #'scraper.pipelines.pipelines.RemoveShortMessagePipeline': 1000,
 }
 
 PIPELINE_MIN_MESSAGE_WORDS = 1
