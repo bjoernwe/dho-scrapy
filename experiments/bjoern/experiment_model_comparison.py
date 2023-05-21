@@ -7,7 +7,7 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 
 from experiments.experiment_setup import ExperimentSetup
-from scraper.dho_scraper.categories import DhOCategory
+from scraper.spiders.dho.categories import DhOCategory
 
 
 def main():

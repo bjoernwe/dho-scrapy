@@ -3,8 +3,8 @@ from datetime import datetime
 import scrapy
 from scrapy.http import HtmlResponse
 
-from data_tools.dho_message import ForumMessage
-from scraper.dummy.categories import DummyCategory
+from data_tools.message import ForumMessage
+from scraper.spiders.dummy.categories import DummyCategory
 
 
 class DummySpider(scrapy.Spider):

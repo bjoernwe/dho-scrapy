@@ -1,6 +1,6 @@
 import pytest
 
-from data_tools.dho_message import ForumMessage
+from data_tools.message import ForumMessage
 from scraper.pipelines.pipelines import HtmlToTextPipeline
 from scraper.pipelines.pipelines import RedactUserPipeline
 from scraper.pipelines.pipelines import RemoveDhOBlockquotesPipeline

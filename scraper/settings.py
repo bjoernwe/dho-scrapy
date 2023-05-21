@@ -8,12 +8,12 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 from pathlib import Path
 
-from data_tools.dho_message import ForumMessage
+from data_tools.message import ForumMessage
 
 
 BOT_NAME = "eprc-scrapers"
 
-SPIDER_MODULES = ["scraper.dho_scraper", "scraper.dummy"]
+SPIDER_MODULES = ["scraper.spiders.dho", "scraper.spiders.dummy"]
 
 jsonl_path: str = (
     Path(__file__).parent.parent.joinpath("data/messages.jsonl").absolute().as_uri()

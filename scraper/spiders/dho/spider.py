@@ -6,8 +6,8 @@ from scrapy.exceptions import CloseSpider
 from scrapy.http import HtmlResponse
 from scrapy.http import XmlResponse
 
-from data_tools.dho_message import ForumMessage
-from scraper.dho_scraper.categories import DhOCategory
+from data_tools.message import ForumMessage
+from scraper.spiders.dho.categories import DhOCategory
 
 
 class DhOSpider(scrapy.Spider):

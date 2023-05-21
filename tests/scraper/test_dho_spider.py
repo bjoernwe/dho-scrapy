@@ -1,7 +1,7 @@
 from typing import List
 
-from data_tools.dho_message import ForumMessage
-from scraper.dho_scraper.spider import DhOCategory
+from data_tools.message import ForumMessage
+from scraper.spiders.dho.spider import DhOCategory
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[ForumMessage]):

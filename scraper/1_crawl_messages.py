@@ -4,9 +4,9 @@ import typer
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-from scraper.dho_scraper.categories import DhOCategory
-from scraper.dho_scraper.spider import DhOSpider
-from scraper.dummy.spider import DummySpider
+from scraper.spiders.dho.categories import DhOCategory
+from scraper.spiders.dho.spider import DhOSpider
+from scraper.spiders.dummy.spider import DummySpider
 
 
 def crawl_messages():
