@@ -25,7 +25,7 @@ class DhOSpider(scrapy.Spider):
     def set_output_feed(cls, jsonlines_path: Path):
         jsonlines_uri: str = (
             jsonlines_path.absolute().as_uri()
-        )  # Add file:// scheme to work on Windows
+        )  # Workaround: This adds file:// scheme to make it work on Windows
         cls.custom_settings["FEEDS"][jsonlines_uri] = {"format": "jsonlines"}
 
     def start_requests(self):
