@@ -8,7 +8,7 @@ from data_tools.embedders.embedder_transformer import EmbedderTransformer
 from data_tools.message_db import MessageDB
 
 
-class ExperimentSetup:
+class ExperimentHelper:
     """
     A helper class for setting up common objects for an experiment:
     - a MessageDB and
