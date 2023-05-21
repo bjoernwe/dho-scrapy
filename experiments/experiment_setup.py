@@ -9,6 +9,12 @@ from data_tools.message_db import MessageDB
 
 
 class ExperimentSetup:
+    """
+    A helper class for setting up common objects for an experiment:
+    - a MessageDB and
+    - an EmbedderTransformer with cache
+    """
+
     def __init__(
         self,
         model_name: str,

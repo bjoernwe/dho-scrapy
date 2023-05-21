@@ -11,7 +11,7 @@ from sklearn.decomposition import PCA
 
 from data_tools.textsnippet import TextSnippet
 from experiments.experiment_setup import ExperimentSetup
-from scraper.dho_scraper.categories import DhOCategory
+from scraper.spiders.dho.categories import DhOCategory
 
 
 def main():

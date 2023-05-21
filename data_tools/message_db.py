@@ -11,7 +11,7 @@ from typing import Union
 
 from tqdm import tqdm
 
-from data_tools.dho_message import ForumMessage
+from data_tools.message import ForumMessage
 from data_tools.msg_category import MsgCategory
 from data_tools.textsnippet import TextSnippet
 

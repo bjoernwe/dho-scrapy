@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from data_tools.dho_message import ForumMessage
+from data_tools.message import ForumMessage
 
 
 def test_dho_message_accepts_datetime(dho_msg: ForumMessage):

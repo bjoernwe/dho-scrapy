@@ -6,7 +6,7 @@ from sklearn.decomposition import PCA
 from sksfa import SFA
 
 from experiments.experiment_setup import ExperimentSetup
-from scraper.dho_scraper.categories import DhOCategory
+from scraper.spiders.dho import DhOCategory
 
 
 def main():
