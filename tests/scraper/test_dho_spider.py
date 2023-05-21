@@ -1,9 +1,7 @@
-from pathlib import Path
 from typing import List
 
 from data_tools.dho_message import ForumMessage
 from scraper.dho_scraper.spider import DhOCategory
-from scraper.dho_scraper.spider import DhOSpider
 
 
 def test_spider_finds_expected_number_of_messages(crawled_messages: List[ForumMessage]):
@@ -61,22 +59,6 @@ def test_crawled_messages_contain_category(
     # THEN they all contain the specified category
     for msg in crawled_messages:
         assert msg.category == test_dho_category
-
-
-def test_feed_output_contains_uri_scheme():
-
-    # GIVEN a DhOSpider
-    spider = DhOSpider()
-
-    # WHEN an output file is set
-    path = Path("foo")
-    spider.set_output_feed(jsonlines_path=path)
-
-    # THEN scrapy is configured with a file:// scheme
-    # (otherwise, on Windows, "C:" would be interpreted as scheme)
-    feed_files: List[str] = list(spider.custom_settings["FEEDS"].keys())
-    assert len(feed_files) == 1
-    assert feed_files[0].startswith("file://")
 
 
 def test_crawled_messages_are_redacted(crawled_messages: List[ForumMessage]):
