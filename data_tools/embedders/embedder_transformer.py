@@ -6,7 +6,7 @@ from sentence_transformers import SentenceTransformer
 from data_tools.embedders.embedder import Embedder
 
 
-class EmbedderTransformer(Embedder):
+class TransformerEmbedder(Embedder):
     def __init__(self, model_name: str, cache_path: Path):
         super().__init__(cache_path=cache_path)
         self._model = SentenceTransformer(model_name_or_path=model_name)
