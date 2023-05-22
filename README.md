@@ -43,6 +43,9 @@ Another important tool is the `TransformerEmbedder` in `data_tools.embedders`. I
 embeddings, which is used in many experiments. Since it can be very slow to calculate embeddings for tens or even
 hundreds of thousands of messages, the embedder can cache results on disk (see `experiments` for examples).
 
+Since both, setting up a `MessageDB` and setting up an `Embedder` with cache, is a common step for many experiments,
+there's also the `ExperimentHelper` in `experiments.experiment_helpe` to make the setup more convenient.
+
 ### Experiments
 
 `experiments` is the place where people are going to try out stuff.
