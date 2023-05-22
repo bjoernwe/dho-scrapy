@@ -17,7 +17,7 @@ from scraper.spiders.dho.categories import DhOCategory
 def main():
 
     model_name = "paraphrase-albert-small-v2"
-    sentences_per_snippet = 3
+    sentences_per_snippet = 1
 
     _plot_sentence_pca(
         model_name=model_name,
@@ -40,7 +40,8 @@ def _plot_sentence_pca(model_name: str, sentences_per_snippet: int = 0):
     embeddings = PCA(n_components=10).fit_transform(embeddings)
 
     df = _create_embedding_dataframe(embeddings=embeddings, texts=texts)
-    _plot(df=df)
+    _plot_cloud(df=df)
+    _plot_sentences(df=df)
 
 
 def _get_text_snippets(experiment: ExperimentHelper) -> List[TextSnippet]:
@@ -66,16 +67,17 @@ def _create_embedding_dataframe(embeddings: np.ndarray, texts: List[str]):
     return df
 
 
-def _plot(df: DataFrame):
-
+def _plot_cloud(df: DataFrame):
     fig = px.scatter(
         data_frame=df,
         x="PCA_0",
         y="PCA_1",
         hover_data=["text"],
     )
-
     fig.show()
+
+
+def _plot_sentences(df: DataFrame):
 
     num_bars = 20
 
