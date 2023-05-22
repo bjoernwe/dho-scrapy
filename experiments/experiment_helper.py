@@ -4,7 +4,7 @@ from typing import Optional
 from data_tools.default_paths import default_jsonl_path
 from data_tools.default_paths import get_default_cache_path
 from data_tools.embedders.embedder import Embedder
-from data_tools.embedders.embedder_transformer import EmbedderTransformer
+from data_tools.embedders.embedder_transformer import TransformerEmbedder
 from data_tools.message_db import MessageDB
 
 
@@ -31,7 +31,7 @@ class ExperimentHelper:
         cache_path = get_default_cache_path(
             sentences_per_snippet=sentences_per_snippet, model_name=model_name
         )
-        self._embedder = EmbedderTransformer(
+        self._embedder = TransformerEmbedder(
             model_name=model_name, cache_path=cache_path
         )
 
