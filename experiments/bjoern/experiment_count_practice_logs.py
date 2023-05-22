@@ -16,6 +16,7 @@ def print_practice_log_counts():
         .group_by_author()
     )
 
+    print("Number of practice logs / user:")
     for author, msgs in author_logs.items():
         print(f"{len(msgs)}: {author}")
 
