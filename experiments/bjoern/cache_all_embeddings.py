@@ -1,4 +1,4 @@
-from experiments.experiment_setup import ExperimentSetup
+from experiments.experiment_helper import ExperimentHelper
 
 
 def main():
@@ -15,7 +15,7 @@ def main():
 
 def calc_and_cache_embeddings(sentences_per_snippet: int, model_name: str):
 
-    experiment = ExperimentSetup(
+    experiment = ExperimentHelper(
         model_name=model_name,
         sentences_per_snippet=sentences_per_snippet,
     )
