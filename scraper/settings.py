@@ -6,15 +6,31 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+from pathlib import Path
 
-BOT_NAME = "dho-scraper"
+from data_tools.message import ForumMessage
 
-SPIDER_MODULES = ["dho_scraper"]
-NEWSPIDER_MODULE = "dho_scraper"
+
+BOT_NAME = "eprc-scrapers"
+
+SPIDER_MODULES = ["scraper.spiders.dho", "scraper.spiders.dummy"]
+
+jsonl_path: str = (
+    Path(__file__).parent.parent.joinpath("data/messages.jsonl").absolute().as_uri()
+)
+
+FEEDS = {
+    jsonl_path: {
+        "format": "jsonl",
+        "overwrite": True,
+        "store_empty": True,
+        "item_classes": [ForumMessage],
+    }
+}
 
 LOG_FILE = "scrapy.log"
 LOG_FILE_APPEND = False
-LOG_LEVEL = "WARN"
+LOG_LEVEL = "INFO"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'scraper (+http://www.yourdomain.com)'
@@ -66,15 +82,15 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "dho_scraper.pipelines.RemoveDuplicatesPipeline": 10,
-    "dho_scraper.pipelines.RedactUserPipeline": 100,
-    #'dho_scraper.pipelines.RemoveNonOpRepliesPipeline': 100,
-    #'dho_scraper.pipelines.RemoveAllRepliesPipeline': 200,
-    "dho_scraper.pipelines.RemoveDhOBlockquotesPipeline": 400,
-    "dho_scraper.pipelines.HtmlToTextPipeline": 600,
-    "dho_scraper.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
-    "dho_scraper.pipelines.RemoveDuplicateSpacesPipeline": 900,
-    #'dho_scraper.pipelines.RemoveShortMessagePipeline': 1000,
+    "scraper.pipelines.pipelines.RemoveDuplicatesPipeline": 10,
+    "scraper.pipelines.pipelines.RedactUserPipeline": 100,
+    #'scraper.pipelines.pipelines.RemoveNonOpRepliesPipeline': 100,
+    #'scraper.pipelines.pipelines.RemoveAllRepliesPipeline': 200,
+    "scraper.pipelines.pipelines.RemoveDhOBlockquotesPipeline": 400,
+    "scraper.pipelines.pipelines.HtmlToTextPipeline": 600,
+    "scraper.pipelines.pipelines.ReplaceNonStandardWhitespacesPipeline": 800,
+    "scraper.pipelines.pipelines.RemoveDuplicateSpacesPipeline": 900,
+    #'scraper.pipelines.pipelines.RemoveShortMessagePipeline': 1000,
 }
 
 PIPELINE_MIN_MESSAGE_WORDS = 1

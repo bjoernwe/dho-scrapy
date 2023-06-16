@@ -1,12 +1,12 @@
 import pytest
 
-from data_tools.dho_message import DhOMessage
-from scraper.dho_scraper.pipelines import HtmlToTextPipeline
-from scraper.dho_scraper.pipelines import RedactUserPipeline
-from scraper.dho_scraper.pipelines import RemoveDhOBlockquotesPipeline
-from scraper.dho_scraper.pipelines import RemoveDuplicateSpacesPipeline
-from scraper.dho_scraper.pipelines import RemoveShortMessagePipeline
-from scraper.dho_scraper.pipelines import ReplaceNonStandardWhitespacesPipeline
+from data_tools.message import ForumMessage
+from scraper.pipelines.pipelines import HtmlToTextPipeline
+from scraper.pipelines.pipelines import RedactUserPipeline
+from scraper.pipelines.pipelines import RemoveDhOBlockquotesPipeline
+from scraper.pipelines.pipelines import RemoveDuplicateSpacesPipeline
+from scraper.pipelines.pipelines import RemoveShortMessagePipeline
+from scraper.pipelines.pipelines import ReplaceNonStandardWhitespacesPipeline
 
 
 def test_dho_blockquote_title_tags_are_removed():
@@ -35,7 +35,7 @@ def test_dho_blockquote_tags_are_removed():
     assert "A QUOTE" not in filtered
 
 
-def test_html_is_removed_from_message(dho_msg: DhOMessage):
+def test_html_is_removed_from_message(dho_msg: ForumMessage):
 
     # GIVEN a DhO message with HTML tags
     html = dho_msg.msg
@@ -99,7 +99,7 @@ def test_messages_can_be_filtered_for_number_of_words(
     assert is_msg_too_short == too_short
 
 
-def test_user_name_can_be_redacted(dho_msg: DhOMessage):
+def test_user_name_can_be_redacted(dho_msg: ForumMessage):
 
     # GIVEN a RedactUserPipeline
     redact_pipeline = RedactUserPipeline()
