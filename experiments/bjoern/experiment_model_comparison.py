@@ -6,8 +6,8 @@ import pandas as pd
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-from data_tools.dho_categories import DhOCategory
-from experiments.experiment_setup import ExperimentSetup
+from experiments.experiment_helper import ExperimentHelper
+from scraper.spiders.dho.categories import DhOCategory
 
 
 def main():
@@ -40,7 +40,7 @@ def compare_embeddings(
 
     for model_name in model_names:
 
-        experiment = ExperimentSetup(
+        experiment = ExperimentHelper(
             model_name=model_name,
             sentences_per_snippet=sentence_per_snippet,
         )

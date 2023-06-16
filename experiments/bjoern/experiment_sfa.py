@@ -5,8 +5,8 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sksfa import SFA
 
-from data_tools.dho_categories import DhOCategory
-from experiments.experiment_setup import ExperimentSetup
+from experiments.experiment_helper import ExperimentHelper
+from scraper.spiders.dho import DhOCategory
 
 
 def main():
@@ -29,7 +29,7 @@ def plot_sfa(
     author: str, model_name: str, sentences_per_snippet: int, show_plot: bool = True
 ):
 
-    experiment = ExperimentSetup(
+    experiment = ExperimentHelper(
         model_name=model_name,
         sentences_per_snippet=sentences_per_snippet,
     )

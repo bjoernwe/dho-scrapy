@@ -11,8 +11,8 @@ from typing import Union
 
 from tqdm import tqdm
 
-from data_tools.dho_categories import DhOCategory
-from data_tools.dho_message import DhOMessage
+from data_tools.message import ForumMessage
+from data_tools.msg_category import MsgCategory
 from data_tools.textsnippet import TextSnippet
 
 
@@ -23,8 +23,8 @@ class MessageDB:
     thread, etc.
     """
 
-    def __init__(self, msgs: List[DhOMessage]):
-        self._msgs: Dict[int, DhOMessage] = {msg.msg_id: msg for msg in msgs}
+    def __init__(self, msgs: List[ForumMessage]):
+        self._msgs: Dict[int, ForumMessage] = {msg.msg_id: msg for msg in msgs}
         assert len(self._msgs) == len(
             msgs
         ), "Message lists seem to contain duplicate IDs"
@@ -36,7 +36,7 @@ class MessageDB:
 
         with open(jsonl_path, "r") as f:
             for line in tqdm(f.readlines()):
-                msg = DhOMessage.parse_raw(line)
+                msg = ForumMessage.parse_raw(line)
                 msgs.append(msg)
 
         return cls(msgs=msgs)
@@ -47,10 +47,10 @@ class MessageDB:
     def __getitem__(self, item):
         return self._msgs[item]
 
-    def get_all_messages(self) -> List[DhOMessage]:
+    def get_all_messages(self) -> List[ForumMessage]:
         return list(self._msgs.values())
 
-    def get_first_message(self) -> DhOMessage:
+    def get_first_message(self) -> ForumMessage:
         return self.get_all_messages()[0]
 
     def get_all_message_bodies(self) -> List[str]:
@@ -62,7 +62,7 @@ class MessageDB:
 
     def _group_messages(
         self,
-        key: Callable[[DhOMessage], Any],
+        key: Callable[[ForumMessage], Any],
         keep_keys: Optional[Set[Hashable]] = None,
         min_group_size: int = 1,
     ) -> Dict[Union[int, str], "MessageDB"]:
@@ -147,7 +147,7 @@ class MessageDB:
         return MessageDB(msgs=filtered_msgs)
 
     def filter_categories(
-        self, categories: Optional[Set[DhOCategory]] = None, min_num_message: int = 1
+        self, categories: Optional[Set[MsgCategory]] = None, min_num_message: int = 1
     ) -> "MessageDB":
         category_msgs = self.group_by_category(
             keep_categories=categories, min_num_messages=min_num_message

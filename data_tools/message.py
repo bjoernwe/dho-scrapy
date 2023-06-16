@@ -5,17 +5,16 @@ import nltk
 from pydantic import BaseModel
 from pydantic import validator
 
-from data_tools.dho_categories import DhOCategory
 from data_tools.textsnippet import TextSnippet
 
 
-class DhOMessage(BaseModel):
+class ForumMessage(BaseModel):
 
     msg_id: int
     thread_id: int
     date: datetime
     is_first_in_thread: bool
-    category: DhOCategory
+    category: str
     author: str
     title: str
     msg: str
