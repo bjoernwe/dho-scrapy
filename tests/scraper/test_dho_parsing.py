@@ -3,8 +3,8 @@ from pathlib import Path
 import pytest
 from scrapy.http import XmlResponse
 
-from data_tools.dho_categories import DhOCategory
-from scraper.dho_scraper.spider import _get_messages_from_rss
+from scraper.spiders.dho.categories import DhOCategory
+from scraper.spiders.dho.spider import _get_messages_from_rss
 
 
 @pytest.fixture(scope="session")
