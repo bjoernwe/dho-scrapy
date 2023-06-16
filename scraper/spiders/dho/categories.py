@@ -1,7 +1,7 @@
-from enum import Enum
+from data_tools.msg_category import MsgCategory
 
 
-class DhOCategory(str, Enum):
+class DhOCategory(MsgCategory):
     ContemporaryBuddhism = (
         "https://www.dharmaoverground.org/discussion/-/message_boards/category/13969849"
     )

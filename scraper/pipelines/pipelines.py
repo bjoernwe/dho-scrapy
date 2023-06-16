@@ -7,14 +7,14 @@ from codenamize import codenamize
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
 
-from data_tools.dho_message import DhOMessage
+from data_tools.message import ForumMessage
 
 
 class RemoveDuplicatesPipeline:
     def __init__(self):
         self.ids_seen = set()
 
-    def process_item(self, item: DhOMessage, _):
+    def process_item(self, item: ForumMessage, _):
 
         msg_id = item.msg_id
 
@@ -27,7 +27,7 @@ class RemoveDuplicatesPipeline:
 
 class RedactUserPipeline:
     @staticmethod
-    def process_item(item: DhOMessage, _=None):
+    def process_item(item: ForumMessage, _=None):
         item.author = codenamize(item.author)
         return item
 
@@ -37,7 +37,7 @@ class RemoveNonOpRepliesPipeline:
     thread_owners = {}
 
     @classmethod
-    def process_item(cls, item: DhOMessage, _):
+    def process_item(cls, item: ForumMessage, _):
 
         if item.is_first_in_thread:
             cls.thread_owners[item.thread_id] = item.author  # remember author
@@ -53,7 +53,7 @@ class RemoveNonOpRepliesPipeline:
 
 class RemoveAllRepliesPipeline:
     @classmethod
-    def process_item(cls, item: DhOMessage, _):
+    def process_item(cls, item: ForumMessage, _):
         if item.is_first_in_thread:
             return item
         raise DropItem
@@ -131,7 +131,7 @@ class RemoveShortMessagePipeline:
     def __init__(self, min_message_words: int = 1):
         self._min_message_words = min_message_words
 
-    def process_item(self, item: DhOMessage, _):
+    def process_item(self, item: ForumMessage, _):
         if self._is_too_short(msg=item.msg, min_words=self._min_message_words):
             raise DropItem
         return item

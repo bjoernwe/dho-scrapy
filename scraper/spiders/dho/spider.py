@@ -1,5 +1,3 @@
-from collections import defaultdict
-from pathlib import Path
 from typing import List
 from typing import Optional
 
@@ -8,25 +6,17 @@ from scrapy.exceptions import CloseSpider
 from scrapy.http import HtmlResponse
 from scrapy.http import XmlResponse
 
-from data_tools.dho_categories import DhOCategory
-from data_tools.dho_message import DhOMessage
+from data_tools.message import ForumMessage
+from scraper.spiders.dho.categories import DhOCategory
 
 
 class DhOSpider(scrapy.Spider):
 
     name = "dho"
-    custom_settings = defaultdict(dict)
 
     def __init__(self, categories: Optional[List[DhOCategory]] = None, **kwargs):
         super().__init__(**kwargs)
         self._categories = categories or [DhOCategory.DharmaDiagnostics]
-
-    @classmethod
-    def set_output_feed(cls, jsonlines_path: Path):
-        jsonlines_uri: str = (
-            jsonlines_path.absolute().as_uri()
-        )  # Add file:// scheme to work on Windows
-        cls.custom_settings["FEEDS"][jsonlines_uri] = {"format": "jsonlines"}
 
     def start_requests(self):
         for category in self._categories:
@@ -57,10 +47,10 @@ class DhOSpider(scrapy.Spider):
 
 def _get_messages_from_rss(
     response: XmlResponse, category: DhOCategory
-) -> List[DhOMessage]:
+) -> List[ForumMessage]:
     for i, item in enumerate(reversed(response.xpath("//item"))):
         item.register_namespace("dc", "http://purl.org/dc/elements/1.1/")
-        message = DhOMessage(
+        message = ForumMessage(
             msg_id=item.xpath("./link/text()").get().split("=")[-1],
             category=category,
             thread_id=response.xpath("./channel/link/text()").get().split("=")[-1],
