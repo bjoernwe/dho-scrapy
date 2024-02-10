@@ -4,7 +4,7 @@ import pytest
 from scrapy.http import XmlResponse
 
 from scraper.spiders.dho.categories import DhOCategory
-from scraper.spiders.dho.spider import _get_messages_from_rss
+from scraper.spiders.dho.spider import DhOSpider
 
 
 @pytest.fixture(scope="session")
@@ -29,7 +29,7 @@ def test_all_messages_are_parsed_from_rss(rss_response: XmlResponse):
     # GIVEN the response object for an RSS
     # WHEN the RSS response is parsed
     messages = list(
-        _get_messages_from_rss(
+        DhOSpider._extract_messages_from_rss(
             response=rss_response, category=DhOCategory.ContemporaryBuddhism
         )
     )
