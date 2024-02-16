@@ -10,7 +10,6 @@ from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
 from data_tools.message import ForumMessage
-from data_tools.message_db import MessageDB
 from scraper.spiders.dho.categories import DhOCategory
 from scraper.spiders.dho.spider import DhOSpider
 
@@ -63,11 +62,6 @@ def jsonl_path(
     process.start()
 
     return jsonl_out_path
-
-
-@pytest.fixture(scope="session")
-def message_db(jsonl_path: Path) -> MessageDB:
-    return MessageDB.from_file(jsonl_path=jsonl_path)
 
 
 @pytest.fixture(scope="session")
