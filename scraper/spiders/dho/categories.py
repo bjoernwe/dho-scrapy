@@ -1,4 +1,4 @@
-from data_tools.msg_category import MsgCategory
+from data_model.msg_category import MsgCategory
 
 
 class DhOCategory(MsgCategory):

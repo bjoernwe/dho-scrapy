@@ -8,7 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 from pathlib import Path
 
-from data_tools.message import ForumMessage
+from data_model.forum_message import ForumMessage
 
 
 BOT_NAME = "eprc-scrapers"

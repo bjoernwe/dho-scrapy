@@ -1,6 +1,6 @@
 from typing import List
 
-from data_tools.message import ForumMessage
+from data_model.forum_message import ForumMessage
 from scraper.spiders.dho.spider import DhOCategory
 
 

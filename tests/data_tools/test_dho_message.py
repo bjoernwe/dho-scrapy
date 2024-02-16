@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from data_tools.message import ForumMessage
+from data_model.forum_message import ForumMessage
 
 
 def test_dho_message_accepts_datetime(dho_msg: ForumMessage):

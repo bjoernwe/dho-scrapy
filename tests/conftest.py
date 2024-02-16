@@ -9,7 +9,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
 
-from data_tools.message import ForumMessage
+from data_model.forum_message import ForumMessage
 from scraper.spiders.dho.categories import DhOCategory
 from scraper.spiders.dho.spider import DhOSpider
 
